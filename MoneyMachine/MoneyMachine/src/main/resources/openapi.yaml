@@ -291,9 +291,22 @@ paths:
   /atm/bankAccounts:
     get:
       tags:
-      - ATM
+        - ATM
       summary: Get all bankaccounts owned by user
       description: Returns bankaccount selectors that will be placed into the account selection box
+      responses:
+        '200':
+          description: Successfully retrieved bank accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ATMBankAccountSelectorDTO'
+        '401':
+          description: Unauthorized - user is not logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
 
   /atm/bankAccount/{iban}:
     get:
@@ -331,19 +344,85 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
 
-  /atm/withdraw:
+  /atm/withdraw/{iban}:
     post:
       tags:
-      - ATM
+        - ATM
       summary: Remove money from bankaccount
       description: Remove money from bank account based on amount
+      parameters:
+        - name: iban
+          in: path
+          required: true
+          description: The IBAN of the bank account to withdraw from
+          schema:
+            type: string
+            example: NL91ABNA0417164300
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmountRequest'
+      responses:
+        '200':
+          description: Successfully withdrawn amount
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceUpdateDTO'
+        '401':
+          description: Unauthorized - user is not logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Bank account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
 
-  /atm/deposit:
+  /atm/deposit/{iban}:
     post:
       tags:
-      - ATM
+        - ATM
       summary: Add money to bankaccount
       description: Add money to bank account based on amount
+      parameters:
+        - name: iban
+          in: path
+          required: true
+          description: The IBAN of the bank account to deposit into
+          schema:
+            type: string
+            example: NL91ABNA0417164300
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmountRequest'
+      responses:
+        '200':
+          description: Successfully deposited amount
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceUpdateDTO'
+        '401':
+          description: Unauthorized - user is not logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Bank account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
 
 components:
   schemas:
