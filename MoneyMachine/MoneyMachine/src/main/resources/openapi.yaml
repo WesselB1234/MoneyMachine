@@ -327,29 +327,6 @@ components:
           examples: [1]
       xml:
         name: user
-
-    ApiResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        type:
-          type: string
-        message:
-          type: string
-      xml:
-        name: '##default'
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-      required:
-        - code
-        - message
     UserArray:
       description: List of user object
       content:
@@ -358,6 +335,109 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/User'
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: "secret123"
+
+    AmountRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: decimal
+          example: 50.00
+
+    ErrorDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 4001
+        message:
+          type: string
+          example: "Insufficient funds"
+
+    BalanceUpdateDTO:
+      type: object
+      properties:
+        newBalance:
+          type: number
+          format: decimal
+          example: 950.00
+        amount:
+          type: number
+          format: decimal
+          example: 50.00
+        transaction_id:
+          type: integer
+          example: 123456
+        iban:
+          type: string
+          example: NL91ABNA0417164300
+
+    ATMBankAccountDTO:
+      type: object
+      properties:
+        iban:
+          type: string
+          example: NL91ABNA0417164300
+        bankAccountType:
+          type: string
+          examples: [checking, savings]
+        balance:
+          type: number
+          format: decimal
+          example: 1200.50
+        dailyWithdrawLimit:
+          type: number
+          format: decimal
+          example: 500.00
+        dailyWithdrawLimitRemaining:
+          type: number
+          format: decimal
+          example: 300.00
+        absoluteLimit:
+          type: number
+          format: decimal
+          example: -100.00
+
+    ATMBankAccountSelectorDTO:
+      type: object
+      properties:
+        bankAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ATMBankAccountOptionDTO'
+
+    ATMBankAccountOptionDTO:
+      type: object
+      properties:
+        iban:
+          type: string
+          example: NL91ABNA0417164300
+        bankAccountType:
+          type: string
+          examples: [checking, savings]
+
+    ATMLoginDTO:
+      type: object
+      properties:
+        ATMJWT:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        expiresIn:
+          type: integer
+          example: 3600
+        userName:
+          type: string
+          example: "John Doe"
+
   securitySchemes:
     petstore_auth:
       type: oauth2
