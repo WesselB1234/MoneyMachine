@@ -1,13 +1,13 @@
-package nl.inholland.nl.TheMoneyMachineBankApplication;
+package MoneyMachine;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TheMoneyMachineBankApplication {
+public class MoneyMachineApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TheMoneyMachineBankApplication.class, args);
+		SpringApplication.run(MoneyMachineApplication.class, args);
 	}
 
 }

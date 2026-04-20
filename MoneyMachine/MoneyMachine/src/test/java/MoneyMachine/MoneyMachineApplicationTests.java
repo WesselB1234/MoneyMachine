@@ -1,10 +1,10 @@
-package nl.inholland.nl.TheMoneyMachineBankApplication;
+package MoneyMachine;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TheMoneyMachineBankApplicationTests {
+class MoneyMachineApplicationTests {
 
 	@Test
 	void contextLoads() {
