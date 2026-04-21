@@ -47,6 +47,14 @@ tags:
     summary: ATM operations
     description: Operations for withdrawing and depositing money for bankaccounts
 paths:
+  /user:
+    get:
+      tags:
+        - user
+      summary: Get all registered users without an approval
+      description: Returns a list with registered users without an approval for a bank accounnt
+      operationId: userWithoutBankAccount
+      parameters:
   /user/createWithList:
     post:
       tags:
@@ -233,18 +241,79 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorDTO"
-  /transactions:
+  /transaction:
     get:
       tags:
           - transaction
-      summary: Get all transactions 
-      description: This can only be done by a logged in user with employee rights
-  /bankAccounts:
+      summary: Get all transactions
+      description: This can only be seen by a logged in employee
+      responses: 
+      '200':
+          description: Transactions could be fetched
+      '404': 
+          descrption: No transactions found
+          content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorDTO'
+  /transaction/bankAccount/{iban}:
+    get:
+      tags:
+        - transaction
+        - bankAccount
+      summary: Get all transactions by IBAN number
+      description: Get all transactions from a bankaccount based on the selected IBAN
+      parameters:
+        - name:iban
+  /bankAccount:
     get:
       tags:
         - bankAccount
       summary: Get all bankaccounts
       description: This can only be viewed by a logged in user with employee rights
+
+  /bankAccount/{iban}:
+    get:
+      tags:
+        - bankAccount
+      summary: Get bankAccount by IBAN number
+      description: Returns bank account information based on the IBAN numbe
+      parameters:
+        - name: iban
+          in: path
+          required: true
+          description: The IBAN of the bank account to retrieve
+          schema:
+            type: string
+            example: NL91ABNA0417164300
+      responses:
+        '200':
+          description: Successful response with bank account information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ATMBankAccountDTO'
+
+        '400':
+          description: Invalid IBAN format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+
+        '404':
+          description: Bank account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+
+/bankAccount/{iban}:
+  put:
+    tags:
+      - bankAccount
+    summary: Update balance from the selected bank account
+    description: Transfer money from one bankaccount to the other bankaccount
 
   /atm/login:
     post:
@@ -583,3 +652,37 @@ components:
         userName:
           type: string
           example: "John Doe"
+
+    TransactionDTO:
+      type: object
+      properties:
+        transaction_id:
+          type: int
+          example: 1
+        initiating_user_id:
+          type: int
+          item:
+            $ref: '#/components/schemas/User'
+          example: 2
+        from_account_iban: 
+          type: string
+          item: 
+            $ref: '#/components/schemas/bankAccount'
+          example: "NL91ABNA0417164300"
+        amount: 
+          type: decimal
+          example: 21.4
+        time: 
+          type: datetime
+        is_active: 
+          type: bool
+          example: true
+
+      TransactionOverviewDTO:
+        type: object
+        properties:
+          transactions:
+            type: array
+            items: 
+              $ref: '#components/schemas/TransactionDTO'
+        
