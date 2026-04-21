@@ -282,7 +282,7 @@ paths:
         '204':
           description: Successfully logged out
         '401':
-          description: Unauthorized - no active session
+          description: Unauthorized - user is not logged in
           content:
             application/json:
               schema:
