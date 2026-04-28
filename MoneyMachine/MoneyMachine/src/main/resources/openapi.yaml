@@ -50,10 +50,28 @@ paths:
     get:
       tags:
         - user
-      summary: Get all registered users without an approval
-      description: Returns a list with registered users without an approval for a bank accounnt
-      operationId: userWithoutBankAccount
-      parameters:
+      summary: Get all registered users
+      description: Returns a list of all registered users.
+      operationId: getUsers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOverviewDTO'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /user/createWithList:
     post:
       tags:
@@ -62,6 +80,7 @@ paths:
       description: Creates list of users with given input array.
       operationId: createUsersWithListInput
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -74,16 +93,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/User'
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorDTO"
+                $ref: '#/components/schemas/ErrorDTO'
   /user/login:
     get:
       tags:
@@ -132,7 +150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorDTO"
+                $ref: '#/components/schemas/ErrorDTO'
   /user/logout:
     get:
       tags:
@@ -145,7 +163,11 @@ paths:
         '200':
           description: successful operation
         default:
-          description: successful operation
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /user/{username}:
     get:
       tags:
@@ -213,7 +235,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorDTO"
+                $ref: '#/components/schemas/ErrorDTO'
     delete:
       tags:
         - user
@@ -232,29 +254,48 @@ paths:
           description: successful operation
         '400':
           description: Invalid username supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
         '404':
           description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorDTO"
-  /transaction:
+                $ref: '#/components/schemas/ErrorDTO'
+  /transactions:
     get:
       tags:
-          - transaction
+        - transaction
       summary: Get all transactions
       description: This can only be seen by a logged in employee
-      responses: 
-      '200':
+      operationId: getTransactions
+      responses:
+        '200':
           description: Transactions could be fetched
-      '404': 
-          descrption: No transactions found
           content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorDTO'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionOverviewDTO'
+        '404':
+          description: No transactions found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /transaction/bankAccount/{iban}:
     get:
       tags:
@@ -262,21 +303,108 @@ paths:
         - bankAccount
       summary: Get all transactions by IBAN number
       description: Get all transactions from a bankaccount based on the selected IBAN
+      operationId: getTransactionsByIban
       parameters:
-        - name:iban
+        - name: iban
+          in: path
+          description: The IBAN for the bank account
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionOverviewDTO'
+        '400':
+          description: Invalid IBAN supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: No transactions found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /bankAccount:
     get:
       tags:
         - bankAccount
       summary: Get all bankaccounts
       description: This can only be viewed by a logged in user with employee rights
-
+      operationId: getBankAccounts
+      responses:
+        '200':
+          description: Successfully retrieved bank accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BankAccountDTO'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /bankAccount/{user_id}:
+    post:
+      tags:
+        - bankAccount
+      summary: Create a bank account for a user
+      description: Creates a new bank account for the selected user.
+      operationId: createBankAccount
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the user who will own the bank account
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountCreationRequest'
+      responses:
+        '201':
+          description: Bank account(s) created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountCreatedDTO'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /bankAccount/{iban}:
     get:
       tags:
         - bankAccount
       summary: Get bankAccount by IBAN number
-      description: Returns bank account information based on the IBAN numbe
+      description: Returns bank account information based on the IBAN number
+      operationId: getBankAccountByIban
       parameters:
         - name: iban
           in: path
@@ -292,34 +420,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ATMBankAccountDTO'
-
         '400':
           description: Invalid IBAN format
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-
         '404':
           description: Bank account not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-
-/bankAccount/{iban}:
-  put:
-    tags:
-      - bankAccount
-    summary: Update balance from the selected bank account
-    description: Transfer money from one bankaccount to the other bankaccount
-
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /atm/login:
     post:
       tags:
         - ATM
       summary: Login into ATM account
       description: Gives user access to ATM
+      operationId: atmLogin
       requestBody:
         required: true
         content:
@@ -339,13 +464,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /atm/logout:
     post:
       tags:
         - ATM
       summary: Logout ATM
       description: Removes access from ATM
+      operationId: atmLogout
       responses:
         '204':
           description: Successfully logged out
@@ -355,13 +486,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /atm/bankAccounts:
     get:
       tags:
         - ATM
       summary: Get all bankaccounts owned by user
       description: Returns bankaccount selectors that will be placed into the account selection box
+      operationId: getAtmBankAccounts
       responses:
         '200':
           description: Successfully retrieved bank accounts
@@ -375,7 +512,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /atm/bankAccount/{iban}:
     get:
       tags:
@@ -397,27 +539,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ATMBankAccountDTO'
-
         '400':
           description: Invalid IBAN format
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-
         '404':
           description: Bank account not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /atm/withdraw/{iban}:
     post:
       tags:
         - ATM
       summary: Remove money from bankaccount
       description: Remove money from bank account based on amount
+      operationId: atmWithdraw
       parameters:
         - name: iban
           in: path
