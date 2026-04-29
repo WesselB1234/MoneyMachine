@@ -625,7 +625,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InActiveBankAccountDTO'
+                $ref: '#/components/schemas/BankAccountDTO'
         '400':
           description: Bad Request - Invalid request parameters or IBAN format
           content:
@@ -1298,6 +1298,9 @@ components:
           type: number
           format: decimal
           example: -1000.00
+        is_active:
+          type: boolean
+          example: true
 
     BankAccountCreationRequest:
       type: object
@@ -1387,47 +1390,6 @@ components:
           type: boolean
           example: false
           description: Flag to deactivate (false) or activate (true) the bank account
-
-    InActiveBankAccountDTO:
-      type: object
-      properties:
-        iban:
-          type: string
-          example: NL91ABNA0417164300
-          description: International Bank Account Number
-        user_id:
-          type: integer
-          example: 1
-          description: The ID of the user who owns the bank account
-        bankAccountType:
-          type: string
-          enum: [checking, savings]
-          example: checking
-          description: Type of bank account
-        balance:
-          type: number
-          format: decimal
-          example: 1000.00
-          description: Current balance
-        singleTransferLimit:
-          type: number
-          format: decimal
-          example: 5000.00
-          description: Maximum amount for a single transfer
-        dailyTransferLimit:
-          type: number
-          format: decimal
-          example: 10000.00
-          description: Maximum total amount that can be transferred in a day
-        absoluteLimit:
-          type: number
-          format: decimal
-          example: -1000.00
-          description: Absolute limit (overdraft limit) for the account
-        is_active:
-          type: boolean
-          example: false
-          description: Current active status of the bank account
 
     TransferLimitRequest:
       type: object
