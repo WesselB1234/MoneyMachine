@@ -1381,13 +1381,8 @@ components:
     DeleteBankAccountRequest:
       type: object
       required:
-        - iban
         - is_active
       properties:
-        iban:
-          type: string
-          example: NL91ABNA0417164300
-          description: International Bank Account Number
         is_active:
           type: boolean
           example: false
