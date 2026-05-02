@@ -3,9 +3,9 @@ FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
 
+RUN chnmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
-# ===== RUN STAGE =====
 FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
