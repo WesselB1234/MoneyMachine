@@ -36,7 +36,7 @@ public class DataSeeder implements ApplicationRunner {
         for (Transaction transaction : transactionRepository.findAll()) {
             System.out.println(transaction.getTransactionId());
             System.out.println(transaction.getClass());
-            System.out.println(String.format("This child class is a: %s!", transaction.getClass().getSimpleName()));
+            System.out.println(String.format("This subclass is a: %s!", transaction.getClass().getSimpleName()));
         }
     }
 }
