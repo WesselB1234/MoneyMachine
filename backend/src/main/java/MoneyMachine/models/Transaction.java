@@ -11,6 +11,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,19 +26,24 @@ public class Transaction {
 
     @Id
     @GeneratedValue
+    @NotNull
     private long transactionId;
 
     @ManyToOne
     @JoinColumn(nullable = false)
+    @NotNull
     private User initiatingUser;
 
     @Column(nullable = false)
+    @NotNull
     private BigDecimal amount;
 
     @Column(nullable = false)
+    @NotNull
     private String message;
 
     @Column(nullable = false)
+    @NotNull
     private Boolean isActive;
 
     public Transaction(User initiatingUser, BigDecimal amount, String message, Boolean isActive) {

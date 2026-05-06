@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,31 +22,40 @@ public class User {
 
     @Id
     @GeneratedValue
+    @NotNull
     private Long id;
 
     @Column(nullable = false)
+    @NotNull
     private String firstName;
 
     @Column(nullable = false)
+    @NotNull
     private String lastName;
 
     @Column(nullable = false)
+    @NotNull
     private String email;
 
     @Column(nullable = false)
+    @NotNull
     private String bsn;
 
     @Column(nullable = false)
+    @NotNull
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull
     private Role role;
 
     @Column(nullable = false)
+    @NotNull
     private Boolean isActive;
 
     @Column(nullable = false)
+    @NotNull
     private Boolean isApproved;
 
     public User(String firstName, String lastName, String email, String bsn, String phoneNumber, Role role, Boolean isActive, Boolean isApproved)
