@@ -2,7 +2,6 @@ package MoneyMachine.controllers;
 
 import java.util.List;
 
-import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +39,4 @@ public class UsersController {
             return ResponseEntity.status(401).body(ex);
         }
     }
-
-    
 }

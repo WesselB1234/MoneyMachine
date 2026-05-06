@@ -8,65 +8,58 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name ="users")
+@Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue
-    @Column(name = "user_id", length = 10, nullable = false, unique = true)
-    @Getter
-    @Setter
-    private Long userId;
+    @NotNull
+    private Long id;
 
-    @Column(name = "first_name", length = 100, nullable = false, unique = false)
-    @Getter
-    @Setter
+    @Column(nullable = false, length = 50)
+    @NotNull
     private String firstName;
 
-    @Column(name = "last_name", length = 200, nullable = false, unique = false)
-    @Getter
-    @Setter
+    @Column(nullable = false, length = 50)
+    @NotNull
     private String lastName;
 
-    @Column(name = "email", length = 300, nullable = false, unique = true)
-    @Getter
-    @Setter
+    @Column(nullable = false, length = 255)
+    @NotNull
     private String email;
 
-    @Column(name = "bsn", length = 10, nullable = false, unique = true)
-    @Getter
-    @Setter
+    @Column(nullable = false, length = 9)
+    @NotNull
     private String bsn;
 
-    @Column(name = "phone_number", length = 11, nullable = false, unique = true)
-    @Getter
-    @Setter
+    @Column(nullable = false, length = 30)
+    @NotNull
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, unique = true)
-    @Getter
-    @Setter
-    private MoneyMachine.models.enums.Role role;
+    @Column(nullable = false)
+    @NotNull
+    private Role role;
 
-    @Column(name = "is_active", nullable = false, unique = false)
-    @Getter
-    @Setter
+    @Column(nullable = false)
+    @NotNull
     private Boolean isActive;
 
-    @Column(name = "is_apptoved", nullable = false, unique = false)
-    @Getter
-    @Setter
+    @Column(nullable = false)
+    @NotNull
     private Boolean isApproved;
 
-    public User() {}
-
-    public User(Long userId, String firstName, String lastName, String email, String bsn, String phoneNumber, Role role, Boolean isActive, Boolean isApproved)
+    public User(String firstName, String lastName, String email, String bsn, String phoneNumber, Role role, Boolean isActive, Boolean isApproved)
     {
-        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
