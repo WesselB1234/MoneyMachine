@@ -27,10 +27,12 @@ const props = defineProps({
 </script>
 
 <template>
+  <tr>
     <FirstNameDataFieldAtom :user="user" />
     <LastNameDataFieldAtom :user="user" />
     <EmailDataFieldAtom :user="user" />
     <BSNNumberDataFieldAtom :user="user" />
     <PhoneNumberDataFieldAtom :user="user" />
     <ApproveCustomerButtonAtom />
+    </tr>  
 </template>
