@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores/authStore.js'
 import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
-import router from '@/router'
+import router from '@/router/router.js'
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:80',

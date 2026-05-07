@@ -3,7 +3,7 @@ import HelloWorld from '@/components/HelloWorld.vue'
 import ATMLogin from '@/components/views/atm/authentication/ATMLogin.vue'
 import AdminAuthorizationTest from '@/components/views/atm/authentication/AdminAuthorizationTest.vue'
 import UserAuthorizationTest from '@/components/views/atm/authentication/UserAuthorizationTest.vue'
-import AtmLayout from '@/components/layout/AtmLayout.vue'
+import ATMLayout from '@/components/layout/ATMLayout.vue'
 
 const routes = [
     {
@@ -12,7 +12,7 @@ const routes = [
     },
     {
         path: '/atm',
-        component: AtmLayout,
+        component: ATMLayout,
         children: [
             { 
                 path: 'login', 
