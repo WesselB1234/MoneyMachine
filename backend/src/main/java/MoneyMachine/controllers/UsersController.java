@@ -6,30 +6,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
+import MoneyMachine.dto.UserDTO;
+import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.User;
-import MoneyMachine.services.UserService;
+import MoneyMachine.services.UserServiceJpa;
 
 
-@Controller
+@RestController
 @RequestMapping("/user")
 public class UsersController {
-    private final UserService userService;
+    private final UserServiceJpa userService;
+    private UserMapper userMapper;
 
-    public UsersController(UserService userService)
+    public UsersController(UserServiceJpa userService, UserMapper userMapper)
     {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity getAllUsersWithoutAnAccount() 
+    public ResponseEntity<UserDTO> getAllUsersWithoutAnAccount() 
     {
         try
         {
             List<User> users = userService.getAllUsersWithoutAnAccount();
-            return ResponseEntity.status(200).body(users);
+            return ResponseEntity.ok(userMapper)
         } catch (InternalServerError ex)
         {
             return ResponseEntity.status(500).body(ex);
