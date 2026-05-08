@@ -2,6 +2,10 @@ package MoneyMachine.services;
 
 import org.springframework.stereotype.Service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import java.util.Date;
+
 import MoneyMachine.models.User;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.Interfaces.AuthenticationService;
@@ -30,7 +34,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String generateTokenFromUser(User user) {
-        return "hi i am a test jwt";
+
+        Algorithm algorithm = Algorithm.HMAC256("jouw-geheim-van-minimaal-32-tekens-jouw-geheim-van-minimaal-32-tekens");
+        
+        return JWT.create()
+            .withSubject(user.getId().toString())
+            .withClaim("role", true)
+            .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
+            .sign(algorithm);
     }
 
     @Override

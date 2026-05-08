@@ -42,17 +42,12 @@ public class ATMAuthenticationController {
 
             return ResponseEntity.status(201).body(loginDto);
         }
-        catch (Exception ex){
+        catch (InvalidCredentialsException ex){
 
             ErrorDTO errorDTO = new ErrorDTO(401, ErrorType.UNAUTHORIZED, "Invalid credentials", ex.getMessage());
 
             return ResponseEntity.status(401).body(errorDTO);
         }
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
-        return ResponseEntity.status(204).body(null);
     }
 
     @GetMapping("/user-test")
