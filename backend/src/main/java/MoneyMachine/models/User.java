@@ -9,6 +9,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -52,6 +53,8 @@ public class User {
     @NotNull
     private Role role;
 
+    @Column(nullable = true)
+    @OneToMany(mappedBy = "user")
     private HashSet<BankAccount> bankAccounts;
 
     @Column(nullable = false)

@@ -7,5 +7,5 @@ import MoneyMachine.models.User;
 
 @Repository
 public interface UserRepository extends ListCrudRepository<User, Long> {
-    
+    Iterable<User> findByBankAccountsIsEmpty();
 }
