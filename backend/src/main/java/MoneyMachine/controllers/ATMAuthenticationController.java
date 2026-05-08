@@ -17,6 +17,8 @@ import MoneyMachine.models.enums.LoginType;
 import MoneyMachine.models.exceptions.InvalidCredentialsException;
 import MoneyMachine.models.requestBodies.LoginRequestBody;
 import MoneyMachine.services.Interfaces.AuthenticationService;
+import MoneyMachine.services.Interfaces.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/atm")
@@ -24,13 +26,14 @@ public class ATMAuthenticationController extends BaseController {
     
     private AuthenticationService authenticationService;
 
-    public ATMAuthenticationController(AuthenticationService authenticationService){
+    public ATMAuthenticationController(AuthenticationService authenticationService, UserService userService){
+        super(userService, authenticationService);
         this.authenticationService = authenticationService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestBody loginRequestBody) {
-        
+
         try{
             User user = authenticationService.getUserByEmailAndPassword(loginRequestBody.getEmail(), loginRequestBody.getPassword());
 
@@ -51,7 +54,10 @@ public class ATMAuthenticationController extends BaseController {
     }
 
     @GetMapping("/user-test")
-    public ResponseEntity<UserDTO> userTest() {
+    public ResponseEntity<UserDTO> userTest(HttpServletRequest request) {
+
+        super.atmLoggedInAuthorization(request);
+
         return ResponseEntity.status(204).body(null);
     }
 }

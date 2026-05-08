@@ -10,15 +10,15 @@ import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
 import MoneyMachine.models.User;
-import MoneyMachine.services.UserService;
+import MoneyMachine.services.UserServiceImpl;
 
 
 @Controller
 @RequestMapping("/user")
 public class UsersController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public UsersController(UserService userService)
+    public UsersController(UserServiceImpl userService)
     {
         this.userService = userService;
     }

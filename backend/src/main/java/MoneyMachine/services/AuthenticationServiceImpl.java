@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import java.util.Date;
 
 import MoneyMachine.models.User;
@@ -55,5 +57,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String getHashedPassword(String rawPassword) {
         return BCrypt.hashpw(rawPassword, BCrypt.gensalt(10));
+    }
+
+    @Override
+    public void getDecodedToken(String token) {
+        DecodedJWT decoded = JWT.decode(token);
+
+        System.out.println("=== JWT Claims ===");
+        System.out.println("Subject    : " + decoded.getSubject());
+        System.out.println("Expires    : " + decoded.getExpiresAt());
+        System.out.println("Issued at  : " + decoded.getIssuedAt());
+        System.out.println("Role       : " + decoded.getClaim("role").asString());
+        System.out.println("Email      : " + decoded.getClaim("email").asString());
+        System.out.println("First name : " + decoded.getClaim("firstName").asString());
+        System.out.println("Last name  : " + decoded.getClaim("lastName").asString());
     }
 }
