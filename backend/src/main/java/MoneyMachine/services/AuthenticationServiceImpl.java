@@ -30,8 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String generateTokenFromUser(User user) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'generateTokenFromUser'");
+        return "hi i am a test jwt";
     }
 
     @Override

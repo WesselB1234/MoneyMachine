@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import MoneyMachine.models.dtos.ErrorDTO;
+import MoneyMachine.models.enums.ErrorType;
 
 @RestControllerAdvice
 public class ErrorController {
@@ -27,7 +28,7 @@ public class ErrorController {
         }
 
         System.err.println(String.format("[RUNTIME ERROR] Reason: %s | Code Location: %s", ex.getMessage(), locationInfo));
-        ErrorDTO errorDTO = new ErrorDTO(500, ex.getMessage(), locationInfo);
+        ErrorDTO errorDTO = new ErrorDTO(500, ErrorType.INTERNAL_SERVER_ERROR, ex.getMessage(), locationInfo);
 
         return ResponseEntity.status(errorDTO.getCode()).body(errorDTO); 
     }

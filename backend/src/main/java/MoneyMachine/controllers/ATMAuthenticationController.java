@@ -1,5 +1,7 @@
 package MoneyMachine.controllers;
 
+import MoneyMachine.models.enums.ErrorType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,9 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import MoneyMachine.models.User;
+import MoneyMachine.models.dtos.ErrorDTO;
 import MoneyMachine.models.dtos.LoginDTO;
 import MoneyMachine.models.dtos.UserDTO;
 import MoneyMachine.models.enums.LoginType;
+import MoneyMachine.models.exceptions.InvalidCredentialsException;
 import MoneyMachine.models.requestBodies.LoginRequestBody;
 import MoneyMachine.services.Interfaces.AuthenticationService;
 
@@ -27,17 +31,23 @@ public class ATMAuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestBody loginRequestBody) {
         
-        String s = null;
-        s.length();
-        User user = authenticationService.getUserByEmailAndPassword(loginRequestBody.getEmail(), loginRequestBody.getPassword());
+        try{
+            User user = authenticationService.getUserByEmailAndPassword(loginRequestBody.getEmail(), loginRequestBody.getPassword());
 
-        if (user != null){
-            LoginDTO loginDto = new LoginDTO("test jwt", LoginType.atm);
+            if (user == null){
+                throw new InvalidCredentialsException("Password or username is not correct.");
+            }
+
+            LoginDTO loginDto = new LoginDTO(authenticationService.generateTokenFromUser(user), LoginType.atm);
 
             return ResponseEntity.status(201).body(loginDto);
         }
+        catch (Exception ex){
 
-        return ResponseEntity.status(400).body("nah");
+            ErrorDTO errorDTO = new ErrorDTO(401, ErrorType.UNAUTHORIZED, "Invalid credentials", ex.getMessage());
+
+            return ResponseEntity.status(401).body(errorDTO);
+        }
     }
 
     @PostMapping("/logout")

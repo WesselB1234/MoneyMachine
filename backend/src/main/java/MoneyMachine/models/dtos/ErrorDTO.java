@@ -1,5 +1,6 @@
 package MoneyMachine.models.dtos;
 
+import MoneyMachine.models.enums.ErrorType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class ErrorDTO {
 
     private Integer code;
+    private ErrorType errorType;
     private String message;
     private String details;
 }
