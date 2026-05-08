@@ -51,11 +51,5 @@ public class DataSeeder implements ApplicationRunner {
 
         TransferTransaction transferTransaction = new TransferTransaction(user, new BigDecimal("10"), "Hello transfer!", true, bankAccount, bankAccount);
         transactionRepository.save(transferTransaction);
-
-        for (Transaction transaction : transactionRepository.findAll()) {
-            System.out.println(transaction.getTransactionId());
-            System.out.println(transaction.getClass());
-            System.out.println(String.format("This subclass is a: %s!", transaction.getClass().getSimpleName()));
-        }
     }
 }
