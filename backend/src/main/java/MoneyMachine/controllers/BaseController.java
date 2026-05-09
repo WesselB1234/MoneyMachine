@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NoArgsConstructor;
 
 @Controller
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", exposedHeaders = {"x-auth-error", "Authorization"})
 @NoArgsConstructor
 public class BaseController {
     
@@ -70,7 +70,7 @@ public class BaseController {
     }
 
     private ErrorDTO authError(HttpServletResponse response, String message, String detail) {
-        response.setHeader("X-Auth-Error", "invalid_token");
+        response.setHeader("x-auth-error", "invalid_token");
         return new ErrorDTO(401, ErrorType.UNAUTHORIZED, message, detail);
     }
 

@@ -33,14 +33,10 @@ apiClient.interceptors.response.use(
         const authStore = useAuthStore()
         const errorHandlingStore = useErrorHandlingStore()
 
-        if (error.response) {
-            if (error.response.status === 401 && error.response.headers['x-auth-error'] && error.response.headers['x-auth-error'] === 'invalid_token') {
-                authStore.setAuthToken(null)
-                errorHandlingStore.setErrorMessage("You must login again for the following reason: " + error.response.data.message)
-                router.push('/atm/login')
-            }
-
-            setAuthTokenIfPresentInHeader(authStore, error.response)
+        if (error.response && error.response.status === 401 && error.response.headers['x-auth-error'] && error.response.headers['x-auth-error'] === 'invalid_token') {
+            authStore.setAuthToken(null)
+            errorHandlingStore.setErrorMessage("You must login again for the following reason: " + error.response.data.message)
+            router.push('/atm/login')
         }
 
         return Promise.reject(error);

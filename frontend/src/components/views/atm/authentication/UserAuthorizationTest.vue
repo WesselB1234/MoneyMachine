@@ -9,12 +9,9 @@
     onMounted(async () => {
         try {
             const response = await axios.get('/atm/user-test')
-
-            console.log(response.data)
             user.value = response.data
         }
         catch (ex){
-            console.log(ex)
             if (ex.response){
                 console.log(ex.response.data)
             }
