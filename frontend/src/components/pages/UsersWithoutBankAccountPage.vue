@@ -26,7 +26,7 @@ const fetchUsersWithoutAccount = async () => {
     }
 };
 
-onMounted(() => {
+onMounted(async () => {
     fetchUsersWithoutAccount();
 })
 
@@ -55,6 +55,6 @@ onMounted(() => {
                 Try Again
             </button>
         </section>
-        <UsersTableGridTemplate :users="usersWithoutBankAccounts" />
+        <UsersTableGridTemplate v-else :users="usersWithoutBankAccounts" />
     </section>
 </template>
