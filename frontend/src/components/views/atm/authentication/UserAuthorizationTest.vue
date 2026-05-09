@@ -14,7 +14,10 @@
             user.value = response.data
         }
         catch (ex){
-            console.log(ex.response.data)
+            console.log(ex)
+            if (ex.response){
+                console.log(ex.response.data)
+            }
         }
     })
 </script>

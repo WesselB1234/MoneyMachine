@@ -19,6 +19,7 @@ import MoneyMachine.models.requestBodies.LoginRequestBody;
 import MoneyMachine.services.Interfaces.AuthenticationService;
 import MoneyMachine.services.Interfaces.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/atm")
@@ -54,9 +55,9 @@ public class ATMAuthenticationController extends BaseController {
     }
 
     @GetMapping("/user-test")
-    public ResponseEntity<?> userTest(HttpServletRequest request) {
+    public ResponseEntity<?> userTest(HttpServletRequest request, HttpServletResponse response) {
 
-        ErrorDTO errorDTO = super.atmLoggedInAuthorization(request);
+        ErrorDTO errorDTO = super.atmLoggedInAuthorization(request, response);
 
         if (errorDTO != null){
             return ResponseEntity.status(errorDTO.getCode()).body(errorDTO);

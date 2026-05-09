@@ -14,6 +14,7 @@ import MoneyMachine.models.exceptions.SignatureInvalidException;
 import MoneyMachine.services.Interfaces.AuthenticationService;
 import MoneyMachine.services.Interfaces.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.NoArgsConstructor;
 
 @Controller
@@ -30,7 +31,7 @@ public class BaseController {
         this.authenticationService = authenticationService;
     }
 
-    private ErrorDTO setLoggedInUser(HttpServletRequest request) {
+    private ErrorDTO setLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
 
         try {
             String authHeader = request.getHeader("Authorization");
@@ -56,19 +57,24 @@ public class BaseController {
             }
         } 
         catch (ExpiredException ex) {
-            return new ErrorDTO(401, ErrorType.UNAUTHORIZED, "Token expired", ex.getMessage());
+            return authError(response, "Token expired", ex.getMessage());
         } 
         catch (SignatureInvalidException ex) {
-            return new ErrorDTO(401, ErrorType.UNAUTHORIZED, "Invalid signature", ex.getMessage());
+            return authError(response, "Invalid signature", ex.getMessage());
         } 
         catch (NotAuthorizedException ex) {
-            return new ErrorDTO(401, ErrorType.UNAUTHORIZED, "Not authorized", ex.getMessage());
+            return authError(response, "Not authorized", ex.getMessage());
         } 
         
         return null;
     }
 
-    public ErrorDTO atmLoggedInAuthorization(HttpServletRequest request){
-        return this.setLoggedInUser(request);
+    private ErrorDTO authError(HttpServletResponse response, String message, String detail) {
+        response.setHeader("X-Auth-Error", "invalid_token");
+        return new ErrorDTO(401, ErrorType.UNAUTHORIZED, message, detail);
+    }
+
+    public ErrorDTO atmLoggedInAuthorization(HttpServletRequest request, HttpServletResponse response){
+        return this.setLoggedInUser(request, response);
     }
 }
