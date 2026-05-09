@@ -24,10 +24,13 @@
 
             const response = await axios.post('/atm/login', form)
 
-            authStore.setAuthToken(response.data.jwt)
+            authStore.setAtmAuthToken(response.data.jwt)
             currentSuccessAlert.value.displaySuccessMessage('Successfully logged in.')
         }
         catch (ex){
+
+            console.log(ex)
+
             if (ex.response){
                 currentErrorAlert.value.displayErrorMessage(ex.response.data.message)
             }

@@ -6,7 +6,7 @@
     const authStore = useAuthStore()
     const errorHandlingStore = useErrorHandlingStore()
 
-    authStore.setAuthToken(null)
+    authStore.setAtmAuthToken(null)
     errorHandlingStore.setSuccessMessage("Successfully logged out of your account.")
 
     router.push('/atm/login')

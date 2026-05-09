@@ -13,11 +13,12 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
     (config) => {
         const authStore = useAuthStore()
-        let authToken = authStore.authToken
+        let atmAuthToken = authStore.atmAuthToken
 
-        if (authToken) {
-            config.headers.Authorization = `Bearer ${authToken}`;
+        if (atmAuthToken) {
+            config.headers.Authorization = `Bearer ${atmAuthToken}`;
         }
+
         return config;
     },
     (error) => {
@@ -34,7 +35,7 @@ apiClient.interceptors.response.use(
         const errorHandlingStore = useErrorHandlingStore()
 
         if (error.response && error.response.status === 401 && error.response.headers['x-auth-error'] && error.response.headers['x-auth-error'] === 'invalid_token') {
-            authStore.setAuthToken(null)
+            authStore.setAtmAuthToken(null)
             errorHandlingStore.setErrorMessage("You must login again for the following reason: " + error.response.data.message)
             router.push('/atm/login')
         }

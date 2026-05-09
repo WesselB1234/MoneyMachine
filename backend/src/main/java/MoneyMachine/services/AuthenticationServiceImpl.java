@@ -69,22 +69,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void validateDecodedToken(DecodedJWT decoded) {
+    public void validateDecodedToken(DecodedJWT decodedToken) {
 
-        if (decoded.getSubject() == null) {
+        if (decodedToken.getSubject() == null) {
             throw new NotAuthorizedException("Token is missing subject.");
         }
 
-        if (decoded.getExpiresAt() == null) {
+        if (decodedToken.getExpiresAt() == null) {
             throw new NotAuthorizedException("Token is missing expiration.");
         }
 
-        if (decoded.getExpiresAt().before(new Date())) {
+        if (decodedToken.getExpiresAt().before(new Date())) {
             throw new ExpiredException("Token has expired.");
         }
 
         for (String requiredClaim : requiredClaims) {
-             if (isClaimNullOrEmpty(decoded.getClaim(requiredClaim))) {
+            if (isClaimNullOrEmpty(decodedToken.getClaim(requiredClaim))) {
                 throw new NotAuthorizedException(String.format("Token is missing %s claim.", requiredClaim));
             }
         }

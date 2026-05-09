@@ -3,14 +3,14 @@ import { jwtDecode } from 'jwt-decode'
 import { ref } from 'vue'
 import axios from '@/utils/axios.js'
 
-const localStorageAuthKey = 'money_machine_auth_token'
+const localStorageAtmAuthKey = 'money_machine_atm_auth_token'
 
 export const useAuthStore = defineStore('auth', () => {
 
-    let authToken = ref(getAuthTokenFromLocalStorage())
-    let decodedAuthToken = ref(getDecodedAuthToken())
+    let atmAuthToken = ref(getAuthTokenFromLocalStorage(localStorageAtmAuthKey))
+    let atmDecodedAuthToken = ref(getDecodedAuthToken(atmAuthToken.value))
 
-    function getAuthTokenFromLocalStorage(){
+    function getAuthTokenFromLocalStorage(localStorageAuthKey){
 
         const localStorageAuthToken = localStorage.getItem(localStorageAuthKey)
 
@@ -21,27 +21,31 @@ export const useAuthStore = defineStore('auth', () => {
         return null
     }
     
-    function setAuthToken(token) {
-
-        authToken.value = token;
-        decodedAuthToken.value = getDecodedAuthToken()
+    function setAuthTokenByVariables(token, authTokenVariable, decodedAuthTokenVariable) {
+        
+        authTokenVariable.value = token;
+        decodedAuthTokenVariable.value = getDecodedAuthToken(authTokenVariable.value)
 
         if (token) {
-            localStorage.setItem(localStorageAuthKey, token)
+            localStorage.setItem(localStorageAtmAuthKey, token)
         } 
         else {
-            localStorage.removeItem(localStorageAuthKey)
+            localStorage.removeItem(localStorageAtmAuthKey)
         }
     }
 
-    function getDecodedAuthToken() {
+    function setAtmAuthToken(token) {
+        setAuthTokenByVariables(token, atmAuthToken, atmDecodedAuthToken)
+    }
 
-        if (authToken.value !== null) {
-            return jwtDecode(authToken.value)
+    function getDecodedAuthToken(authToken) {
+
+        if (authToken !== null) {
+            return jwtDecode(authToken)
         }
         
         return null
     }
 
-    return {authToken, decodedAuthToken, setAuthToken}
+    return {atmAuthToken, atmDecodedAuthToken, setAtmAuthToken}
 })

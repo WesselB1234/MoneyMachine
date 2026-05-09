@@ -27,5 +27,5 @@
     <br>
     jwt 
     <br>
-    {{ JSON.stringify(authStore.decodedAuthToken, null, 2) }}
+    {{ JSON.stringify(authStore.atmDecodedAuthToken, null, 2) }}
 </template>

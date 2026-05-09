@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HelloWorld from '@/components/HelloWorld.vue'
 import ATMLogin from '@/components/views/atm/authentication/ATMLogin.vue'
-import AdminAuthorizationTest from '@/components/views/atm/authentication/AdminAuthorizationTest.vue'
-import UserAuthorizationTest from '@/components/views/atm/authentication/UserAuthorizationTest.vue'
+import ATMUserAuthorizationTest from '@/components/views/atm/authentication/ATMUserAuthorizationTest.vue'
 import ATMLayout from '@/components/layout/ATMLayout.vue'
 import { useAuthStore } from "@/stores/authStore.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
@@ -33,10 +32,10 @@ const routes = [
             },
             { 
                 path: 'user-test', 
-                component: UserAuthorizationTest,
+                component: ATMUserAuthorizationTest,
                 meta: { 
                     title: 'UserTest',
-                    isAuthenticated: true
+                    isAtmAuthenticated: true
                 }
             },
         ],
@@ -53,14 +52,9 @@ router.beforeEach((to) => {
     const authStore = useAuthStore()
     const errorHandlingStore = useErrorHandlingStore()
 
-    if (to.meta.isAuthenticated) {
-
-        const decodedAuthToken = authStore.decodedAuthToken
-
-        if (decodedAuthToken === null) {
-            errorHandlingStore.setErrorMessage('You need to be logged in to perform this action.')
-            return '/atm/login'
-        }
+    if (to.meta.isAtmAuthenticated && authStore.atmDecodedAuthToken === null) {
+        errorHandlingStore.setErrorMessage('You need to be logged in to perform this action.')
+        return '/atm/login'
     }
     
     if (to.meta.title) {

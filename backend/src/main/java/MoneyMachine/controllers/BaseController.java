@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.ErrorDTO;
 import MoneyMachine.models.enums.ErrorType;
+import MoneyMachine.models.enums.LoginType;
 import MoneyMachine.models.exceptions.ExpiredException;
 import MoneyMachine.models.exceptions.NotAuthorizedException;
 import MoneyMachine.models.exceptions.SignatureInvalidException;
@@ -18,11 +19,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NoArgsConstructor;
 
 @Controller
-@CrossOrigin(origins = "*", exposedHeaders = {"x-auth-error", "Authorization"})
+@CrossOrigin(origins = "*", exposedHeaders = {"x-atm-auth-error"})
 @NoArgsConstructor
 public class BaseController {
     
-    User loggedInUser = null;
+    User atmLoggedInUser = null;
     UserService userService;
     AuthenticationService authenticationService;
 
@@ -31,13 +32,18 @@ public class BaseController {
         this.authenticationService = authenticationService;
     }
 
-    private ErrorDTO setLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
-
+    private ErrorDTO setLoggedInUserByLoginType(HttpServletRequest request, HttpServletResponse response, LoginType loginType) {
         try {
-            String authHeader = request.getHeader("Authorization");
+            String headerName = "";
+
+            if (loginType == LoginType.atm) {
+                headerName = "Authorization";
+            }
+
+            String authHeader = request.getHeader(headerName);
 
             if (authHeader == null) {
-                throw new NotAuthorizedException("Authorization header is required.");
+                throw new NotAuthorizedException(headerName + " header is required.");
             }
 
             String[] headerParts = authHeader.split(" ");
@@ -47,13 +53,17 @@ public class BaseController {
             }
 
             String token = headerParts[1];
-            DecodedJWT decoded = authenticationService.getDecodedToken(token);
-            this.authenticationService.validateDecodedToken(decoded);
-
-            this.loggedInUser = this.userService.findUserById(Integer.parseInt(decoded.getSubject()));
-
-            if (this.loggedInUser == null) {
+            DecodedJWT decodedToken = authenticationService.getDecodedToken(token);
+            this.authenticationService.validateDecodedToken(decodedToken);
+            
+            User user = this.userService.findUserById(Integer.parseInt(decodedToken.getSubject()));
+            
+            if (user == null) {
                 throw new NotAuthorizedException("User in your token does not exist.");
+            }
+
+            if (loginType == LoginType.atm) {
+                this.atmLoggedInUser = user;
             }
         } 
         catch (ExpiredException ex) {
@@ -69,12 +79,12 @@ public class BaseController {
         return null;
     }
 
-    private ErrorDTO authError(HttpServletResponse response, String message, String detail) {
-        response.setHeader("x-auth-error", "invalid_token");
-        return new ErrorDTO(401, ErrorType.UNAUTHORIZED, message, detail);
+    public ErrorDTO setAtmLoggedInUser(HttpServletRequest request, HttpServletResponse response) {
+        return setLoggedInUserByLoginType(request, response, LoginType.atm);
     }
 
-    public ErrorDTO atmLoggedInAuthorization(HttpServletRequest request, HttpServletResponse response){
-        return this.setLoggedInUser(request, response);
+    private ErrorDTO authError(HttpServletResponse response, String message, String detail) {
+        response.setHeader("x-atm-auth-error", "invalid_token");
+        return new ErrorDTO(401, ErrorType.UNAUTHORIZED, message, detail);
     }
 }
