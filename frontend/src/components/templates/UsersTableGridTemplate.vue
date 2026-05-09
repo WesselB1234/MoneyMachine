@@ -1,4 +1,7 @@
 <script setup>
+import UserRecordMolecule from '../molecules/users/tablerows/UserRecordMolecule.vue';
+import UserTableHeader from '../molecules/users/tablerows/UserTableHeader.vue';
+
 const props = defineProps({
     users: {
         type: Array,
@@ -21,5 +24,12 @@ const props = defineProps({
 </script>
 
 <template>
-
+    <UserTableHeader />
+    <section class="">
+        <UserRecordMolecule
+        v-for="user in users"
+        :key="user.userId"
+        :user="user"
+        />
+    </section>
 </template>
