@@ -52,11 +52,11 @@ public class BaseController {
                 throw new NotAuthorizedException("Invalid authorization header format.");
             }
 
-            String token = headerParts[1];
-            DecodedJWT decodedToken = authenticationService.getDecodedToken(token);
-            this.authenticationService.validateDecodedToken(decodedToken);
+            String authToken = headerParts[1];
+            DecodedJWT decodedAuthToken = authenticationService.getDecodedAuthToken(authToken);
+            this.authenticationService.validateDecodedAuthToken(decodedAuthToken);
             
-            User user = this.userService.findUserById(Integer.parseInt(decodedToken.getSubject()));
+            User user = this.userService.findUserById(Integer.parseInt(decodedAuthToken.getSubject()));
             
             if (user == null) {
                 throw new NotAuthorizedException("User in your token does not exist.");

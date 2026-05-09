@@ -21,14 +21,14 @@ import org.mindrot.jbcrypt.BCrypt;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private UserRepository userRepository;
-    private String tokenSecretKey;
-    private double tokenExpirationInHours;
+    private String AuthTokenSecretKey;
+    private double authTokenExpirationInHours;
     private final String[] requiredClaims = {"role", "email", "firstName", "lastName"};
 
-    public AuthenticationServiceImpl(UserRepository userRepository, @Value("${TOKEN_SECRET_KEY}") String tokenSecretKey, @Value("${TOKEN_EXPIRATION_IN_HOURS}") double tokenExpirationInHours) {
+    public AuthenticationServiceImpl(UserRepository userRepository, @Value("${AUTH_TOKEN_SECRET_KEY}") String authTokenSecretKey, @Value("${AUTH_TOKEN_EXPIRATION_IN_HOURS}") double authTokenExpirationInHours) {
         this.userRepository = userRepository;
-        this.tokenSecretKey = tokenSecretKey;
-        this.tokenExpirationInHours = tokenExpirationInHours;
+        this.AuthTokenSecretKey = authTokenSecretKey;
+        this.authTokenExpirationInHours = authTokenExpirationInHours;
     }
 
     @Override
@@ -44,9 +44,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String generateTokenFromUser(User user) {
+    public String generateAuthTokenFromUser(User user) {
 
-        Algorithm algorithm = Algorithm.HMAC256(this.tokenSecretKey);
+        Algorithm algorithm = Algorithm.HMAC256(this.AuthTokenSecretKey);
         
         return JWT.create()
             .withSubject(user.getId().toString())
@@ -54,7 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .withClaim("email", user.getEmail())
             .withClaim("firstName", user.getFirstName())
             .withClaim("lastName", user.getLastName())
-            .withExpiresAt(new Date(System.currentTimeMillis() + (long)(3600000 * tokenExpirationInHours)))
+            .withExpiresAt(new Date(System.currentTimeMillis() + (long)(3600000 * authTokenExpirationInHours)))
             .sign(algorithm);
     }
 
@@ -64,27 +64,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public DecodedJWT getDecodedToken(String token) {
-        return JWT.decode(token);
+    public DecodedJWT getDecodedAuthToken(String authToken) {
+        return JWT.decode(authToken);
     }
 
     @Override
-    public void validateDecodedToken(DecodedJWT decodedToken) {
+    public void validateDecodedAuthToken(DecodedJWT decodedAuthToken) {
 
-        if (decodedToken.getSubject() == null) {
+        if (decodedAuthToken.getSubject() == null) {
             throw new NotAuthorizedException("Token is missing subject.");
         }
 
-        if (decodedToken.getExpiresAt() == null) {
+        if (decodedAuthToken.getExpiresAt() == null) {
             throw new NotAuthorizedException("Token is missing expiration.");
         }
 
-        if (decodedToken.getExpiresAt().before(new Date())) {
+        if (decodedAuthToken.getExpiresAt().before(new Date())) {
             throw new ExpiredException("Token has expired.");
         }
 
         for (String requiredClaim : requiredClaims) {
-            if (isClaimNullOrEmpty(decodedToken.getClaim(requiredClaim))) {
+            if (isClaimNullOrEmpty(decodedAuthToken.getClaim(requiredClaim))) {
                 throw new NotAuthorizedException(String.format("Token is missing %s claim.", requiredClaim));
             }
         }

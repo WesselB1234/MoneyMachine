@@ -3,16 +3,16 @@ import { jwtDecode } from 'jwt-decode'
 import { ref } from 'vue'
 import axios from '@/utils/axios.js'
 
-const localStorageAtmAuthKey = 'money_machine_atm_auth_token'
+const localStorageAtmAuthTokenKey = 'money_machine_atm_auth_token'
 
 export const useAuthStore = defineStore('auth', () => {
 
-    let atmAuthToken = ref(getAuthTokenFromLocalStorage(localStorageAtmAuthKey))
+    let atmAuthToken = ref(getAuthTokenFromLocalStorage(localStorageAtmAuthTokenKey))
     let atmDecodedAuthToken = ref(getDecodedAuthToken(atmAuthToken.value))
 
-    function getAuthTokenFromLocalStorage(localStorageAuthKey){
+    function getAuthTokenFromLocalStorage(localStorageAuthTokenKey){
 
-        const localStorageAuthToken = localStorage.getItem(localStorageAuthKey)
+        const localStorageAuthToken = localStorage.getItem(localStorageAuthTokenKey)
 
         if (localStorageAuthToken){
             return localStorageAuthToken
@@ -21,21 +21,21 @@ export const useAuthStore = defineStore('auth', () => {
         return null
     }
     
-    function setAuthTokenByVariables(token, authTokenVariable, decodedAuthTokenVariable) {
+    function setAuthTokenByVariables(authToken, authTokenVariable, decodedAuthTokenVariable, localStorageAuthTokenKey) {
         
-        authTokenVariable.value = token;
-        decodedAuthTokenVariable.value = getDecodedAuthToken(authTokenVariable.value)
+        authTokenVariable.value = authToken;
+        decodedAuthTokenVariable.value = getDecodedAuthToken(authToken)
 
-        if (token) {
-            localStorage.setItem(localStorageAtmAuthKey, token)
+        if (authToken) {
+            localStorage.setItem(localStorageAuthTokenKey, authToken)
         } 
         else {
-            localStorage.removeItem(localStorageAtmAuthKey)
+            localStorage.removeItem(localStorageAuthTokenKey)
         }
     }
 
-    function setAtmAuthToken(token) {
-        setAuthTokenByVariables(token, atmAuthToken, atmDecodedAuthToken)
+    function setAtmAuthToken(authToken) {
+        setAuthTokenByVariables(authToken, atmAuthToken, atmDecodedAuthToken, localStorageAtmAuthTokenKey)
     }
 
     function getDecodedAuthToken(authToken) {

@@ -6,8 +6,8 @@ import MoneyMachine.models.User;
 
 public interface AuthenticationService {
     public User getUserByEmailAndPassword(String username, String password);
-    public String generateTokenFromUser(User user);
-    public DecodedJWT getDecodedToken(String token);
+    public String generateAuthTokenFromUser(User user);
+    public DecodedJWT getDecodedAuthToken(String authToken);
     public String getHashedPassword(String rawPassword);
-    public void validateDecodedToken(DecodedJWT decodedToken);
+    public void validateDecodedAuthToken(DecodedJWT decodedAuthToken);
 }

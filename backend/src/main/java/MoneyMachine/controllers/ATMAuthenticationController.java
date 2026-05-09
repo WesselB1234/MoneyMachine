@@ -42,7 +42,7 @@ public class ATMAuthenticationController extends BaseController {
                 throw new InvalidCredentialsException("Password or username is not correct.");
             }
 
-            LoginDTO loginDto = new LoginDTO(authenticationService.generateTokenFromUser(user), LoginType.atm);
+            LoginDTO loginDto = new LoginDTO(authenticationService.generateAuthTokenFromUser(user), LoginType.atm);
 
             return ResponseEntity.status(201).body(loginDto);
         }
