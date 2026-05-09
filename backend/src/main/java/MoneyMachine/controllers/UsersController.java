@@ -13,14 +13,14 @@ import MoneyMachine.models.dtos.ErrorDTO;
 import MoneyMachine.models.dtos.UserDTO;
 import MoneyMachine.models.dtos.UserOverviewDTO;
 import MoneyMachine.models.enums.ErrorType;
-import MoneyMachine.services.interfaces.UserServiceImpl;
+import MoneyMachine.services.interfaces.UserService;
 
 @RestController
 @RequestMapping("/user")
 public class UsersController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
-    public UsersController(UserServiceImpl userService) {
+    public UsersController(UserService userService) {
         this.userService = userService;
     }
 

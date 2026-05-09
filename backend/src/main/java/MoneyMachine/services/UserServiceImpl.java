@@ -11,11 +11,11 @@ import MoneyMachine.services.interfaces.UserService;
 import java.util.ArrayList;
 
 @Service
-public class UserServiceJpa implements UserService {
+public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     private UserRepository userRepository;
 
-    public UserServiceJpa(UserRepository userRepository, UserMapper userMapper)
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper)
     {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
