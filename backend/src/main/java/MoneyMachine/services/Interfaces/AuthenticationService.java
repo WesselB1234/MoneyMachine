@@ -9,4 +9,5 @@ public interface AuthenticationService {
     public String generateTokenFromUser(User user);
     public DecodedJWT getDecodedToken(String token);
     public String getHashedPassword(String rawPassword);
+    public void validateDecodedToken(DecodedJWT decoded);
 }

@@ -5,11 +5,14 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Date;
 
 import MoneyMachine.models.User;
+import MoneyMachine.models.exceptions.ExpiredException;
+import MoneyMachine.models.exceptions.NotAuthorizedException;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.Interfaces.AuthenticationService;
 import org.mindrot.jbcrypt.BCrypt;
@@ -20,6 +23,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private UserRepository userRepository;
     private String tokenSecretKey;
     private double tokenExpirationInHours;
+    private final String[] requiredClaims = {"role", "email", "firstName", "lastName"};
 
     public AuthenticationServiceImpl(UserRepository userRepository, @Value("${TOKEN_SECRET_KEY}") String tokenSecretKey, @Value("${TOKEN_EXPIRATION_IN_HOURS}") double tokenExpirationInHours) {
         this.userRepository = userRepository;
@@ -61,18 +65,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public DecodedJWT getDecodedToken(String token) {
-        
-        DecodedJWT decoded = JWT.decode(token);
+        return JWT.decode(token);
+    }
 
-        System.out.println("=== JWT Claims ===");
-        System.out.println("Subject    : " + decoded.getSubject());
-        System.out.println("Expires    : " + decoded.getExpiresAt());
-        System.out.println("Issued at  : " + decoded.getIssuedAt());
-        System.out.println("Role       : " + decoded.getClaim("role").asString());
-        System.out.println("Email      : " + decoded.getClaim("email").asString());
-        System.out.println("First name : " + decoded.getClaim("firstName").asString());
-        System.out.println("Last name  : " + decoded.getClaim("lastName").asString());
+    @Override
+    public void validateDecodedToken(DecodedJWT decoded) {
 
-        return decoded;
+        if (decoded.getSubject() == null) {
+            throw new NotAuthorizedException("Token is missing subject.");
+        }
+
+        if (decoded.getExpiresAt() == null) {
+            throw new NotAuthorizedException("Token is missing expiration.");
+        }
+
+        if (decoded.getExpiresAt().before(new Date())) {
+            throw new ExpiredException("Token has expired.");
+        }
+
+        for (String requiredClaim : requiredClaims) {
+             if (isClaimNullOrEmpty(decoded.getClaim(requiredClaim))) {
+                throw new NotAuthorizedException(String.format("Token is missing %s claim.", requiredClaim));
+            }
+        }
+    }
+
+    private boolean isClaimNullOrEmpty(Claim claim) {
+        return claim == null || claim.isNull() || claim.isMissing() || claim.asString() == null || claim.asString().isBlank();
     }
 }

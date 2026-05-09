@@ -47,6 +47,7 @@ public class BaseController {
 
             String token = headerParts[1];
             DecodedJWT decoded = authenticationService.getDecodedToken(token);
+            this.authenticationService.validateDecodedToken(decoded);
 
             this.loggedInUser = this.userService.findUserById(Integer.parseInt(decoded.getSubject()));
 
