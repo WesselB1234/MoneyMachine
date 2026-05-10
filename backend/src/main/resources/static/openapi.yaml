@@ -432,39 +432,6 @@ paths:
                 message: "Internal Server Error - An unexpected error occurred"
                 details: "Please try again later or contact support if the problem persists."
 
-
-  /users/forgot-password:
-   post:
-    summary: Request a password reset link
-    tags:
-      - user
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              email:
-                type: string
-                format: email
-                example: "user@example.com"
-            required:
-              - email
-    responses:
-      '200':
-        description: If the email exists, a reset link has been sent.
-        content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-      '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-
   /transactions:
     get:
       tags:
