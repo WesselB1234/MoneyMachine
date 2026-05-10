@@ -50,24 +50,12 @@ paths:
       description: Returns a list of registered users. Can be filtered by username
       operationId: getUsers
       parameters:
-        - name: username
-          in: query         
-          description: Filter users by a specific username
-          required: false   
-          schema:
-            type: string
         - name: role
           in: query
           description: Filter by 'employee' or 'customer'
           required: false   
           schema:
             type: string
-        - name: status
-          in: query
-          description: Filter by 'approved'
-          required: false   
-          schema:
-            type: boolean
       responses:
         '200':
           description: Successful operation
@@ -246,7 +234,6 @@ paths:
     post:
       tags:
         - user
-        - bankAccount
       summary: Transfer money from a user's bank account
       description: Transfers money from the specified bank account to another account
       operationId: userTransfer
@@ -331,7 +318,6 @@ paths:
     get:
       tags:
         - user
-        - bankAccount
       summary: Get all bank accounts owned by the authenticated user
       description: Returns a list of bank accounts belonging to the currently logged in user
       operationId: getUserBankAccounts
@@ -430,7 +416,6 @@ paths:
     get:
       tags:
         - user
-        - transaction
       summary: Get all transactions for the authenticated user
       description: Returns a list of all transactions across all bank accounts owned by the currently logged in user
       operationId: getUserTransactions
@@ -545,7 +530,6 @@ paths:
     get:
       tags:
         - transaction
-        - bankAccount
       summary: Get all transactions by IBAN number
       description: Get all transactions from a bankaccount based on the selected IBAN
       operationId: getTransactionsByIban
