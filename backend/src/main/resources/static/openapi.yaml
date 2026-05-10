@@ -436,6 +436,12 @@ paths:
       summary: Get all transactions for the authenticated user
       description: Returns a list of all transactions across all bank accounts owned by the currently logged in user
       operationId: getUserTransactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionFilterRequest'
       responses:
         '200':
           description: Successful operation - Transactions retrieved
@@ -1772,6 +1778,29 @@ components:
           type: string
           example: NL91ABNA0417164300
           description: IBAN of the destination account
+
+    TransactionFilterRequest:
+      type: object
+      properties:
+        lessThan:
+          type: number
+          format: decimal
+          example: 500.00
+          description: Filter transactions with an amount less than this value
+        greaterThan:
+          type: number
+          format: decimal
+          example: 100.00
+          description: Filter transactions with an amount greater than this value
+        equalTo:
+          type: number
+          format: decimal
+          example: 250.00
+          description: Filter transactions with an amount equal to this value
+        iban:
+          type: string
+          example: NL91ABNA0417164300
+          description: Filter transactions by a specific IBAN (from or to)
         
 
 
