@@ -819,7 +819,7 @@ paths:
         - Transactions
       summary: Remove money from bankaccount
       description: Remove money from bank account based on amount
-      operationId: atmWithdraw
+      operationId: Withdraw
       parameters:
         - name: iban
           in: path
@@ -840,7 +840,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ATMBalanceUpdateResponse'
+                $ref: '#/components/schemas/WithdrawTransactionResponse'
         '400':
           description: Bad Request - Invalid amount or parameters
           content:
@@ -903,7 +903,7 @@ paths:
         - Transactions
       summary: Add money to bankaccount
       description: Add money to bank account based on amount
-      operationId: atmDeposit
+      operationId: Deposit
       parameters:
         - name: iban
           in: path
@@ -924,7 +924,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ATMBalanceUpdateResponse'
+                $ref: '#/components/schemas/DepositTransactionResponse'
         '400':
           description: Bad Request - Invalid amount or parameters
           content:
@@ -1162,20 +1162,23 @@ components:
           type: boolean
           example: true
 
-    ATMBalanceUpdateResponse:
+    WithdrawTransactionResponse:
       type: object
       properties:
         transactionId:
           type: integer
           example: 1
-        accountIban: 
+        initiatingUserId:
+          type: integer
+          example: 2
+        fromAccountIban: 
           type: string
           example: "NL91ABNA0417164300"
-        oldBalance: 
-          type: number
-          format: decimal
-          example: 21.4
-        newBalance: 
+        message:
+          type: string
+          example: "Bought a car"
+          description: Displays why the transaction was done
+        amount: 
           type: number
           format: decimal
           example: 21.4
@@ -1183,6 +1186,38 @@ components:
           type: string
           format: date-time
           example: "2026-11-24T14:45:12Z"
+        isActive: 
+          type: boolean
+          example: true
+    
+    DepositTransactionResponse:
+      type: object
+      properties:
+        transactionId:
+          type: integer
+          example: 1
+        initiatingUserId:
+          type: integer
+          example: 2
+        toAccountIban:
+          type: string
+          example: "NL91ABNA0417164300"
+          description: The IBAN of the account the funds are transferred to
+        message:
+          type: string
+          example: "Bought a car"
+          description: Displays why the transaction was done
+        amount: 
+          type: number
+          format: decimal
+          example: 21.4
+        dateTime: 
+          type: string
+          format: date-time
+          example: "2026-11-24T14:45:12Z"
+        isActive: 
+          type: boolean
+          example: true
 
     BankAccountResponse:
       type: object
@@ -1308,92 +1343,6 @@ components:
           type: boolean
           example: false
           description: Flag to deactivate (false) or activate (true) the bank account
-
-    TransferLimitRequest:
-      type: object
-      required:
-        - singleTransferLimit
-        - dailyTransferLimit
-        - absoluteLimit
-        - iban
-      properties:
-        singleTransferLimit:
-          type: number
-          format: decimal
-          example: 5000.00
-          description: New maximum amount for a single transfer
-        dailyTransferLimit:
-          type: number
-          format: decimal
-          example: 10000.00
-          description: New maximum total amount that can be transferred in a day
-        absoluteLimit:
-          type: number
-          format: decimal
-          example: -1000.00
-          description: New absolute limit (overdraft limit) for the account
-        iban:
-          type: string
-          example: NL91ABNA0417164300
-          description: International Bank Account Number
-
-    TransferLimitUpdateResponse:
-      type: object
-      properties:
-        iban:
-          type: string
-          example: NL91ABNA0417164300
-          description: International Bank Account Number
-        userId:
-          type: integer
-          example: 1
-          description: The ID of the user who owns the bank account
-        newSingleTransferLimit:
-          type: number
-          format: decimal
-          example: 5000.00
-          description: Updated maximum amount for a single transfer
-        newDailyTransferLimit:
-          type: number
-          format: decimal
-          example: 10000.00
-          description: Updated maximum total amount that can be transferred in a day
-        newAbsoluteTransferLimit:
-          type: number
-          format: decimal
-          example: -1000.00
-          description: Updated absolute limit (overdraft limit) for the account
-
-    IbanFinderResultResponse:
-      type: object
-      properties:
-        firstName:
-          type: string
-          example: John
-          description: The first name of the account holder
-        lastName:
-          type: string
-          example: Doe
-          description: The last name of the account holder
-        iban:
-          type: string
-          example: NL91ABNA0417164300
-          description: The IBAN of the bank account belonging to the account holder
-
-    IbanFinderRequest:
-      type: object
-      required:
-        - firstName
-        - lastName
-      properties:
-        firstName:
-          type: string
-          example: John
-          description: The first name of the account holder
-        lastName:
-          type: string
-          example: Doe
-          description: The last name of the account holder
       
   securitySchemes:
     bearerAuth:            
