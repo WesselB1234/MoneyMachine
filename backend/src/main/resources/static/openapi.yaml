@@ -627,7 +627,7 @@ paths:
     get:
       tags:
         - BankAccounts
-      summary: Look up a customer's IBAN by name
+      summary: Look up a users's IBAN by name
       description: >
         Allows users to look up the IBAN of another user's checking account
         using first and last name.
@@ -636,14 +636,14 @@ paths:
         - name: firstName
           in: query
           required: true
-          description: The first name of the customer whose IBAN is being searched
+          description: The first name of the user whose IBAN is being searched
           schema:
             type: string
             example: John
         - name: lastName
           in: query
           required: true
-          description: The last name of the customer whose IBAN is being searched
+          description: The last name of the user whose IBAN is being searched
           schema:
             type: string
             example: Doe
