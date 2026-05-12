@@ -20,13 +20,14 @@ import MoneyMachine.models.enums.LoginType;
 import MoneyMachine.models.requestBodies.LoginRequest;
 import MoneyMachine.services.UserServiceImpl;
 import MoneyMachine.services.Interfaces.AuthenticationService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.web.bind.annotation.*;
+
 @Controller
-@RequestMapping("/users")
-public class UsersController {
+@RequestMapping("users")
+public class UsersController extends BaseController {
 
     private final UserServiceImpl userService;
     private final AuthenticationService authenticationService;
@@ -36,21 +37,21 @@ public class UsersController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequestBody) throws Exception {
+    @PostMapping("login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) throws Exception {
 
-        User user = authenticationService.getUserByEmailAndPassword(loginRequestBody.getEmail(), loginRequestBody.getPassword());
+        User user = authenticationService.getUserByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
 
         if (user == null){
             throw new InvalidCredentialsException("Password or username is not correct.");
         }
 
-        LoginResponse loginDto = new LoginResponse(authenticationService.generateAuthTokenFromUser(user));
+        LoginResponse loginDto = new LoginResponse(authenticationService.generateAuthTokenFromUserAndLoginType(user, loginRequest.getLoginType()));
 
         return ResponseEntity.status(201).body(loginDto);
     }
 
-    @GetMapping("/me")
+    @GetMapping("me")
     public ResponseEntity<?> getLoggedInUser(HttpServletRequest request, HttpServletResponse response, @RequestParam LoginType loginType) throws Exception {
 
         User user = this.authenticationService.getLoggedInUserByLoginType(request, response, loginType);

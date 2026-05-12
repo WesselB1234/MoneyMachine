@@ -23,7 +23,7 @@
             form.append('password', password.value)
             form.append('loginType', 'ATM')
 
-            const response = await axios.post('/atm/login', form)
+            const response = await axios.post('/users/login', form)
 
             authStore.setAtmAuthToken(response.data.jwt)
             currentSuccessAlert.value.displaySuccessMessage('Successfully logged in.')

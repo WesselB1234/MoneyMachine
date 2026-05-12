@@ -29,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private UserRepository userRepository;
     private String AuthTokenSecretKey;
     private double authTokenExpirationInHours;
-    private final String[] requiredClaims = {"role", "email", "firstName", "lastName"};
+    private final String[] requiredClaims = {"role", "email", "firstName", "lastName", "loginType"};
 
     public AuthenticationServiceImpl(UserRepository userRepository, @Value("${AUTH_TOKEN_SECRET_KEY}") String authTokenSecretKey, @Value("${AUTH_TOKEN_EXPIRATION_IN_HOURS}") double authTokenExpirationInHours) {
         this.userRepository = userRepository;
@@ -50,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String generateAuthTokenFromUser(User user) {
+    public String generateAuthTokenFromUserAndLoginType(User user, LoginType loginType) {
 
         Algorithm algorithm = Algorithm.HMAC256(this.AuthTokenSecretKey);
         
@@ -60,6 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .withClaim("email", user.getEmail())
             .withClaim("firstName", user.getFirstName())
             .withClaim("lastName", user.getLastName())
+            .withClaim("loginType", loginType.toString())
             .withExpiresAt(new Date(System.currentTimeMillis() + (long)(3600000 * authTokenExpirationInHours)))
             .sign(algorithm);
     }
@@ -75,7 +76,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void validateDecodedAuthToken(DecodedJWT decodedAuthToken) {
+    public void validateDecodedAuthToken(DecodedJWT decodedAuthToken, LoginType loginType) {
 
         if (decodedAuthToken.getSubject() == null) {
             throw new NotAuthorizedException("Token is missing subject.");
@@ -93,6 +94,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             if (isClaimNullOrEmpty(decodedAuthToken.getClaim(requiredClaim))) {
                 throw new NotAuthorizedException(String.format("Token is missing %s claim.", requiredClaim));
             }
+        }
+
+        if (LoginType.valueOf(decodedAuthToken.getClaim("loginType").toString().replace("\"", "")) != loginType){
+            throw new NotAuthorizedException("You are not logged in into this part of the application.");
         }
     }
 
@@ -116,7 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             String authToken = headerParts[1];
             DecodedJWT decodedAuthToken = getDecodedAuthToken(authToken);
-            validateDecodedAuthToken(decodedAuthToken);
+            validateDecodedAuthToken(decodedAuthToken, loginType);
             
             User user = this.userRepository.findById(Integer.parseInt(decodedAuthToken.getSubject()));
             
