@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import MoneyMachine.exception.InvalidCredentialsException;
 import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.LoginDTO;
 import MoneyMachine.models.dtos.UserDTO;
 import MoneyMachine.models.enums.LoginType;
-import MoneyMachine.models.exceptions.InvalidCredentialsException;
 import MoneyMachine.models.requestBodies.LoginRequestBody;
 import MoneyMachine.services.Interfaces.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;

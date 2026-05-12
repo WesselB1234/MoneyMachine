@@ -1,4 +1,4 @@
-package MoneyMachine.models.exceptions;
+package MoneyMachine.exception;
 
 public class InvalidCredentialsException extends RuntimeException {
     public InvalidCredentialsException(String message) {

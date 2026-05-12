@@ -1,4 +1,4 @@
-package MoneyMachine.models.exceptions;
+package MoneyMachine.exception;
 
 public class NotAuthorizedException extends RuntimeException {
     public NotAuthorizedException(String message) {

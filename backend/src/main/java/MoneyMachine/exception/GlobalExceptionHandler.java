@@ -1,4 +1,4 @@
-package MoneyMachine.controllers;
+package MoneyMachine.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,12 +8,9 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 
 import MoneyMachine.models.dtos.ErrorDTO;
 import MoneyMachine.models.enums.ErrorType;
-import MoneyMachine.models.exceptions.ExpiredException;
-import MoneyMachine.models.exceptions.InvalidCredentialsException;
-import MoneyMachine.models.exceptions.NotAuthorizedException;
 
 @RestControllerAdvice
-public class ErrorController {
+public class GlobalExceptionHandler {
 
     private String getLocationOfException(Exception ex){
 

@@ -11,10 +11,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Date;
 
+import MoneyMachine.exception.ExpiredException;
+import MoneyMachine.exception.NotAuthorizedException;
 import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.ErrorDTO;
-import MoneyMachine.models.exceptions.ExpiredException;
-import MoneyMachine.models.exceptions.NotAuthorizedException;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.Interfaces.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
