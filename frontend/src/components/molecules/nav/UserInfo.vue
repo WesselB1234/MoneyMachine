@@ -1,19 +1,17 @@
 <script setup>
+    import { computed } from 'vue';
+    import { useAuthStore } from '@/stores/authStore.js'
     import LoginBtn from '@/components/atoms/nav/LoginBtn.vue';
     import LogoutBtn from '@/components/atoms/nav/LogoutBtn.vue';
 
-    const props = defineProps({
-        email: { 
-            type: String, 
-            default: null 
-        },
-    })
+    const authStore = useAuthStore()
+    const atmDecodedAuthToken = computed(() => authStore.atmDecodedAuthToken ?? null)
 </script>
 
 <template>
-    <div v-if="email !== null" class="form-inline my-2 my-lg-0">
+    <div v-if="atmDecodedAuthToken !== null" class="form-inline my-2 my-lg-0">
         <div class="nav-link">
-            Logged in as: {{ email }}
+            Logged in as: {{ atmDecodedAuthToken.email }}
         </div>
         <LogoutBtn url="/atm/logout" />
     </div>
