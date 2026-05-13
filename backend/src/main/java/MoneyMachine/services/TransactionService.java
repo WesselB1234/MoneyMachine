@@ -6,18 +6,21 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import MoneyMachine.models.Transaction;
+import MoneyMachine.repositories.BankAccountRepository;
 import MoneyMachine.repositories.TransactionRepository;
 @Service
 public class TransactionService {
     private TransactionRepository transactionRepository;
+    private BankAccountRepository bankAccountRepository;
 
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository, BankAccountRepository bankAccountRepository) {
         this.transactionRepository = transactionRepository;
+        this.bankAccountRepository = bankAccountRepository;
     }
 
     public List<Transaction> getAllTransactions()
     {
-       return transactionRepository.findAll();
+       return transactionRepository.findAll().orElseThrow();
     }
     public List<Transaction> getAllTransactionsByAccountId(int accountId)
     {
@@ -25,8 +28,8 @@ public class TransactionService {
         List<Transaction> fromTransactions = new  ArrayList<Transaction>();
         List<Transaction> toTransactions = new  ArrayList<Transaction>();
 
-        fromTransactions.addAll(transactionRepository.getTransactionByFromAccountId(accountId));
-        toTransactions.addAll(transactionRepository.getTransactionByToAccountId(accountId));
+        fromTransactions.addAll(transactionRepository.getTransactionByFromAccountId(accountId).orElseThrow());
+        toTransactions.addAll(transactionRepository.getTransactionByToAccountId(accountId).orElseThrow());
 
         transactions.addAll(fromTransactions);
         transactions.addAll(toTransactions);
@@ -34,20 +37,13 @@ public class TransactionService {
     }
     public Transaction getTransactionById(int transactionId)
     {
-       return transactionRepository.findById(transactionId);
+       return transactionRepository.findById(transactionId).orElseThrow();
     }
+    @Transactional(rollbackFor = Exception.class)
     public Transaction createTransaction(Transaction transaction)
     {
-        return transactionRepository.save(transaction);
-    }
-    public Transaction updateTransaction(int transactionId, Transaction transaction)
-    {
-        return transactionRepository.save(transactionId,transaction);
-    }
-    public void deleteTransaction(int transactionId)
-    {
-        transactionRepository.deleteById(transactionId);
-    }
-
-    
+        bankAccountRepository.pay(transaction.getFromBankAccount().getAccountId(), transaction.getAmount());
+        bankAccountRepository.receive(transaction.getToBankAccount().getAccountId(), transaction.getAmount());
+        return transactionRepository.save(transaction).orElseThrow();
+    }  
 }

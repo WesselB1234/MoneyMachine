@@ -34,15 +34,4 @@ public class TransactionController {
     public String getTransactionById(@PathVariable Long id) {
         return transactionService.getTransactionById(id);
     }
-
-    @PutMapping("/transactions/{id}")
-    public String updateTransaction(@PathVariable Long id, @RequestBody TransferTransaction transaction) {
-        return transactionService.updateTransaction(id, transaction);
-    }
-
-    @DeleteMapping("/transactions/{id}")
-    public String deleteTransaction(@PathVariable Long id) {
-        return transactionService.deleteTransaction(id);
-    }
-
 }
