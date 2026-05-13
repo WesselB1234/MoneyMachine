@@ -45,7 +45,7 @@ paths:
       tags:
         - Users
       summary: Get all registered users
-      description: Returns a list of registered users. Can be filtered by approval status.
+      description: Returns a list of registered users. Can be filtered by approval status. Access | Employee
       operationId: getUsers
       parameters:
         - name: isApproved
@@ -97,7 +97,7 @@ paths:
       tags:
         - Users
       summary: Register a new user account
-      description: Creates a new user account.
+      description: Creates a new user account. Access | Public to everyone
       security: []
       operationId: registerUser
       requestBody:
@@ -151,7 +151,7 @@ paths:
       tags:
         - Users
       summary: Log in to the system
-      description: Verifies the provided email and password and returns a JWT bearer token along with a user summary on success.
+      description: Verifies the provided email and password and returns a JWT bearer token along with a user summary on success. Access | Public to everyone
       security: []
       operationId: loginUser
       requestBody:
@@ -206,7 +206,7 @@ paths:
       tags:
         - Transactions
       summary: Transfer money between bank accounts
-      description: Transfers a specified amount from one bank account to another. Both the source IBAN (fromIban) and destination IBAN (toIban) are provided in the request body.
+      description: Transfers a specified amount from one bank account to another. Both the source IBAN (fromIban) and destination IBAN (toIban) are provided in the request body. Access | User and Employee
       operationId: userTransfer
       requestBody:
         required: true
@@ -282,7 +282,7 @@ paths:
       tags:
         - Users
       summary: Get all bank accounts for a specific user
-      description: Returns a list of bank accounts belonging to the user identified by the given user_id in the path.
+      description: Returns a list of bank accounts belonging to the user identified by the given user_id in the path.  Access | User and Employee
       operationId: getUserBankAccounts
       parameters:
         - name: user_id
@@ -343,7 +343,7 @@ paths:
       description: >
         Updates the user identified by the given user_id. Any type of requestBody
         can be provided to update specific user fields, such as approval status,
-        role, or personal information.
+        role, or personal information. Access | User and Employee
       operationId: updateUser
       parameters:
         - name: user_id
@@ -416,7 +416,7 @@ paths:
       tags:
         - Users
       summary: Get the authenticated user's profile
-      description: Returns the full profile details of the currently logged in user.
+      description: Returns the full profile details of the currently logged in user. Access | User and Employee
       operationId: getMyAccount
       responses:
         '200':
@@ -464,7 +464,7 @@ paths:
       tags:
         - Transactions
       summary: Get all transactions for the authenticated user
-      description: Returns a paginated list of all transactions across all bank accounts owned by the currently authenticated user. Supports filtering by amount and by source or destination IBAN.
+      description: Returns a paginated list of all transactions across all bank accounts owned by the currently authenticated user. Supports filtering by amount and by source or destination IBAN. Access | Employee
       operationId: getUserTransactions
       parameters:
       - name: lessThan
@@ -585,7 +585,7 @@ paths:
       tags:
         - BankAccounts
       summary: Get all transactions for a specific bank account
-      description: Returns all transactions (both incoming and outgoing) for the bank account identified by the given IBAN. The authenticated user must own the account or have employee rights.
+      description: Returns all transactions (both incoming and outgoing) for the bank account identified by the given IBAN. Access | User and Employee
       operationId: getTransactionsByIban
       parameters:
         - name: iban
@@ -724,7 +724,7 @@ paths:
       summary: Look up a users's IBAN by name
       description: >
         Allows users to look up the IBAN of another user's checking account
-        using first and last name.
+        using first and last name. Access | User and Employee
       operationId: lookupIbanByName
       parameters:
         - name: firstName
@@ -816,7 +816,7 @@ paths:
       tags:
         - BankAccounts
       summary: Get all bank accounts
-      description: Returns a paginated list of all bank accounts in the system. Only accessible by employees.
+      description: Returns a paginated list of all bank accounts in the system. Access | Employee
       operationId: getBankAccounts
       parameters:
         - name: page
@@ -881,7 +881,7 @@ paths:
       tags:
         - BankAccounts
       summary: Create a bank account for a user
-      description: Creates a new bank account. The owning user and account details (type, balance, limits) are provided in the request body. Only accessible by employees.
+      description: Creates a new bank account. The owning user and account details (type, balance, limits) are provided in the request body. Access | Employee
       operationId: createBankAccount
       requestBody:
         required: true
@@ -1010,7 +1010,7 @@ paths:
       tags:
         - BankAccounts
       summary: Updates a bank account's information
-      description: Updates the bank account identified by the given IBAN. Any type of requestBody can be given to update specific values
+      description: Updates the bank account identified by the given IBAN. Any type of requestBody can be given to update specific values. Access | User and Employee
       operationId: updateBankAccountStatus
       parameters:
         - name: iban
@@ -1083,7 +1083,7 @@ paths:
       tags:
         - Transactions
       summary: Withdraw money from a bank account
-      description: Withdraws a specified amount from a bank account. The source IBAN is provided in the request body via fromIban.
+      description: Withdraws a specified amount from a bank account. The source IBAN is provided in the request body via fromIban. Access | User and Employee
       operationId: Withdraw
       requestBody:
         required: true
@@ -1159,7 +1159,7 @@ paths:
       tags:
         - Transactions
       summary: Deposit money into a bank account
-      description: Deposits a specified amount into a bank account. The destination IBAN is provided in the request body via toIban.
+      description: Deposits a specified amount into a bank account. The destination IBAN is provided in the request body via toIban. Access | User and Employee
       operationId: Deposit
       requestBody:
         required: true
