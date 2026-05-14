@@ -27,7 +27,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <tr>
+  <tr class="table table-dark">
     <FirstNameDataFieldAtom :user="user" />
     <LastNameDataFieldAtom :user="user" />
     <EmailDataFieldAtom :user="user" />

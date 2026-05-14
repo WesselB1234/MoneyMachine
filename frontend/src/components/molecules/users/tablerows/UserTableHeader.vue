@@ -9,7 +9,7 @@ import PhoneNumberTableHeaderAtom from '../../../atoms/users/textelements/tableh
 </script>
 
 <template>
-    <tr class="table-light">
+    <tr class="table table-light">
         <FirstNameTableHeaderAtom />
         <LastNameTableHeaderAtom />
         <EmailTableHeaderAtom />

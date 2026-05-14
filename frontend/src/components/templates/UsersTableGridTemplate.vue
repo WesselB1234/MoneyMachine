@@ -24,7 +24,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <table class="table-striped">
+    <table class="table table-striped">
         <thead>
             <UserTableHeader />
         </thead>

@@ -17,7 +17,7 @@ import MoneyMachine.services.interfaces.UserService;
 
 @RestController
 @RequestMapping("/user")
-public class UsersController extends BaseController {
+public class UsersController {
     private final UserService userService;
 
     public UsersController(UserService userService) {
