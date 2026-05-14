@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HelloWorld from '@/components/HelloWorld.vue'
 import ATMLogin from '@/components/views/atm/authentication/ATMLogin.vue'
 import ATMUserAuthorizationTest from '@/components/views/atm/authentication/ATMUserAuthorizationTest.vue'
 import ATMLayout from '@/components/layout/ATMLayout.vue'
@@ -9,8 +8,8 @@ import ATMLogout from '@/components/views/atm/authentication/ATMLogout.vue'
 
 const routes = [
     {
-        path: '/', 
-        component: HelloWorld
+        path: '/',
+        redirect: '/atm/login'
     },
     {
         path: '/atm',
