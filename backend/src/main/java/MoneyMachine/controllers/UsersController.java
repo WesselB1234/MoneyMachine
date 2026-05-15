@@ -14,12 +14,15 @@ import org.springframework.web.client.HttpServerErrorException.InternalServerErr
 
 import MoneyMachine.exception.InvalidCredentialsException;
 import MoneyMachine.models.User;
+import MoneyMachine.models.dtos.ErrorResponse;
 import MoneyMachine.models.dtos.LoginResponse;
+import MoneyMachine.models.dtos.UserDTO;
+import MoneyMachine.models.dtos.UserOverviewDTO;
 import MoneyMachine.models.dtos.UserResponse;
 import MoneyMachine.models.enums.LoginType;
 import MoneyMachine.models.requestBodies.LoginRequest;
 import MoneyMachine.services.UserServiceImpl;
-import MoneyMachine.services.Interfaces.AuthenticationService;
+import MoneyMachine.services.interfaces.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -79,11 +82,11 @@ public class UsersController extends BaseController {
             userOverviewDTO.setUsers(users);
             return ResponseEntity.ok(userOverviewDTO);
         } catch (Unauthorized exUnauthorized) {
-            ErrorDTO errorDTO = new ErrorDTO(401, MoneyMachine.models.enums.ErrorType.UNAUTHORIZED,
+            ErrorResponse errorDTO = new ErrorResponse(401, MoneyMachine.models.enums.ErrorType.UNAUTHORIZED,
                     "Unauthorized - Authentication required", exUnauthorized.getMessage());
             return ResponseEntity.status(401).body(errorDTO);
         } catch (InternalServerError exInternalServerError) {
-            ErrorDTO errorDTO = new ErrorDTO(500, ErrorType.BAD_REQUEST,
+            ErrorResponse errorDTO = new ErrorResponse(500, MoneyMachine.models.enums.ErrorType.INTERNAL_SERVER_ERROR,
                     "Internal Server Error - An unexpected error occurred", exInternalServerError.getMessage());
             return ResponseEntity.status(500).body(errorDTO);
         }
