@@ -1,7 +1,7 @@
 <script setup>
 import UsersTableGridTemplate from '../templates/UsersTableGridTemplate.vue';
-import axios from 'axios'
 import { onMounted, ref } from 'vue';
+import axios from '../../utils/axios';
 
 const loading = ref(true);
 const error = ref(null);
