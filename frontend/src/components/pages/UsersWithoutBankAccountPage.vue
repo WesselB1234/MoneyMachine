@@ -11,9 +11,9 @@ const fetchUsersWithoutAccount = async () => {
     loading.value = true;
     error.value = null;
     try {
-        const result = await axios.get("/user");
+        const result = await axios.get("/users");
         usersWithoutBankAccounts.value = result.data.users;
-        console.log(result.data.users);
+        console.log(result.data);
     }
     catch (err) {
         console.log("Error fetching users without bank accounts", err);
