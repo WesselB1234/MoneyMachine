@@ -1,11 +1,13 @@
-package main.java.MoneyMachine.services;
+package MoneyMachine.services;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import MoneyMachine.models.Transaction;
+import MoneyMachine.models.TransferTransaction;
 import MoneyMachine.repositories.BankAccountRepository;
 import MoneyMachine.repositories.TransactionRepository;
 @Service
@@ -20,30 +22,30 @@ public class TransactionService {
 
     public List<Transaction> getAllTransactions()
     {
-       return transactionRepository.findAll().orElseThrow();
+       return transactionRepository.findAll();
     }
-    public List<Transaction> getAllTransactionsByAccountId(int accountId)
+    public List<Transaction> getAllTransactionsByAccountId(String iban)
     {
         List<Transaction> transactions = new  ArrayList<Transaction>();
         List<Transaction> fromTransactions = new  ArrayList<Transaction>();
         List<Transaction> toTransactions = new  ArrayList<Transaction>();
 
-        fromTransactions.addAll(transactionRepository.getTransactionByFromAccountId(accountId).orElseThrow());
-        toTransactions.addAll(transactionRepository.getTransactionByToAccountId(accountId).orElseThrow());
+        fromTransactions.addAll(transactionRepository.getTransactionByFromIban(iban));
+        toTransactions.addAll(transactionRepository.getTransactionByToIban(iban));
 
         transactions.addAll(fromTransactions);
         transactions.addAll(toTransactions);
         return transactions;
     }
-    public Transaction getTransactionById(int transactionId)
+    public Transaction getTransactionByid(long id)
     {
-       return transactionRepository.findById(transactionId).orElseThrow();
+       return transactionRepository.findById(id).orElseThrow();
     }
     @Transactional(rollbackFor = Exception.class)
-    public Transaction createTransaction(Transaction transaction)
+    public TransferTransaction createTransaction(TransferTransaction transaction)
     {
-        bankAccountRepository.pay(transaction.getFromBankAccount().getAccountId(), transaction.getAmount());
-        bankAccountRepository.receive(transaction.getToBankAccount().getAccountId(), transaction.getAmount());
-        return transactionRepository.save(transaction).orElseThrow();
+        bankAccountRepository.pay(transaction.getFromBankAccount().getIban(), transaction.getAmount());
+        bankAccountRepository.receive(transaction.getToBankAccount().getIban(), transaction.getAmount());
+        return transactionRepository.save(transaction);
     }  
 }

@@ -1,10 +1,16 @@
-package main.java.MoneyMachine.controllers;
+package MoneyMachine.controllers;
+
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import MoneyMachine.models.Transaction;
 import MoneyMachine.models.TransferTransaction;
-import main.java.MoneyMachine.services.TransactionService;
+import MoneyMachine.services.TransactionService;
 
 @RestController
 public class TransactionController {
@@ -16,22 +22,22 @@ public class TransactionController {
     }
 
     @GetMapping("/transactions")
-    public String getTransactions() {
+    public List<Transaction> getTransactions() {
         return transactionService.getAllTransactions();
     }
 
     @GetMapping("/transactions/account/{accountId}")
-    public String getTransactionsByAccountId(@PathVariable Long accountId) {
-        return transactionService.getAllTransactionsByAccountId(accountId);
+    public List<Transaction> getTransactionsByAccountiban(@PathVariable String Iban) {
+        return transactionService.getAllTransactionsByAccountId(Iban);
     }
 
     @PostMapping("/transactions")
-    public String createTransaction(@RequestBody TransferTransaction transaction) {
+    public TransferTransaction createTransaction(@RequestBody TransferTransaction transaction) {
         return transactionService.createTransaction(transaction);
     }
 
     @GetMapping("/transactions/{id}")
-    public String getTransactionById(@PathVariable Long id) {
-        return transactionService.getTransactionById(id);
+    public Transaction getTransactionById(@PathVariable Long id) {
+        return transactionService.getTransactionByid(id);
     }
 }
