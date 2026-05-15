@@ -10,12 +10,12 @@ import org.springframework.web.client.HttpServerErrorException.InternalServerErr
 import MoneyMachine.exception.InvalidCredentialsException;
 import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.User;
-import MoneyMachine.models.dtos.ErrorResponse;
-import MoneyMachine.models.dtos.LoginResponse;
-import MoneyMachine.models.dtos.UserOverviewResponse;
-import MoneyMachine.models.dtos.UserResponse;
 import MoneyMachine.models.enums.LoginType;
-import MoneyMachine.models.requestBodies.LoginRequest;
+import MoneyMachine.models.dtos.requests.LoginRequest;
+import MoneyMachine.models.dtos.responses.ErrorResponse;
+import MoneyMachine.models.dtos.responses.LoginResponse;
+import MoneyMachine.models.dtos.responses.UserOverviewResponse;
+import MoneyMachine.models.dtos.responses.UserResponse;
 import MoneyMachine.services.interfaces.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

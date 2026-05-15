@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.User;
-import MoneyMachine.models.dtos.UserResponse;
+import MoneyMachine.models.dtos.responses.UserResponse;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.interfaces.UserService;
 

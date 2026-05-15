@@ -1,4 +1,4 @@
-package MoneyMachine.models.dtos;
+package MoneyMachine.models.dtos.responses;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

@@ -3,10 +3,10 @@ package MoneyMachine.mappers;
 import org.springframework.stereotype.Component;
 
 import MoneyMachine.models.*;
+import MoneyMachine.models.dtos.responses.UserResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import MoneyMachine.models.dtos.UserResponse;
 
 @Component
 public class UserMapper {

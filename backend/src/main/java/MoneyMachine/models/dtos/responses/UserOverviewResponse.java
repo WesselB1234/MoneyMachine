@@ -1,4 +1,4 @@
-package MoneyMachine.models.dtos;
+package MoneyMachine.models.dtos.responses;
 
 import java.io.Serializable;
 import java.util.List;
