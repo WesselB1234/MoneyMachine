@@ -16,7 +16,7 @@
             console.log(result.data);
         }
         catch (err) {
-            console.log("Error fetching users without bank accounts test", err);
+            console.log("Error fetching users without bank accounts", err);
             error.value =
                 err.message || "Failed to fetch users without bank accounts. Please try again later.";
             usersWithoutBankAccounts.value = [];
