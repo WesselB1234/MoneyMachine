@@ -38,10 +38,9 @@ const routes = [
                     isAtmAuthenticated: true
                 }
             },
-              {path: '/user', component: UsersWithoutBankAccountPage},
         ],
     },
-
+    {path: '/user', component: UsersWithoutBankAccountPage},
 ]
 
 const router = createRouter({

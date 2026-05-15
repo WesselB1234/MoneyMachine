@@ -21,7 +21,6 @@ import MoneyMachine.models.dtos.UserOverviewDTO;
 import MoneyMachine.models.dtos.UserResponse;
 import MoneyMachine.models.enums.LoginType;
 import MoneyMachine.models.requestBodies.LoginRequest;
-import MoneyMachine.services.UserServiceImpl;
 import MoneyMachine.services.interfaces.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,10 +31,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("users")
 public class UsersController extends BaseController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    public UsersController(UserServiceImpl userService, AuthenticationService authenticationService) {
+    public UsersController(UserService userService, AuthenticationService authenticationService) {
         this.userService = userService;
         this.authenticationService = authenticationService;
     }
