@@ -5,6 +5,7 @@ import ATMLayout from '@/components/layout/ATMLayout.vue'
 import { useAuthStore } from "@/stores/authStore.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
 import ATMLogout from '@/components/views/atm/authentication/ATMLogout.vue'
+import UsersWithoutBankAccountPage from '../components/pages/UsersWithoutBankAccountPage.vue';
 
 const routes = [
     {
@@ -37,8 +38,10 @@ const routes = [
                     isAtmAuthenticated: true
                 }
             },
+              {path: '/user', component: UsersWithoutBankAccountPage},
         ],
     },
+
 ]
 
 const router = createRouter({
