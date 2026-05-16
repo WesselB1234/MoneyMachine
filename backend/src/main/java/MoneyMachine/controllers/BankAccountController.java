@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import MoneyMachine.services.interfaces.BankAccountService;
 
 @Controller
-@RequestMapping("bankAccounts")
+@RequestMapping("bank-accounts")
 public class BankAccountController extends BaseController
 {
     private BankAccountService bankAccountService;

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import MoneyMachine.models.enums.BankAccountType;
-import MoneyMachine.models.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,13 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BankAccountCreatedResponse {
-    private String ibam;
-    private User user;
+    private String iban;
+    private Long userId;
     private BankAccountType bankAccountType;
     private BigDecimal balance;
     private BigDecimal singleTransferLimit;
     private BigDecimal dailyTransferLimit;
-    private BigDecimal absoluteTransferLimit;
+    private BigDecimal absoluteLimit;
     private boolean isActive;
     private LocalDateTime createdAt;
 }
