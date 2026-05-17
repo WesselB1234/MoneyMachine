@@ -1,19 +1,15 @@
 package MoneyMachine.services;
 
 import MoneyMachine.mappers.BankAccountMapper;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import MoneyMachine.models.enums.BankAccountType;
 import MoneyMachine.models.enums.Role;
 import MoneyMachine.repositories.BankAccountRepository;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.interfaces.BankAccountService;
-import MoneyMachine.strategies.CheckingStrategy;
-import MoneyMachine.strategies.SavingsStrategy;
 import MoneyMachine.strategies.interfaces.BankAccountTypeStrategy;
 import MoneyMachine.exception.NotAuthorizedException;
 import MoneyMachine.exception.NotFoundException;
