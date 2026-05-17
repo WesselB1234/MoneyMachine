@@ -15,6 +15,7 @@ import MoneyMachine.strategies.CheckingStrategy;
 import MoneyMachine.strategies.SavingsStrategy;
 import MoneyMachine.exception.NotAuthorizedException;
 import MoneyMachine.exception.NotFoundException;
+import MoneyMachine.factories.BankAccountTypeFactory;
 import MoneyMachine.factories.IbanGenerator;
 import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.User;
@@ -27,13 +28,15 @@ public class BankAccountServiceImpl implements BankAccountService {
     private BankAccountRepository bankAccountRepository;
     private UserRepository userRepository;
     private IbanGenerator ibanGenerator;
+    private BankAccountTypeFactory bankAccountTypeFactory;
 
     public BankAccountServiceImpl(BankAccountRepository bankAccountRepository, UserRepository userRepository,
-            BankAccountMapper bankAccountMapper, IbanGenerator ibanGenerator) {
+            BankAccountMapper bankAccountMapper, IbanGenerator ibanGenerator, BankAccountTypeFactory bankAccountTypeFactory) {
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
         this.bankAccountMapper = bankAccountMapper;
         this.ibanGenerator = ibanGenerator;
+        this.bankAccountTypeFactory = bankAccountTypeFactory;
     }
 
     public BankAccountResponse createBankAccount(BankAccountCreationRequest bankAccountCreationRequest) {
@@ -60,13 +63,11 @@ public class BankAccountServiceImpl implements BankAccountService {
                 bankAccountCreationRequest.getDailyTransferLimit(), bankAccountCreationRequest.getBankAccountType(),
                 true, LocalDateTime.now());
         if (bankAccountCreationRequest.getBankAccountType() == BankAccountType.CHECKING) {
-            CheckingStrategy checkingStrategy = new CheckingStrategy();
-            checkingStrategy.applyBankAccountRules(bankAccount);
+            bankAccountTypeFactory.bankAccountRules(BankAccountType.CHECKING);
         }
 
         if (bankAccountCreationRequest.getBankAccountType() == BankAccountType.SAVINGS) {
-            SavingsStrategy savingsStrategy = new SavingsStrategy();
-            savingsStrategy.applyBankAccountRules(bankAccount);
+              bankAccountTypeFactory.bankAccountRules(BankAccountType.SAVINGS);
         }
         bankAccountRepository.save(bankAccount);
         BankAccountResponse bankAccountRespnse = bankAccountMapper.toResponse(bankAccount);
