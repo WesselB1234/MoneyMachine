@@ -1,5 +1,5 @@
 <script setup>
-import axios from 'axios';
+ import axios from '@/utils/axios.js';
 import { ref, onMounted } from 'vue';
 const transaction = {}
 const createTransaction = async () => {

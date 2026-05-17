@@ -21,22 +21,22 @@ public class TransactionController {
 
     }
 
-    @GetMapping("/transactions")
+    @GetMapping("/api/transactions")
     public List<Transaction> getTransactions() {
         return transactionService.getAllTransactions();
     }
 
-    @GetMapping("/transactions/account/{accountId}")
+    @GetMapping("/api/transactions/account/{accountId}")
     public List<Transaction> getTransactionsByAccountiban(@PathVariable String Iban) {
         return transactionService.getAllTransactionsByAccountId(Iban);
     }
 
-    @PostMapping("/transactions")
+    @PostMapping("/api/transactions")
     public TransferTransaction createTransaction(@RequestBody TransferTransaction transaction) {
         return transactionService.createTransaction(transaction);
     }
 
-    @GetMapping("/transactions/{id}")
+    @GetMapping("/api/transactions/{id}")
     public Transaction getTransactionById(@PathVariable Long id) {
         return transactionService.getTransactionByid(id);
     }

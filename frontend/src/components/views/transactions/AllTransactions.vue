@@ -1,13 +1,14 @@
 <script setup>
-import axios from 'axios';
+import axios from '@/utils/axios.js';
 import { ref, onMounted } from 'vue';
 const transactions = ref([])
 onMounted(async () => {
 try {
-const result = await axios.get("/api/transactions")
-transactions.value = result.data
+    console.log(import.meta.env.VITE_API_URL)
+    const result = await axios.get("/api/transactions")
+    transactions.value = result.data
 } catch (error) {
-console.log(error)
+    console.log(error)
 }
 })
 
