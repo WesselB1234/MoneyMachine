@@ -3,6 +3,7 @@ package MoneyMachine.services;
 import MoneyMachine.mappers.BankAccountMapper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -41,8 +42,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     public BankAccountResponse createBankAccount(BankAccountCreationRequest bankAccountCreationRequest) {
-        User user = userRepository.findById(bankAccountCreationRequest.getUserId());
-
+        Optional<User> optionalUser = userRepository.findById(bankAccountCreationRequest.getUserId());
+        User user = optionalUser.get();
         if (user == null) {
             throw new NotFoundException("User with user id" + bankAccountCreationRequest.getUserId() + "Not found");
         }
