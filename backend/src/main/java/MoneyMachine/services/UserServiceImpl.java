@@ -25,7 +25,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private BankAccountService bankAccountService;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, BankAccountService bankAccountService){
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper,
+            BankAccountService bankAccountService) {
         this.userMapper = userMapper;
         this.userRepository = userRepository;
         this.bankAccountService = bankAccountService;
@@ -42,9 +43,9 @@ public class UserServiceImpl implements UserService {
 
         return convertedUsers;
     }
+
     @Transactional
-    public void approveUserAndCreateAccounts(Long userId)
-    {
+    public void approveUserAndCreateAccounts(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         User user = optionalUser.get();
         if (user == null) {
@@ -60,5 +61,8 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setIsApproved(true);
+        for (BankAccountType bankAccountType : BankAccountType.values()) {
+            bankAccountService.createBankAccountForUser(bankAccountType, user);
+        }
     }
 }

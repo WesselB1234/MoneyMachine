@@ -22,7 +22,7 @@ public class BankAccountController extends BaseController {
     @PostMapping()
     public ResponseEntity<BankAccountResponse> createBankAccount(
             @RequestBody BankAccountCreationRequest bankAccountCreationRequest) throws Exception {
-        BankAccountResponse bankAccountResponse = bankAccountService.createBankAccount(bankAccountCreationRequest);
+        BankAccountResponse bankAccountResponse = bankAccountService.createBankAccountFromRequest(bankAccountCreationRequest);
         return ResponseEntity.status(201).body(bankAccountResponse);
     }
 

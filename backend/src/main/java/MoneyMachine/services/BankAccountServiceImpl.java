@@ -1,18 +1,14 @@
 package MoneyMachine.services;
 
 import MoneyMachine.mappers.BankAccountMapper;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
-import MoneyMachine.models.enums.Role;
+import MoneyMachine.models.enums.BankAccountType;
 import MoneyMachine.repositories.BankAccountRepository;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.interfaces.BankAccountService;
+
 import MoneyMachine.strategies.interfaces.BankAccountTypeStrategy;
-import MoneyMachine.exception.NotAuthorizedException;
-import MoneyMachine.exception.NotFoundException;
 import MoneyMachine.factories.BankAccountTypeFactory;
 import MoneyMachine.factories.IbanGenerator;
 import MoneyMachine.models.BankAccount;
@@ -20,52 +16,62 @@ import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.requests.BankAccountCreationRequest;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
     private BankAccountMapper bankAccountMapper;
     private BankAccountRepository bankAccountRepository;
-    private UserRepository userRepository;
     private IbanGenerator ibanGenerator;
     private BankAccountTypeFactory bankAccountTypeFactory;
+    private UserRepository userRepository;
 
     public BankAccountServiceImpl(BankAccountRepository bankAccountRepository, UserRepository userRepository,
-            BankAccountMapper bankAccountMapper, IbanGenerator ibanGenerator, BankAccountTypeFactory bankAccountTypeFactory) {
+            BankAccountMapper bankAccountMapper, IbanGenerator ibanGenerator,
+            BankAccountTypeFactory bankAccountTypeFactory) {
         this.bankAccountRepository = bankAccountRepository;
-        this.userRepository = userRepository;
         this.bankAccountMapper = bankAccountMapper;
         this.ibanGenerator = ibanGenerator;
         this.bankAccountTypeFactory = bankAccountTypeFactory;
+        this.userRepository = userRepository;
     }
 
-    public BankAccountResponse createBankAccount(BankAccountCreationRequest bankAccountCreationRequest) {
+    public BankAccountResponse createBankAccountForUser(BankAccountType bankAccountType, User user) {
+
+        generateIBAN();
+        BankAccount bankAccount = new BankAccount();
+
+        BankAccountTypeStrategy strategy = bankAccountTypeFactory.getStrategy(bankAccountType);
+        strategy.applyBankAccountRules(bankAccount);
+
+        bankAccountRepository.save(bankAccount);
+        BankAccountResponse bankAccountRespnse = bankAccountMapper.toResponse(bankAccount);
+        return bankAccountRespnse;
+    }
+
+    public BankAccountResponse createBankAccountFromRequest(BankAccountCreationRequest bankAccountCreationRequest) {
         Optional<User> optionalUser = userRepository.findById(bankAccountCreationRequest.getUserId());
         User user = optionalUser.get();
-        if (user == null) {
-            throw new NotFoundException("User with user id" + bankAccountCreationRequest.getUserId() + "Not found");
-        }
 
-        if (user.getIsActive() == false) {
-            throw new NotAuthorizedException("User is not active");
-        }
+        String iban = generateIBAN();
+        BankAccount bankAccount = new BankAccount(iban, user, bankAccountCreationRequest.getBalance(),
+                bankAccountCreationRequest.getAbsoluteLimit(), bankAccountCreationRequest.getSingleTransferLimit(),
+                bankAccountCreationRequest.getDailyTransferLimit(), bankAccountCreationRequest.getBankAccountType(),
+                true, LocalDateTime.now());
+        BankAccountTypeStrategy strategy = bankAccountTypeFactory
+                .getStrategy(bankAccountCreationRequest.getBankAccountType());
+        strategy.applyBankAccountRules(bankAccount);
+        bankAccountRepository.save(bankAccount);
+        BankAccountResponse bankAccountRespnse = bankAccountMapper.toResponse(bankAccount);
+        return bankAccountRespnse;
+    }
 
-        if (user.getRole() == Role.USER) {
-            throw new NotAuthorizedException("User is not allowed to create account");
-        }
-
+    private String generateIBAN() {
         String generatedIban = ibanGenerator.generateIBAN();
         while (bankAccountRepository.existsById(generatedIban)) {
             generatedIban = ibanGenerator.generateIBAN();
         }
-        BankAccount bankAccount = new BankAccount(generatedIban, user, bankAccountCreationRequest.getBalance(),
-                bankAccountCreationRequest.getAbsoluteLimit(), bankAccountCreationRequest.getSingleTransferLimit(),
-                bankAccountCreationRequest.getDailyTransferLimit(), bankAccountCreationRequest.getBankAccountType(),
-                true, LocalDateTime.now());
-        
-        BankAccountTypeStrategy strategy = bankAccountTypeFactory.getStrategy(bankAccountCreationRequest.getBankAccountType());
-        strategy.applyBankAccountRules(bankAccount);
-        
-        bankAccountRepository.save(bankAccount);
-        BankAccountResponse bankAccountRespnse = bankAccountMapper.toResponse(bankAccount);
-        return bankAccountRespnse;
+        return generatedIban;
     }
 }

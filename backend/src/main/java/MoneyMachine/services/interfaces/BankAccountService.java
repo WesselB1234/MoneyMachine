@@ -2,6 +2,9 @@ package MoneyMachine.services.interfaces;
 
 import MoneyMachine.models.dtos.requests.BankAccountCreationRequest;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
+import MoneyMachine.models.enums.BankAccountType;
+import MoneyMachine.models.User;
 public interface BankAccountService {
-    BankAccountResponse createBankAccount(BankAccountCreationRequest bankAccountCreationRequest);
+    BankAccountResponse createBankAccountFromRequest(BankAccountCreationRequest bankAccountCreationRequest);
+    BankAccountResponse createBankAccountForUser(BankAccountType bankAccountType, User user);
 }
