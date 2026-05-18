@@ -1,8 +1,10 @@
 package MoneyMachine.filter;
 
+import MoneyMachine.exception.NotAuthorizedException;
 import MoneyMachine.models.User;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,32 +33,42 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         
-        String authorizationHeader = request.getHeader("Authorization");
+        // String authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        // if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        //     filterChain.doFilter(request, response);
+        //     return;
+        // }
 
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+        // String[] headerParts = authorizationHeader.split(" ");
+
+        // if (headerParts.length != 2 || !headerParts[0].equalsIgnoreCase("bearer")) {
+        //     throw new NotAuthorizedException("Invalid authorization header format.");
+        // }
+
+        // String authToken = headerParts[1];
+
+        // if (SecurityContextHolder.getContext().getAuthentication() == null) {
         
-            try {
-                //String username = jwtUtil.extractUsername(authorizationHeader);
-                Optional<User> userOptional = userRepository.findById(1L);
+        //     try {
+        //         Claims decodedAuthToken = jwtUtil.getDecodedAuthToken(authToken);
+        //         Optional<User> userOptional = userRepository.findById(Long.parseLong(decodedAuthToken.getSubject()));
 
-                if (userOptional.isPresent()) {
-                    User user = userOptional.get();
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        //         if (userOptional.isPresent()) {
+        //             User user = userOptional.get();
+        //             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        //             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            } 
-            catch (JwtException | IllegalArgumentException ignored) {
-                // Invalid/expired token: proceed without authentication.
-            }
-        }
+        //             SecurityContextHolder.getContext().setAuthentication(authentication);
+        //         }
+        //     } 
+        //     catch (JwtException | IllegalArgumentException ignored) {
+        //         // Invalid/expired token: proceed without authentication.
+        //         // Nah i dont think so. Your getting a punishment for being invalid you little JWT
+        //     }
+        // }
 
         filterChain.doFilter(request, response);
+        // System.out.println("tet");
     }
 }

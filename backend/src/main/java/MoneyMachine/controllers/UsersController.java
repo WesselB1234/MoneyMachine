@@ -56,10 +56,12 @@ public class UsersController extends BaseController {
     @GetMapping("me")
     public ResponseEntity<?> getLoggedInUser(HttpServletRequest request, HttpServletResponse response, @RequestParam LoginType loginType) throws Exception {
 
-        User user = this.authenticationService.getLoggedInUserByLoginType(request, response, loginType);
-        UserResponse userResponse = userMapper.toResponse(user);
+        // User user = this.authenticationService.getLoggedInUserByLoginType(request, response, loginType);
+        // UserResponse userResponse = userMapper.toResponse(user);
 
-        return ResponseEntity.status(200).body(userResponse);
+        return ResponseEntity.status(200).body(org.springframework.security.core.context.SecurityContextHolder
+                .getContext()
+                .getAuthentication());
     }
 
     @GetMapping()

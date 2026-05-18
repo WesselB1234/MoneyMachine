@@ -43,7 +43,7 @@ public class JwtUtil {
             .claim("lastName", user.getLastName())
             .claim("loginType", loginType.toString())
             .issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+            .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * AUTH_TOKEN_EXPIRATION_HOURS))
             .signWith(authTokenSecretKeyEncoded)
             .compact();
     }
@@ -78,16 +78,12 @@ public class JwtUtil {
     //     return claim == null || claim.isNull() || claim.isMissing() || claim.asString() == null || claim.asString().isBlank();
     // }
 
-    public String extractUsername(String token) {
-        
-        String jwt = token != null && token.startsWith("Bearer ") ? token.substring(7) : token;
-        
+    public Claims getDecodedAuthToken(String authToken) {
         return Jwts.parser()
             .verifyWith(authTokenSecretKeyEncoded)
             .build()
-            .parseSignedClaims(jwt)
-            .getPayload()
-            .getSubject();
+            .parseSignedClaims(authToken)
+            .getPayload();
     }
 
     // public User getLoggedInUserByLoginType(HttpServletRequest request, HttpServletResponse response, LoginType loginType) throws Exception {

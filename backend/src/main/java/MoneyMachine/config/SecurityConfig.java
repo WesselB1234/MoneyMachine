@@ -8,6 +8,7 @@ import org.springframework.security.access.expression.method.DefaultMethodSecuri
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,29 +29,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Potentially insecure
-                // Disabling CSRF protection for simplicity (not recommended for production)
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/login").anonymous()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            // .authorizeHttpRequests(auth -> auth
+            //     //.requestMatchers("/users/login", "/users/register").permitAll()
+            //     .requestMatchers("/**").permitAll()
+            //     //.anyRequest().authenticated()
+            // );
+            //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Using BCryptPasswordEncoder for password hashing
         return new BCryptPasswordEncoder();
     }
 
     // This bean customizes how Spring evaluates method-level security expressions
     // such as @PreAuthorize("hasPermission(...)").
     @Bean
-    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(
-            CustomPermissionEvaluator customPermissionEvaluator
-    ) {
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(CustomPermissionEvaluator customPermissionEvaluator) {
         // Default handler knows how to process common expressions:
         // hasRole(...), isAuthenticated(), hasPermission(...), etc.
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
