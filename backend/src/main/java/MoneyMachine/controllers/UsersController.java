@@ -20,6 +20,8 @@ import MoneyMachine.services.interfaces.*;
 import MoneyMachine.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +63,18 @@ public class UsersController extends BaseController {
         UserResponse userResponse = userMapper.toResponse(user);
         
         return ResponseEntity.status(200).body(userResponse);
+    }
+
+    @GetMapping("employee-test")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<String> employeeTest() {
+        return ResponseEntity.status(200).body("Yes yo have employee powers");
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("@authorizationService.isAllowedToGetUserById(authentication, #id)")
+    public ResponseEntity<String> getUserByIdTest() {
+        return ResponseEntity.status(200).body("You are allowed to get this user");
     }
 
     @GetMapping()
