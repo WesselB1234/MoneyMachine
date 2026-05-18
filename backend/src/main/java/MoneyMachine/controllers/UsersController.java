@@ -59,21 +59,21 @@ public class UsersController {
     @GetMapping("me")
     public ResponseEntity<?> getLoggedInUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = authenticationService.getLoggedInUser();
         UserResponse userResponse = userMapper.toResponse(user);
         
         return ResponseEntity.status(200).body(userResponse);
     }
 
     @GetMapping("employee-test")
-    @PreAuthorize("hasRole('EMPLOYEE')")
+    @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('ATM')")
     public ResponseEntity<String> employeeTest() {
         return ResponseEntity.status(200).body("Yes yo have employee powers");
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("@authorizationService.isAllowedToGetUserById(authentication, #id)")
-    public ResponseEntity<String> getUserByIdTest() {
+    @PreAuthorize("@authorizationService.isAllowedToGetUserById(#id)")
+    public ResponseEntity<String> getUserByIdTest(@PathVariable Long id) {
         return ResponseEntity.status(200).body("You are allowed to get this user");
     }
 

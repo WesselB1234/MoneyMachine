@@ -1,5 +1,7 @@
 package MoneyMachine.exception;
 
+import org.springframework.security.access.AccessDeniedException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -61,6 +63,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNotAuthorizedExceptions(NotAuthorizedException ex) {
         
         ErrorResponse errorDTO = generateErrorDtoByExceptionAndErrorInfo(ex, 401, ErrorType.UNAUTHORIZED, "Not authorized");
+        return ResponseEntity.status(errorDTO.getCode()).body(errorDTO); 
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedExceptions(AccessDeniedException ex) {
+        
+        ErrorResponse errorDTO = generateErrorDtoByExceptionAndErrorInfo(ex, 403, ErrorType.FORBIDDEN, "Access denied");
         return ResponseEntity.status(errorDTO.getCode()).body(errorDTO); 
     }
 
