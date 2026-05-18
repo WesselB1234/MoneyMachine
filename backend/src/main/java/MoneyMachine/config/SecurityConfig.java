@@ -44,17 +44,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    // This bean customizes how Spring evaluates method-level security expressions
-    // such as @PreAuthorize("hasPermission(...)").
-    @Bean
-    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(CustomPermissionEvaluator customPermissionEvaluator) {
-        // Default handler knows how to process common expressions:
-        // hasRole(...), isAuthenticated(), hasPermission(...), etc.
-        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        // Plug in our custom evaluator so hasPermission(...) can run
-        // our own ownership/admin checks (for example on reviews).
-        expressionHandler.setPermissionEvaluator(customPermissionEvaluator);
-        return expressionHandler;
-    }
 }

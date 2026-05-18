@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 public class AuthorizationService {
 
     public Boolean isAllowedToGetUserById(Authentication authentication, Long id) {
-        return false;
+        return true;
     }
 }
