@@ -89,4 +89,10 @@ public class GlobalExceptionHandler {
                 "Object not found");
         return ResponseEntity.status(errorDTO.getCode()).body(errorDTO);
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException ex) {
+        ErrorResponse errorResponse = generateErrorDtoByExceptionAndErrorInfo(ex, 403, ErrorType.FORBIDDEN, "Forbidden - Insufficient permissions");
+        return ResponseEntity.status(errorResponse.getCode()).body(errorResponse);
+    }
 }

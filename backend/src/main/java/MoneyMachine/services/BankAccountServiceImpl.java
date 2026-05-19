@@ -71,12 +71,12 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     public List<BankAccountResponse> getAllBankAccounts()
     {
-        Iterable<BankAccount> bankAccounts = bankAccountRepository.getAll();
+        Iterable<BankAccount> bankAccounts = bankAccountRepository.findAll();
         List<BankAccountResponse> convertedBankAccounts = new ArrayList<BankAccountResponse>();
 
         for(BankAccount bankAccount: bankAccounts)
         {
-            convertedBankAccounts.add(bankAccountMapper.toResponse(bankAccount)) 
+            convertedBankAccounts.add(bankAccountMapper.toResponse(bankAccount)); 
         }
         return convertedBankAccounts;
     }

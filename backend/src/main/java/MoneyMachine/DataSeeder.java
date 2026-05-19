@@ -1,6 +1,7 @@
 package MoneyMachine;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -71,6 +72,7 @@ public class DataSeeder implements ApplicationRunner {
         bankAccount.setDailyTransferLimit(new BigDecimal("100"));
         bankAccount.setBankAccountType(BankAccountType.CHECKING);
         bankAccount.setIsActive(true);
+        bankAccount.setCreatedAt(LocalDateTime.now());
 
         bankAccountRepository.save(bankAccount);
 
