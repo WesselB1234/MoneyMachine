@@ -9,6 +9,6 @@ const props = defineProps({
 
 <template>
     <td>
-        {{ bankAccount.balance }}
+        {{ bankAccount.isActive }}
     </td>
 </template>
