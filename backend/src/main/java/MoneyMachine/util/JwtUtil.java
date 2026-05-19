@@ -15,13 +15,6 @@ import javax.crypto.SecretKey;
 
 @Component
 public class JwtUtil {
-    // Convert the plain text SECRET into a SecretKey object that crypto APIs can use.
-    // JWT signing with HS256 uses HMAC (a hash-based message authentication algorithm),
-    // which requires raw bytes, not a Java String.
-    // We use UTF-8 to convert characters to bytes in a consistent, cross-platform way.
-    // This same key must be used for BOTH:
-    // - signWith(...) when creating the token
-    // - verifyWith(...) when validating/parsing the token
     private final SecretKey authTokenSecretKeyEncoded;
     private final int AUTH_TOKEN_EXPIRATION_HOURS = 1;
     private final String[] requiredClaims = {"role", "email", "firstName", "lastName", "loginType"};

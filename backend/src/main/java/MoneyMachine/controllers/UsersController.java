@@ -66,7 +66,7 @@ public class UsersController {
     }
 
     @GetMapping("employee-test")
-    @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('ATM')")
+    @PreAuthorize("@authorizationService.isLoggedIntoLoginType('ATM') && hasRole('EMPLOYEE')")
     public ResponseEntity<String> employeeTest() {
         return ResponseEntity.status(200).body("Yes yo have employee powers");
     }

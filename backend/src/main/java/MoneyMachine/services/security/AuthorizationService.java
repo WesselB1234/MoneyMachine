@@ -34,7 +34,7 @@ public class AuthorizationService {
 
         User user = authenticationService.getLoggedInUser();
 
-        if (user.getRole() != Role.ROLE_EMPLOYEE && id != user.getId()) {
+        if (user.getRole() != Role.EMPLOYEE && id != user.getId()) {
             return false;
         }
 

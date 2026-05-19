@@ -79,6 +79,9 @@ public class User {
     private Boolean isApproved;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+
+        System.out.println(role.getAuthority());
+
+        return List.of(new SimpleGrantedAuthority(role.getAuthority()));
     }
 }

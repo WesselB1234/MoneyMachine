@@ -2,11 +2,11 @@ package MoneyMachine.models.enums;
 import org.springframework.security.core.GrantedAuthority;
 
 public enum Role implements GrantedAuthority {
-    ROLE_USER, 
-    ROLE_EMPLOYEE;
+    USER, 
+    EMPLOYEE;
 
     @Override
     public String getAuthority() {
-        return name();
+        return "ROLE_" + name();
     }
 }
