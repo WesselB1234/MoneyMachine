@@ -32,7 +32,7 @@ public class JwtUtil {
             .claim("lastName", user.getLastName())
             .claim("loginType", loginType.toString())
             .issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * AUTH_TOKEN_EXPIRATION_HOURS))
+            .expiration(getAuthTokenExpirationTime())
             .signWith(authTokenSecretKeyEncoded)
             .compact();
     }
@@ -73,5 +73,9 @@ public class JwtUtil {
             .build()
             .parseSignedClaims(authToken)
             .getPayload();
+    }
+
+    public Date getAuthTokenExpirationTime() {
+        return new Date(System.currentTimeMillis() + 1000 * 60 * 60 * AUTH_TOKEN_EXPIRATION_HOURS);
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.web.client.HttpServerErrorException.InternalServerErr
 import MoneyMachine.exception.InvalidCredentialsException;
 import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.User;
-import MoneyMachine.models.enums.LoginType;
 import MoneyMachine.models.dtos.requests.LoginRequest;
 import MoneyMachine.models.dtos.responses.ErrorResponse;
 import MoneyMachine.models.dtos.responses.LoginResponse;
@@ -22,7 +21,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -51,7 +49,9 @@ public class UsersController {
             throw new InvalidCredentialsException("Password or username is not correct.");
         }
 
-        LoginResponse loginResponse = new LoginResponse(jwtUtil.generateAuthTokenFromUser(user, loginRequest.getLoginType()));
+        String authToken = jwtUtil.generateAuthTokenFromUser(user, loginRequest.getLoginType());
+
+        LoginResponse loginResponse = new LoginResponse(authToken, "Bearer", jwtUtil.getAuthTokenExpirationTime(), userMapper.toSummaryResponse(user));
 
         return ResponseEntity.status(201).body(loginResponse);
     }
