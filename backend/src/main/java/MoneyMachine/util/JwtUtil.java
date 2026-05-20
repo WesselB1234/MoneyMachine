@@ -17,6 +17,7 @@ import javax.crypto.SecretKey;
 public class JwtUtil {
     private final SecretKey authTokenSecretKeyEncoded;
     private final int AUTH_TOKEN_EXPIRATION_HOURS = 1;
+    private final int HOUR_IN_MILLISECONDS = 3600000;
     private final String[] requiredClaims = {"role", "email", "firstName", "lastName", "loginType"};
 
     public JwtUtil(@Value("${AUTH_TOKEN_SECRET_KEY}") String authTokenSecretKey) {
@@ -76,6 +77,6 @@ public class JwtUtil {
     }
 
     public Date getAuthTokenExpirationTime() {
-        return new Date(System.currentTimeMillis() + 1000 * 60 * 60 * AUTH_TOKEN_EXPIRATION_HOURS);
+        return new Date(System.currentTimeMillis() + HOUR_IN_MILLISECONDS * AUTH_TOKEN_EXPIRATION_HOURS);
     }
 }
