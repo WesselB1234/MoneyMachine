@@ -10,9 +10,10 @@
 <template>
     <ul class="navbar-nav mr-auto">
         <template v-if="atmDecodedAuthToken !== null">
-            <NavLink to="/atm/user-test" text="Test your JWT" />  
+            <NavLink to="/user-test" text="Test your JWT" />
+            <NavLink to="/employee-test" text="Test your employee rights" />  
         </template>
 
-        <NavLink to="/login" text="Go to website" />
+        <NavLink to="/atm/login" text="Go to ATM" /> 
     </ul>
 </template>

@@ -3,11 +3,18 @@ import { useAuthStore } from "@/stores/authStore.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
 
 import ATMLayout from '@/components/layout/ATMLayout.vue'
+import WebsiteLayout from '@/components/layout/WebsiteLayout.vue'
 
 import ATMLogin from '@/components/pages/atm/authentication/ATMLogin.vue'
 import ATMUserAuthorizationTest from '@/components/pages/atm/authentication/ATMUserAuthorizationTest.vue'
 import ATMLogout from '@/components/pages/atm/authentication/ATMLogout.vue'
-import UsersWithoutBankAccountPage from '@/components/pages/website/UsersWithoutBankAccountPage.vue'
+
+import Login from '@/components/pages/atm/authentication/ATMLogin.vue'
+import UserAuthorizationTest from '@/components/pages/atm/authentication/ATMUserAuthorizationTest.vue'
+import Logout from '@/components/pages/atm/authentication/ATMLogout.vue'
+
+import UsersWithoutBankAccountPage from '@/components/pages/website/users/UsersWithoutBankAccountPage.vue'
+import EmployeeAuthorizationTest from '@/components/pages/website/authentication/EmployeeAuthorizationTest.vue'
 
 const routes = [
     {
@@ -43,9 +50,31 @@ const routes = [
         ],
     },
     {
-        path: '/users', 
-        component: UsersWithoutBankAccountPage
-    },
+        path: '/',
+        component: WebsiteLayout,
+        children: [
+            {
+                path: '/users', 
+                component: UsersWithoutBankAccountPage
+            },
+            {
+                path: '/login', 
+                component: Login
+            },
+            {
+                path: '/logout', 
+                component: Logout
+            },
+            {
+                path: '/user-test', 
+                component: UserAuthorizationTest
+            },
+            {
+                path: '/employee-test', 
+                component: EmployeeAuthorizationTest
+            }
+        ]
+    }
 ]
 
 const router = createRouter({
