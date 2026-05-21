@@ -110,7 +110,7 @@ router.beforeEach((to) => {
     const errorHandlingStore = useErrorHandlingStore()
 
     if (to.meta.isAtmAuthenticated && authStore.atmDecodedAuthToken === null) {
-        errorHandlingStore.setErrorMessage('You need to be logged in into the ATM to perform this action.')
+        errorHandlingStore.errorMessage = 'You need to be logged in into the ATM to perform this action.'
         return '/atm/login'
     }
 
@@ -119,7 +119,7 @@ router.beforeEach((to) => {
         const websiteDecodedAuthToken = authStore.websiteDecodedAuthToken
 
         if (websiteDecodedAuthToken === null) {
-            errorHandlingStore.setErrorMessage('You need to be logged in to perform this action.')
+            errorHandlingStore.errorMessage = 'You need to be logged in to perform this action.'
             return '/login'
         }
 
@@ -135,7 +135,7 @@ router.beforeEach((to) => {
             }
 
             if (isAuthorized === false) {
-                errorHandlingStore.setErrorMessage(`Your account doesn't have the right role to perform this action.`)
+                errorHandlingStore.errorMessage = `Your account doesn't have the right role to perform this action.`
                 return '/login'
             }
         }
