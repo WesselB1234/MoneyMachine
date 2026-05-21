@@ -1,14 +1,11 @@
 package MoneyMachine.exception;
 
-import org.springframework.security.access.AccessDeniedException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import MoneyMachine.models.enums.ErrorType;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import MoneyMachine.models.dtos.responses.ErrorResponse;
 
 @RestControllerAdvice

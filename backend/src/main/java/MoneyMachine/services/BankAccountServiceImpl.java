@@ -23,7 +23,6 @@ import MoneyMachine.models.dtos.responses.BankAccountResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.List;
-import java.util.ArrayList;
 
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
@@ -77,8 +76,9 @@ public class BankAccountServiceImpl implements BankAccountService {
     {
         Page<BankAccount> page = bankAccountRepository.findAll(pageable);
         List<BankAccount> bankAccounts = page.getContent();
-        
-        bankAccountMapper.toDTOList(page.getContent());
+        List<BankAccountResponse> items = bankAccountMapper.toDTOList(bankAccounts);
+        BankAccountOverviewResponse bankAccountOverviewResponse = new BankAccountOverviewResponse(items, page.getNumber(), page.getSize());
+        return bankAccountOverviewResponse;
     }
 
     private String generateIBAN() {

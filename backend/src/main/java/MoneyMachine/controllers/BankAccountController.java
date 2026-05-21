@@ -2,6 +2,7 @@ package MoneyMachine.controllers;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import MoneyMachine.models.dtos.requests.BankAccountCreationRequest;
@@ -11,11 +12,10 @@ import MoneyMachine.services.interfaces.BankAccountService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-import java.util.List;
 
 @RestController
-@RequestMapping("bank-accounts")
-public class BankAccountController extends BaseController {
+@RequestMapping("/bank-accounts")
+public class BankAccountController {
     private BankAccountService bankAccountService;
 
     public BankAccountController(BankAccountService bankAccountService) {
@@ -23,6 +23,7 @@ public class BankAccountController extends BaseController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
     public ResponseEntity<BankAccountResponse> createBankAccount(
             @RequestBody BankAccountCreationRequest bankAccountCreationRequest) throws Exception {
         BankAccountResponse bankAccountResponse = bankAccountService
@@ -31,10 +32,9 @@ public class BankAccountController extends BaseController {
     }
 
     @GetMapping()
-    public ResponseEntity<BankAccountOverviewResponse> getAllBankAccounts(int page, int pageSize, Pageable pageable) {
-        Pageable bankAccounts = bankAccountService.getAllBankAccounts(pageable);
-        BankAccountOverviewResponse bankAccountOverviewResponse = new BankAccountOverviewResponse();
-        bankAccountOverviewResponse.setItems(bankAccounts);
-        return ResponseEntity.ok(bankAccountOverviewResponse);
+    @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
+    public ResponseEntity<BankAccountOverviewResponse> getAllBankAccounts(Pageable pageable) {
+        BankAccountOverviewResponse bankAccounts = bankAccountService.getAllBankAccounts(pageable);
+        return ResponseEntity.ok(bankAccounts);
     }
 }
