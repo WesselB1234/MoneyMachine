@@ -11,10 +11,7 @@
     <ul class="navbar-nav mr-auto">
         <template v-if="websiteDecodedAuthToken !== null">
             <NavLink to="/user-test" text="Test your JWT" /> 
-        </template>
-
-        <template v-if="websiteDecodedAuthToken.role === 'EMPLOYEE'">
-            <NavLink to="/employee-test" text="Test your employee rights" /> 
+            <NavLink v-if="websiteDecodedAuthToken.role === 'EMPLOYEE'" to="/employee-test" text="Test your employee rights" /> 
         </template>
 
         <NavLink to="/atm/login" text="Go to ATM" /> 
