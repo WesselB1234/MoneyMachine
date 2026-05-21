@@ -14,14 +14,24 @@ const transaction = ref({
 const createTransaction = async () => {
   try {
     await axios.post("/api/transactions", transaction.value)
-  } catch (error) {
-    console.log(error)
-  }
+  }catch (error) {
+    console.log("FULL ERROR OBJECT:", error)
+
+    console.log("RESPONSE:", error.response)
+    console.log("DATA:", error.response?.data)
+
+    console.log("MESSAGE:", error.response?.data?.message)
+    console.log("TYPE:", error.response?.data?.errorType)
+    console.log("CODE:", error.response?.data?.code)
+    console.log("LOCATION:", error.response?.data?.location)
+
+    console.log("STRINGIFIED:", JSON.stringify(error.response?.data))
+   
+
+    }
 }
 </script>
-                <td> {{ transaction.type }}</td>
                 
-
 <template>
   <form @submit.prevent="createTransaction">
     <div class="mb-3">

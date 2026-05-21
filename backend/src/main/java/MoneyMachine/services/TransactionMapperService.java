@@ -1,5 +1,6 @@
 package MoneyMachine.services;
 
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,19 +9,25 @@ import MoneyMachine.mappers.TransactionMapper;
 import MoneyMachine.models.DepositTransaction;
 import MoneyMachine.models.Transaction;
 import MoneyMachine.models.TransferTransaction;
+import MoneyMachine.models.User;
 import MoneyMachine.models.WithdrawTransaction;
 import MoneyMachine.models.dtos.requests.DepositRequest;
 import MoneyMachine.models.dtos.requests.TransferRequest;
 import MoneyMachine.models.dtos.requests.WithdrawRequest;
 import MoneyMachine.models.dtos.responses.TransactionResponse;
+import MoneyMachine.repositories.UserRepository;
 
 @Service
 public class TransactionMapperService {
     
+    
     TransactionMapper mapper;
-    TransactionMapperService(TransactionMapper mapper)
+    UserRepository userRepository;
+    TransactionMapperService(TransactionMapper mapper, UserRepository userRepository)
     {
         this.mapper = mapper;
+        this.userRepository = userRepository;
+       
     }
     public List<TransactionResponse> getAllTransactions( List<Transaction> transactions) {
         return transactions
@@ -31,6 +38,7 @@ public class TransactionMapperService {
 
     public TransactionResponse toResponse(Transaction t) {
         TransactionResponse response = mapper.toResponse(t);
+
        switch (t) 
         {
 
@@ -60,20 +68,38 @@ public class TransactionMapperService {
     }
     public TransferTransaction toTransferEntity( TransferRequest transfer) {
        
-      TransferTransaction t= mapper.toTransferEntity(transfer);
+        TransferTransaction t= mapper.toTransferEntity(transfer);
+        User user = userRepository.findById(transfer.getInitiatedBy());
+        if (user == null) 
+        {
+            throw new RuntimeException("User not found");
+        } 
+        t.setInitiatingUser(user);
         t.setDateTime(java.time.LocalDateTime.now());
-            return t;
+        return t;
 
     }
     public WithdrawTransaction toWithdrawEntity( WithdrawRequest withdraw) {
        
         WithdrawTransaction t= mapper.toWithdrawEntity(withdraw);
+        User user = userRepository.findById(withdraw.getInitiatedBy());
+        if (user == null) 
+        {
+            throw new RuntimeException("User not found");
+        } 
+        t.setInitiatingUser(user);
         t.setDateTime(java.time.LocalDateTime.now());
         return t;
     }
     public DepositTransaction toDepositEntity( DepositRequest deposit) {
        
         DepositTransaction t= mapper.toDepositEntity(deposit);
+         User user = userRepository.findById(deposit.getInitiatedBy());
+        if (user == null) 
+        {
+            throw new RuntimeException("User not found");
+        } 
+        t.setInitiatingUser(user);
         t.setDateTime(java.time.LocalDateTime.now());
         return t;
     }
