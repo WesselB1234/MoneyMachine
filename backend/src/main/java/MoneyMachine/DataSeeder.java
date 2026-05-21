@@ -1,4 +1,4 @@
-package MoneyMachine.config;
+package MoneyMachine;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
