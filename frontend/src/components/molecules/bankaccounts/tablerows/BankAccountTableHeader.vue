@@ -6,6 +6,7 @@ import DailyTransferLimitTableHeaderAtom from '../../../atoms/bankaccounts/texte
 import IBANNumberTableHeaderAtom from '../../../atoms/bankaccounts/textelements/tableaheaders/IBANNumberTableHeaderAtom.vue';
 import SingleTransferLimitTableHeaderAtom from '../../../atoms/bankaccounts/textelements/tableaheaders/SingleTransferLimitTableHeaderAtom.vue';
 import IsActiveTableHeaderAtom from '../../../atoms/bankaccounts/textelements/tableaheaders/IsActiveTableHeaderAtom.vue';
+import ActionsTableHeaderAtom from '../../../atoms/users/textelements/tableheaders/ActionsTableHeaderAtom.vue';
 </script>
 
 <template>
@@ -17,5 +18,6 @@ import IsActiveTableHeaderAtom from '../../../atoms/bankaccounts/textelements/ta
         <DailyTransferLimitTableHeaderAtom />
         <SingleTransferLimitTableHeaderAtom />
         <IsActiveTableHeaderAtom />
+        <ActionsTableHeaderAtom />
     </tr>
 </template>

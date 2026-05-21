@@ -40,7 +40,7 @@ import BankAccountsTableGrid from '../../organisms/BankAccountsTableGrid.vue';
         <section v-if="loading" class="min-h-screen flex items-center justify-center">
             <section class="text-center">
                 <section class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4">
-                    <p class="text-blue">Loading Users without bankaccount</p>
+                    <p class="text-blue">Loading Users with bankaccount</p>
                 </section>
             </section>
         </section>
@@ -49,7 +49,7 @@ import BankAccountsTableGrid from '../../organisms/BankAccountsTableGrid.vue';
         <section v-else-if="error" class="min-h-screen flex items-center justify-center">
             <section class="text-red-600 text-5xl mb-4">⚠️</section>
             <h2 class="text-2xl font-bold text-gray-900 mb-2">
-                Error Loading Users without bankaccount
+                Error Loading Users with bankaccount
             </h2>
             <p class="text-gray-600 mb-4">{{ error }}</p>
             <button @click="fetchUsersWithAccount"
