@@ -1,16 +1,12 @@
 <script setup>
     defineProps({
-        to: { 
+        url: { 
             type: String, 
             required: true 
         },
-        text: {
-            type: String,
-            default: "Login"
-        }
     })
 </script>
 
 <template>
-    <RouterLink :to="to" class="btn btn-success text-light">{{ text }}</RouterLink>
+    <a :href="url" class="btn btn-success text-light">Login</a>
 </template>

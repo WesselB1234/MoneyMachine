@@ -1,10 +1,10 @@
 <script setup>
     defineProps({
-        to: { 
+        href: { 
             type: String, 
             required: true 
         },
-        text: { 
+        label: { 
             type: String, 
             required: true 
         },
@@ -13,6 +13,6 @@
 
 <template>
     <li class="nav-link">
-        <RouterLink class="nav-btn" :to="to">{{ text }}</RouterLink>
+        <a class="nav-btn" :href="href">{{ label }}</a>
     </li>
 </template>

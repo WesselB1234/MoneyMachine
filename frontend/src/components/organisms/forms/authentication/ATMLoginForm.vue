@@ -25,7 +25,7 @@
 
             const response = await axios.post('/users/login', form)
 
-            authStore.setAtmAuthToken(response.data.accessToken)
+            authStore.setAtmAuthToken(response.data.jwt)
             currentSuccessAlert.value.displaySuccessMessage('Successfully logged in.')
         }
         catch (ex){
@@ -42,6 +42,6 @@
         <SuccessAlert ref="currentSuccessAlert" />
         <BaseFormField labelName="Email" type="email" id="email" name="email" placeholder="Enter your email address" v-model="email"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
-        <AuthsubmitBtn text="Login" />
+        <AuthsubmitBtn buttonText="Login" />
   </form>
 </template>
