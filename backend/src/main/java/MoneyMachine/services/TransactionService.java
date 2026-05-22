@@ -55,22 +55,25 @@ public class TransactionService {
    @Transactional(rollbackFor = Exception.class)
     public TransactionResponse createTransfer(TransferRequest transaction)
     { 
-      BankAccount fromAccount = bankAccountRepository.findById(transaction.getFromAccount()).orElseThrow(() -> new RuntimeException("From bank account not found"));
-        validateTransfer(transaction, fromAccount);
-        
-        bankAccountRepository.findById(transaction.getToAccount()).orElseThrow(() -> new RuntimeException("To bank account not found"));
-        TransferTransaction transferTransaction = mapper.toTransferEntity(transaction);
+        BankAccount fromAccount = bankAccountRepository.findByIdForUpdate(transaction.getFromAccount()).orElseThrow(() -> new RuntimeException("From bank account not found"));
+        BankAccount toAccount = bankAccountRepository.findByIdForUpdate(transaction.getToAccount()).orElseThrow(() -> new RuntimeException("To bank account not found"));
+        validateTransfer(transaction, fromAccount,toAccount);
 
-        bankAccountRepository.pay(transaction.getFromAccount(), transaction.getAmount());
-        bankAccountRepository.receive(transaction.getToAccount(), transaction.getAmount());
+        fromAccount.setBalance(fromAccount.getBalance().subtract(transaction.getAmount()));
+        toAccount.setBalance(toAccount.getBalance().add(transaction.getAmount()));
+
+        TransferTransaction transferTransaction = mapper.toTransferEntity(transaction);
+        transferTransaction.setFromBankAccount(fromAccount);
+        transferTransaction.setToBankAccount(toAccount);
         TransferTransaction saved = transactionRepository.save(transferTransaction);
         return mapper.toResponse(saved);
     }  
-    private void validateTransfer(TransferRequest transaction, BankAccount fromAccount) {
+    private void validateTransfer(TransferRequest transaction, BankAccount fromAccount, BankAccount toAccount) {
         validateSufficientBalance(fromAccount, transaction.getAmount());
         validateWithinSingleTransferLimit(fromAccount, transaction.getAmount());
-        validateNotSelfTransfer(fromAccount, transaction.getToAccount());
+        validateNotSameAccountTransfer(fromAccount,toAccount);
         validatePositiveAmount(transaction.getAmount());
+        validateNotDiffrentUserSavingsTransfer( fromAccount,toAccount);
         
     }
     private void validateSufficientBalance(BankAccount fromAccount, BigDecimal amount) {
@@ -85,10 +88,10 @@ public class TransactionService {
         }
     }
 
-    private void validateNotSelfTransfer(BankAccount fromAccount, String toIban)
+    private void validateNotSameAccountTransfer(BankAccount fromAccount, BankAccount toAccount)
     {
-        if (fromAccount.getIban().equals(toIban)) {
-            throw new IllegalArgumentException("Self-transfer is not allowed");
+        if (fromAccount.getIban().equals(toAccount.getIban())) {
+            throw new IllegalArgumentException("transfer to the same account is not allowed");
         }
     }
     private void validatePositiveAmount(BigDecimal amount) {
@@ -96,5 +99,15 @@ public class TransactionService {
             throw new IllegalArgumentException("Amount must be greater than 0");
         }
     }
+    private void validateNotDiffrentUserSavingsTransfer(BankAccount fromAccount, BankAccount toAccount)
+    {
+        if (fromAccount.getUser().getId() != toAccount.getUser().getId() && ( fromAccount.getBankAccountType() == MoneyMachine.models.enums.BankAccountType.SAVINGS || toAccount.getBankAccountType() == MoneyMachine.models.enums.BankAccountType.SAVINGS)) {
+            throw new IllegalArgumentException("transfer between different users' savings accounts is not allowed");
+        }
+    }
+    {
+
+    }
+       
 
 }

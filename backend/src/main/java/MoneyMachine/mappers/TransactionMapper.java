@@ -21,17 +21,24 @@ public interface TransactionMapper {
     @Mapping(target = "type", ignore = true)
     TransactionResponse toResponse(Transaction t);
 
-    @Mapping(source = "fromAccount", target = "fromBankAccount.iban")
-    @Mapping(source = "toAccount", target = "toBankAccount.iban")
+    @Mapping(target = "fromBankAccount", ignore = true)
+    @Mapping(target = "toBankAccount", ignore = true)
     @Mapping(target = "dateTime", ignore = true)
+    @Mapping(target = "initiatingUser", ignore = true)
+    @Mapping(target = "isActive", ignore = true)
     
     TransferTransaction toTransferEntity(TransferRequest r);
 
-    @Mapping(source = "fromAccount", target = "fromBankAccount.iban")
+    @Mapping(target = "fromBankAccount", ignore = true)
     @Mapping(target = "dateTime", ignore = true)
+    @Mapping(target = "initiatingUser", ignore = true)
+    @Mapping(target = "isActive", ignore = true)
     WithdrawTransaction toWithdrawEntity(WithdrawRequest r);
 
-    @Mapping(source = "toAccount", target = "toBankAccount.iban")
+    @Mapping(target = "toBankAccount", ignore = true)
     @Mapping(target = "dateTime", ignore = true)
+    @Mapping(target = "initiatingUser", ignore = true)
+    @Mapping(target = "isActive", ignore = true)
+
     DepositTransaction toDepositEntity(DepositRequest r);
 }

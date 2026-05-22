@@ -49,7 +49,7 @@ public class DataSeeder implements ApplicationRunner {
         user.setIsActive(true);
         user.setIsApproved(true);
 
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         User userWithoutBankAccount = new User();
         userWithoutBankAccount.setFirstName("test");
@@ -62,7 +62,7 @@ public class DataSeeder implements ApplicationRunner {
         userWithoutBankAccount.setIsActive(false);
         userWithoutBankAccount.setIsApproved(false);
 
-        userRepository.save(userWithoutBankAccount);
+        userWithoutBankAccount = userRepository.save(userWithoutBankAccount);
 
         BankAccount bankAccount1 = new BankAccount();
         bankAccount1.setIban("NL91ABNA0417164300");
@@ -74,7 +74,7 @@ public class DataSeeder implements ApplicationRunner {
         bankAccount1.setBankAccountType(BankAccountType.CHECKING);
         bankAccount1.setIsActive(true);
 
-        bankAccountRepository.save(bankAccount1);
+        bankAccount1 = bankAccountRepository.save(bankAccount1);
         BankAccount bankAccount2 = new BankAccount();
         bankAccount2.setIban("NL91ABNA0417164301");
         bankAccount2.setUser(user);
@@ -85,7 +85,7 @@ public class DataSeeder implements ApplicationRunner {
         bankAccount2.setBankAccountType(BankAccountType.CHECKING);
         bankAccount2.setIsActive(true);
 
-        bankAccountRepository.save(bankAccount2);
+        bankAccount2 = bankAccountRepository.save(bankAccount2);
 
         DepositTransaction depositTransaction = new DepositTransaction();
         depositTransaction.setInitiatingUser(user);
@@ -95,7 +95,7 @@ public class DataSeeder implements ApplicationRunner {
         depositTransaction.setToBankAccount(bankAccount1);
         depositTransaction.setDateTime(LocalDateTime.now());
 
-        transactionRepository.save(depositTransaction);
+        depositTransaction = transactionRepository.save(depositTransaction);
 
         WithdrawTransaction withdrawTransaction = new WithdrawTransaction();
         withdrawTransaction.setInitiatingUser(user);
@@ -105,7 +105,7 @@ public class DataSeeder implements ApplicationRunner {
         withdrawTransaction.setFromBankAccount(bankAccount1);
         withdrawTransaction.setDateTime(LocalDateTime.now());
 
-        transactionRepository.save(withdrawTransaction);
+        withdrawTransaction = transactionRepository.save(withdrawTransaction);
 
         TransferTransaction transferTransaction = new TransferTransaction();
         transferTransaction.setInitiatingUser(user);
@@ -116,6 +116,6 @@ public class DataSeeder implements ApplicationRunner {
         transferTransaction.setToBankAccount(bankAccount2);
         transferTransaction.setDateTime(LocalDateTime.now());
 
-        transactionRepository.save(transferTransaction);
+       transferTransaction= transactionRepository.save(transferTransaction);
     }
 }

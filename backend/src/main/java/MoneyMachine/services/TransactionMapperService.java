@@ -15,6 +15,7 @@ import MoneyMachine.models.dtos.requests.DepositRequest;
 import MoneyMachine.models.dtos.requests.TransferRequest;
 import MoneyMachine.models.dtos.requests.WithdrawRequest;
 import MoneyMachine.models.dtos.responses.TransactionResponse;
+import MoneyMachine.repositories.BankAccountRepository;
 import MoneyMachine.repositories.UserRepository;
 
 @Service
@@ -23,10 +24,12 @@ public class TransactionMapperService {
     
     TransactionMapper mapper;
     UserRepository userRepository;
-    TransactionMapperService(TransactionMapper mapper, UserRepository userRepository)
+    BankAccountRepository bankAccountRepository;
+    TransactionMapperService(TransactionMapper mapper, UserRepository userRepository,BankAccountRepository bankAccountRepository)
     {
         this.mapper = mapper;
         this.userRepository = userRepository;
+        this.bankAccountRepository = bankAccountRepository;
        
     }
     public List<TransactionResponse> getAllTransactions( List<Transaction> transactions) {
@@ -86,7 +89,7 @@ public class TransactionMapperService {
     public DepositTransaction toDepositEntity( DepositRequest deposit) {
        
         DepositTransaction t= mapper.toDepositEntity(deposit);
-         User user =userRepository.findById(deposit.getInitiatedBy()).orElseThrow(() -> new RuntimeException("User not found")) ;
+        User user =userRepository.findById(deposit.getInitiatedBy()).orElseThrow(() -> new RuntimeException("User not found")) ;
         t.setInitiatingUser(user);
         t.setIsActive(true);
         return t;
