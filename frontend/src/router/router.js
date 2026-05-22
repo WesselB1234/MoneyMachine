@@ -10,6 +10,9 @@ import NotFound from '@/components/pages/website/NotFound.vue'
 import ATMLogin from '@/components/pages/atm/authentication/ATMLogin.vue'
 import ATMUserAuthorizationTest from '@/components/pages/atm/authentication/ATMUserAuthorizationTest.vue'
 import ATMLogout from '@/components/pages/atm/authentication/ATMLogout.vue'
+import ATMBankAccountSelection from '@/components/pages/atm/authentication/ATMBankAccountSelection.vue'
+import ATMDeposit from '@/components/pages/atm/authentication/ATMDeposit.vue'
+import ATMMyBankAccount from '@/components/pages/atm/authentication/ATMMyBankAccount.vue'
 
 import Login from '@/components/pages/website/authentication/Login.vue'
 import UserAuthorizationTest from '@/components/pages/website/authentication/UserAuthorizationTest.vue'
@@ -39,6 +42,30 @@ const routes = [
                 component: ATMLogout, 
                 meta: { 
                     title: 'Logout',
+                    isAtmAuthenticated: true
+                }
+            },
+            { 
+                path: 'bank-account-selection', 
+                component: ATMBankAccountSelection, 
+                meta: { 
+                    title: 'Select your bank account',
+                    isAtmAuthenticated: true
+                }
+            },
+            { 
+                path: 'bank-account/:iban', 
+                component: ATMMyBankAccount, 
+                meta: { 
+                    title: 'My bank account',
+                    isAtmAuthenticated: true
+                }
+            },
+            { 
+                path: 'deposit/:iban', 
+                component: ATMDeposit, 
+                meta: { 
+                    title: 'Deposit',
                     isAtmAuthenticated: true
                 }
             },
