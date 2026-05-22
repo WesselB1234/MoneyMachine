@@ -2,12 +2,13 @@
     import { ref } from 'vue'
     import axios from '@/utils/axios.js'
     import { useAuthStore } from '@/stores/authStore.js'
-    import { useErrorHandlingStore } from '../../../../stores/errorHandlingStore'
+    import { useErrorHandlingStore } from '@/stores/errorHandlingStore.js'
 
     import AuthsubmitBtn from '@/components/atoms/buttons/AuthSubmitBtn.vue'
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import SuccessAlert from '@/components/atoms/errorHandling/SuccessAlert.vue'
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
+    import router from '@/router/router.js'
     
     const authStore = useAuthStore()
     const errorHandlingStore = useErrorHandlingStore()
@@ -28,6 +29,7 @@
 
             authStore.setAtmAuthToken(response.data.accessToken)
             errorHandlingStore.successMessage = 'Successfully logged in.'
+            router.push('/atm/select-bank-account')
         }
         catch (ex){
             if (ex.response){
@@ -40,7 +42,6 @@
 <template>
     <form @submit="handleLogin">
         <ErrorAlert />
-        <SuccessAlert />
         <BaseFormField labelName="Email" type="email" id="email" name="email" placeholder="Enter your email address" v-model="email"/>
         <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
         <AuthsubmitBtn text="Login" />

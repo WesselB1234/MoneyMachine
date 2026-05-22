@@ -46,7 +46,7 @@ const routes = [
                 }
             },
             { 
-                path: 'bank-account-selection', 
+                path: 'select-bank-account', 
                 component: ATMBankAccountSelection, 
                 meta: { 
                     title: 'Select your bank account',
