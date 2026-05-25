@@ -17,6 +17,7 @@ import MoneyMachine.factories.IbanGenerator;
 import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.requests.BankAccountCreationRequest;
+import MoneyMachine.models.dtos.requests.PatchRequest;
 import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
 
@@ -81,6 +82,25 @@ public class BankAccountServiceImpl implements BankAccountService {
         return bankAccountOverviewResponse;
     }
 
+    public BankAccountResponse getBankAccountByIban(String iban)
+    {
+        Optional<BankAccount> optionalBankAccount = bankAccountRepository.findById(iban);
+        BankAccount bankAccount = optionalBankAccount.get();
+        BankAccountResponse bankAccountResponse = bankAccountMapper.toResponse(bankAccount);
+        return bankAccountResponse;
+    }
+
+    public BankAccountResponse closeBankAccount(PatchRequest patchRequest, String iban)
+    {
+       Optional<BankAccount> optionalBankAccount = bankAccountRepository.findById(iban);
+       BankAccount bankAccount = optionalBankAccount.get();
+       boolean isActive = patchRequest.isActive();
+       bankAccount.setIsActive(isActive);
+
+       bankAccountRepository.save(bankAccount);
+       BankAccountResponse bankAccountResponse = bankAccountMapper.toResponse(bankAccount);
+       return bankAccountResponse;
+    }
     private String generateIBAN() {
         String generatedIban = ibanGenerator.generateIBAN();
         while (bankAccountRepository.existsById(generatedIban)) {

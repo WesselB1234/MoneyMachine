@@ -6,12 +6,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import MoneyMachine.models.dtos.requests.BankAccountCreationRequest;
+import MoneyMachine.models.dtos.requests.PatchRequest;
 import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
 import MoneyMachine.services.interfaces.BankAccountService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/bank-accounts")
@@ -36,5 +39,21 @@ public class BankAccountController {
     public ResponseEntity<BankAccountOverviewResponse> getAllBankAccounts(Pageable pageable) {
         BankAccountOverviewResponse bankAccounts = bankAccountService.getAllBankAccounts(pageable);
         return ResponseEntity.ok(bankAccounts);
+    }
+
+    @GetMapping("/{iban}")
+    @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
+    public ResponseEntity<BankAccountResponse> getBankAccountByIban(@PathVariable String iban)
+    {
+        BankAccountResponse bankAccountResponse = bankAccountService.getBankAccountByIban(iban);
+        return ResponseEntity.ok(bankAccountResponse);
+    }
+    
+    @PatchMapping("/{iban}")
+    @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
+    public ResponseEntity<BankAccountResponse> closeBankAccount(@RequestBody PatchRequest patchRequest,  @PathVariable String iban)
+    {
+        BankAccountResponse bankAccountResponse = bankAccountService.closeBankAccount(patchRequest, iban);
+        return ResponseEntity.ok(bankAccountResponse);
     }
 }
