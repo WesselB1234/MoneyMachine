@@ -1,6 +1,9 @@
 package MoneyMachine.services;
 
 import MoneyMachine.mappers.BankAccountMapper;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import MoneyMachine.models.enums.BankAccountType;
@@ -14,10 +17,12 @@ import MoneyMachine.factories.IbanGenerator;
 import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.requests.BankAccountCreationRequest;
+import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class BankAccountServiceImpl implements BankAccountService {
@@ -39,8 +44,8 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     public BankAccountResponse createBankAccountForUser(BankAccountType bankAccountType, User user) {
 
-        String iban = generateIBAN();
-        BankAccount bankAccount = new BankAccount(iban, user, 500, 500, 500, 500, bankAccountType, true, LocalDateTime.now());
+
+        BankAccount bankAccount = new BankAccount();
 
         BankAccountTypeStrategy strategy = bankAccountTypeFactory.getStrategy(bankAccountType);
         strategy.applyBankAccountRules(bankAccount);
@@ -65,6 +70,15 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccountRepository.save(bankAccount);
         BankAccountResponse bankAccountRespnse = bankAccountMapper.toResponse(bankAccount);
         return bankAccountRespnse;
+    }
+
+    public BankAccountOverviewResponse getAllBankAccounts(Pageable pageable)
+    {
+        Page<BankAccount> page = bankAccountRepository.findAll(pageable);
+        List<BankAccount> bankAccounts = page.getContent();
+        List<BankAccountResponse> items = bankAccountMapper.toDTOList(bankAccounts);
+        BankAccountOverviewResponse bankAccountOverviewResponse = new BankAccountOverviewResponse(items, page.getNumber(), page.getSize());
+        return bankAccountOverviewResponse;
     }
 
     private String generateIBAN() {

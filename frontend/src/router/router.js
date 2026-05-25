@@ -3,40 +3,51 @@ import { useAuthStore } from "@/stores/authStore.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
 
 import ATMLayout from '@/components/layout/ATMLayout.vue'
+import WebsiteLayout from '@/components/layout/WebsiteLayout.vue'
+
+import NotFound from '@/components/pages/website/NotFound.vue'
 
 import ATMLogin from '@/components/pages/atm/authentication/ATMLogin.vue'
 import ATMUserAuthorizationTest from '@/components/pages/atm/authentication/ATMUserAuthorizationTest.vue'
 import ATMLogout from '@/components/pages/atm/authentication/ATMLogout.vue'
-import UsersWithoutBankAccountPage from '@/components/pages/website/UsersWithoutBankAccountPage.vue'
+import UsersWithoutBankAccountPage from '@/components/pages/website/users/UsersWithoutBankAccountPage.vue'
 import CreateBankAccountPage from '../components/pages/website/CreateBankAccountPage.vue'
+import UsersWithBankAccuntsPage from '../components/pages/website/UsersWithBankAccountsPage.vue'
+
+import Login from '@/components/pages/website/authentication/Login.vue'
+import UserAuthorizationTest from '@/components/pages/website/authentication/UserAuthorizationTest.vue'
+import Logout from '@/components/pages/website/authentication/Logout.vue'
+
+import EmployeeAuthorizationTest from '@/components/pages/website/authentication/EmployeeAuthorizationTest.vue'
 
 const routes = [
     {
         path: '/',
-        redirect: '/atm/login'
+        redirect: '/login'
     },
     {
         path: '/atm',
         component: ATMLayout,
         children: [
-            { 
-                path: 'login', 
-                component: ATMLogin, 
-                meta: { 
+            {
+                path: 'login',
+                component: ATMLogin,
+                meta: {
                     title: 'Login'
                 }
             },
-            { 
-                path: 'logout', 
-                component: ATMLogout, 
-                meta: { 
-                    title: 'Logout'
+            {
+                path: 'logout',
+                component: ATMLogout,
+                meta: {
+                    title: 'Logout',
+                    isAtmAuthenticated: true
                 }
             },
-            { 
-                path: 'user-test', 
+            {
+                path: 'user-test',
                 component: ATMUserAuthorizationTest,
-                meta: { 
+                meta: {
                     title: 'UserTest',
                     isAtmAuthenticated: true
                 }
@@ -44,8 +55,65 @@ const routes = [
         ],
     },
     {
-        path: '/users', 
-        component: UsersWithoutBankAccountPage
+        path: '/',
+        component: WebsiteLayout,
+        children: [
+            {
+                path: '/users',
+                component: UsersWithoutBankAccountPage,
+                meta: {
+                    title: 'Users',
+                    isWebsiteAuthenticated: true,
+                    roles: ['EMPLOYEE']
+                }
+            },
+            {
+                path: '/login',
+                component: Login,
+                meta: {
+                    title: 'Users',
+                }
+            },
+            {
+                path: '/logout',
+                component: Logout,
+                meta: {
+                    title: 'Users',
+                    isWebsiteAuthenticated: true
+                }
+            },
+            {
+                path: '/user-test',
+                component: UserAuthorizationTest,
+                meta: {
+                    title: 'User test',
+                    isWebsiteAuthenticated: true
+                }
+
+            },
+            {
+                path: '/employee-test',
+                component: EmployeeAuthorizationTest,
+                meta: {
+                    title: 'Employee test',
+                    isWebsiteAuthenticated: true,
+                    roles: ['EMPLOYEE']
+                }
+            },
+            {
+                path: '/bank-accounts',
+                component: UsersWithBankAccuntsPage,
+                meta: {
+                    title: 'bank-accounts',
+                    isWebsiteAuthenticated: true,
+                    roles: ['EMPLOYEE']
+                }
+            },
+            {
+                path: '/:pathMatch(.*)*',
+                component: NotFound
+            }
+        ]
     },
     {
         path: '/users/:user_id/bank-accounts',
@@ -64,10 +132,37 @@ router.beforeEach((to) => {
     const errorHandlingStore = useErrorHandlingStore()
 
     if (to.meta.isAtmAuthenticated && authStore.atmDecodedAuthToken === null) {
-        errorHandlingStore.setErrorMessage('You need to be logged in to perform this action.')
+        errorHandlingStore.errorMessage = 'You need to be logged in into the ATM to perform this action.'
         return '/atm/login'
     }
-    
+
+    if (to.meta.isWebsiteAuthenticated) {
+
+        const websiteDecodedAuthToken = authStore.websiteDecodedAuthToken
+
+        if (websiteDecodedAuthToken === null) {
+            errorHandlingStore.errorMessage = 'You need to be logged in to perform this action.'
+            return '/login'
+        }
+
+        if (to.meta.roles) {
+
+            let isAuthorized = false
+
+            for (const role of to.meta.roles) {
+                if (websiteDecodedAuthToken.role === role) {
+                    isAuthorized = true
+                    break
+                }
+            }
+
+            if (isAuthorized === false) {
+                errorHandlingStore.errorMessage = `Your account doesn't have the right role to perform this action.`
+                return '/login'
+            }
+        }
+    }
+
     if (to.meta.title) {
         document.title = to.meta.title
     }
