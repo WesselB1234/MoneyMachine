@@ -1,7 +1,6 @@
 package MoneyMachine.controllers;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import MoneyMachine.mappers.BankAccountMapper;
 import MoneyMachine.models.BankAccount;
+import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
+import MoneyMachine.models.enums.Role;
+import MoneyMachine.services.interfaces.AuthenticationService;
 import MoneyMachine.services.interfaces.BankAccountService;
 
 @RestController
@@ -18,17 +20,27 @@ public class BankAccountController {
 
     private BankAccountService bankAccountService;
     private BankAccountMapper bankAccountMapper;
+    private AuthenticationService authenticationService;
 
-    public BankAccountController(BankAccountService bankAccountService, BankAccountMapper bankAccountMapper) {
+    public BankAccountController(BankAccountService bankAccountService, BankAccountMapper bankAccountMapper, AuthenticationService authenticationService) {
         this.bankAccountService = bankAccountService;
         this.bankAccountMapper = bankAccountMapper;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("{iban}")
-    // @PreAuthorize("@authorizationService.isAllowedToInteractWithUserId(#iban)")
     public ResponseEntity<BankAccountResponse> getBankAccountByIban(@PathVariable String iban) {
         
-        BankAccount bankAccount = bankAccountService.getBankAccountByIban(iban);
+        BankAccount bankAccount;
+        User loggedInUser = this.authenticationService.getLoggedInUser();
+
+        if (loggedInUser.getRole() == Role.USER) {
+            bankAccount = bankAccountService.getBankAccountByIban(iban);
+        }
+        else {
+            bankAccount = bankAccountService.getBankAccountByIbanAndUserId(iban, loggedInUser.getId());
+        }
+
         return ResponseEntity.status(200).body(bankAccountMapper.toResponse(bankAccount));
     }
 }

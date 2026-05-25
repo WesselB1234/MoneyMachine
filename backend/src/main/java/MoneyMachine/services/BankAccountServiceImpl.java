@@ -35,4 +35,16 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         throw new NotFoundException(String.format("Bank account with IBAN %s does not exist.", iban));
     } 
+
+    @Override
+    public BankAccount getBankAccountByIbanAndUserId(String iban, Long id) {
+        
+        Optional<BankAccount> bankAccount = bankAccountRepository.findByIbanAndUserId(iban, id);
+
+        if (bankAccount.isPresent()) {
+            return bankAccount.get();
+        }
+
+        throw new NotFoundException(String.format("Bank account with IBAN %s owned by %s does not exist.", iban, id));
+    } 
 }

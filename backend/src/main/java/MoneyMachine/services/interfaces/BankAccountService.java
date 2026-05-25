@@ -10,4 +10,5 @@ import MoneyMachine.models.BankAccount;
 public interface BankAccountService {
     List<BankAccount> findBankAccountsByUserId(Long id);
     BankAccount getBankAccountByIban(String iban);
+    BankAccount getBankAccountByIbanAndUserId(String iban, Long id);
 }
