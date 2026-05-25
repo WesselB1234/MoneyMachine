@@ -35,9 +35,6 @@ import Navbar from '../../organisms/layout/Navbar.vue';
 </script>
 
 <template>
-    <header>
-        <Navbar />
-    </header>
     <TabMolecule />
     <section>
         <!-- Loading State -->
