@@ -4,7 +4,6 @@
     import axios from '@/utils/axios';
     import TabMolecule from '@/components/molecules/tabs/TabMolecule.vue';
 import BankAccountsTableGrid from '../../organisms/BankAccountsTableGrid.vue';
-import Navbar from '../../organisms/layout/Navbar.vue';
 
     const loading = ref(true);
     const error = ref(null);
@@ -19,9 +18,9 @@ import Navbar from '../../organisms/layout/Navbar.vue';
             console.log(result.data);
         }
         catch (err) {
-            console.log("Error fetching users without bank accounts", err);
+            console.log("Error fetching users with bank accounts", err);
             error.value =
-                err.message || "Failed to fetch users without bank accounts. Please try again later.";
+                err.message || "Failed to fetch users wit bank accounts. Please try again later.";
             usersWithBankAccounts.value = [];
         }
         finally {
