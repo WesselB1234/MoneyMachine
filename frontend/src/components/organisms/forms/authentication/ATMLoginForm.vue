@@ -50,8 +50,8 @@
     <form @submit="handleLogin">
         <ErrorAlert ref="errorAlertRef" />
         <SuccessAlert />
-        <BaseFormField labelName="Email" type="email" id="email" name="email" placeholder="Enter your email address" v-model="email"/>
-        <BaseFormField labelName="Password" type="password" id="password" name="password" placeholder="Enter your password" v-model="password"/>
+        <BaseFormField labelName="Email" type="email" id="email" placeholder="Enter your email address" v-model="email"/>
+        <BaseFormField labelName="Password" type="password" id="password" placeholder="Enter your password" v-model="password"/>
         <AuthsubmitBtn text="Login" />
   </form>
 </template>

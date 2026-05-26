@@ -16,7 +16,7 @@
 
 <template>
     <form @submit="handleDeposit">
-        <BaseFormField labelName="Amount" type="number" id="amount" name="amount" placeholder="Enter amount of money" v-model="amount"/>
+        <BaseFormField labelName="Amount" type="number" id="amount" placeholder="Enter amount of money" v-model="amount"/>
         <SubmitBtn text="Deposit" />
     </form>
 </template>
