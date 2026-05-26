@@ -1,33 +1,18 @@
 <script setup>
     import { onMounted, ref } from 'vue'
     import { useRoute } from 'vue-router'
-    import axios from '@/utils/axios.js'
-    import router from '@/router/router.js'
-    import { useErrorHandlingStore } from '@/stores/errorHandlingStore.js'
     import { useAuthStore } from '@/stores/authStore.js'
     import { getPriceFormatted } from '@/utils/stringFormatter.js'
+    import { getBankAccountByIban } from '@/utils/bankAccountLoader.js'
 
     import ATMActionOptions from '@/components/molecules/atm/ATMActionOptions.vue'
     
-    const errorHandlingStore = useErrorHandlingStore()
     const authStore = useAuthStore()
     const route = useRoute()
     const bankAccount = ref(null)
     
     onMounted(async () => {
-        try {
-            const response = await axios.get('/bank-accounts/' + route.params.iban)
-            bankAccount.value = response.data
-        }
-        catch (ex){
-            if (ex.response){
-                errorHandlingStore.errorMessage = ex.response.data.details
-                router.push('/atm/select-bank-account')
-            }
-            else {
-                useErrorHandlingStore.errorMessage = ex.details
-            }
-        }
+        bankAccount.value = await getBankAccountByIban(route.params.iban, '/atm/select-bank-account')
     }) 
 </script>
 
