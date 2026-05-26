@@ -8,5 +8,5 @@ const props = defineProps({
 </script>
 
 <template>
-    <p>${{ bankAccount.absoluteLimit }}</p>
+    <p>${{ bankAccount.singleTransferLimit }}</p>
 </template>
