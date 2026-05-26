@@ -31,12 +31,12 @@
             errorHandlingStore.successMessage = 'Successfully logged in.'
             router.push('/user-test')
         }
-        catch (ex){
+        catch (ex) {
             if (ex.response){
                 errorAlertRef.value.displayErrorMessage(ex.response.data.details)
             }
             else{
-                errorAlertRef.value.displayErrorMessage(ex.details)
+                errorAlertRef.value.displayErrorMessage(ex.message)
             }
         }
     }

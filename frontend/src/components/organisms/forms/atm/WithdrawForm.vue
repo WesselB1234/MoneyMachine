@@ -1,5 +1,6 @@
 <script setup>
     import { onMounted, ref } from 'vue'
+    import { useRoute } from 'vue-router'
     import { getBankAccountByIban } from '@/utils/bankAccountLoader.js'
     import { getPriceFormatted } from '@/utils/stringFormatter.js'
     import router from '@/router/router.js'
@@ -15,7 +16,7 @@
     const bankAccount = ref(null)
     const errorAlertRef = ref(null)
 
-    function handleDeposit(e) {
+    function handleWithdraw(e) {
         try {
             e.preventDefault()
             
@@ -23,11 +24,11 @@
                 throw new Error('Amount cannot be less or equal to 0.')
             }
             
-            // axios.post('/transactions/desposit' + router.currentRoute.value.params.iban, {
+            // axios.post('/transactions/withdraw' + router.currentRoute.value.params.iban, {
             //     'amount': amount
             // })
 
-            errorHandlingStore.successMessage = 'Successfully deposited [PRICE] to your balance.'
+            errorHandlingStore.successMessage = 'Successfully withdrawn [PRICE] from your balance.'
             router.push('/atm/bank-account/' + router.currentRoute.value.params.iban)
         }
         catch (ex) {
@@ -46,9 +47,10 @@
 </script>
 
 <template>
-    <form @submit="handleDeposit">
+    <form @submit="handleWithdraw">
         <ErrorAlert ref="errorAlertRef" />
+        <div>Absolute limit: {{ getPriceFormatted(bankAccount?.absoluteLimit) }}</div>
         <BaseFormField :labelName="'Amount (max ' + getPriceFormatted(bankAccount?.singleTransferLimit) + ')'" type="number" id="amount" placeholder="Enter amount of money" v-model="amount"/>
-        <SubmitBtn text="Deposit" />
+        <SubmitBtn text="Withdraw" />
     </form>
 </template>

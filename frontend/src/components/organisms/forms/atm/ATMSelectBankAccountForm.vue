@@ -37,18 +37,13 @@
             const response = await axios.get('users/' + authStore.atmDecodedAuthToken.sub + '/bank-accounts')
             bankAccounts.value = response.data
         }
-        catch (ex){
-
-            let message = null;
-
+        catch (ex) {
             if (ex.response){
-                message = errorHandlingStore.errorMessage = ex.response.data.details
+                errorAlertRef.value.displayErrorMessage(ex.response.data.details)
             }
             else{
-                message = ex.details
+                errorAlertRef.value.displayErrorMessage(ex.message)
             }
-
-            errorAlertRef.value.displayErrorMessage()
         }
     })
 </script>
