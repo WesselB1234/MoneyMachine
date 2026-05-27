@@ -1,17 +1,18 @@
 <script setup>
     import { onMounted, ref } from 'vue'
     import { useAuthStore } from '@/stores/authStore.js'
+    import { useBankAccountStore } from '@/stores/bankAccountStore.js'
     import { getPriceFormatted } from '@/utils/stringFormatter.js'
-    import { getBankAccountByIban } from '@/utils/bankAccountLoader.js'
     import router from '@/router/router.js'
 
     import ATMActionOptions from '@/components/molecules/atm/ATMActionOptions.vue'
     
     const authStore = useAuthStore()
+    const bankAccountStore = useBankAccountStore()
     const bankAccount = ref(null)
     
     onMounted(async () => {
-        bankAccount.value = await getBankAccountByIban(router.currentRoute.value.params.iban, '/atm/select-bank-account')
+        bankAccount.value = await bankAccountStore.getBankAccountByIbanFromDatabase(router.currentRoute.value.params.iban, '/atm/select-bank-account')        
     }) 
 </script>
 

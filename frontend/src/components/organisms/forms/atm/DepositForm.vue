@@ -4,6 +4,7 @@
     import { getPriceFormatted } from '@/utils/stringFormatter.js'
     import router from '@/router/router.js'
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore.js'
+    import { useBankAccountStore } from '@/stores/bankAccountStore.js'
     import { throwIfMoneyAmountIsNotValid } from '@/utils/inputValidator.js'
 
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
@@ -11,6 +12,7 @@
     import ErrorAlert from '@/components/atoms/errorHandling/ErrorAlert.vue'
 
     const errorHandlingStore = useErrorHandlingStore()
+    const bankAccountStore = useBankAccountStore()
     
     const amount = ref(null)
     const bankAccount = ref(null)
@@ -35,7 +37,7 @@
     }
 
     onMounted(async () => {
-        bankAccount.value = await getBankAccountByIban(router.currentRoute.value.params.iban, '/atm/select-bank-account')
+        bankAccount.value = await bankAccountStore.getBankAccountByIban(router.currentRoute.value.params.iban, '/atm/select-bank-account')
     })
 </script>
 
