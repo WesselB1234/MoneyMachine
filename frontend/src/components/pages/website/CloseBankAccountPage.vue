@@ -11,7 +11,7 @@ const fetchBankAccount = async () => {
     loading.value = true;
     error.value = null;
     try {
-        const result = await axios.get("/bank-accounts.{iban}");
+        const result = await axios.get("/bank-accounts/{iban}");
         bankAccount.value = result.data;
         console.log(result.data)
     }

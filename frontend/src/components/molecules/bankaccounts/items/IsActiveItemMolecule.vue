@@ -22,7 +22,7 @@ const props = defineProps({
 
 <template>
     <section class="flex flex-row">
-    <IsActiveLabelAtom />
-    <IsActiveLidtDataFieldAtom :bankAccount="bankAccount"/>
+        <IsActiveLabelAtom />
+        <IsActiveLidtDataFieldAtom :bankAccount="bankAccount" />
     </section>
 </template>

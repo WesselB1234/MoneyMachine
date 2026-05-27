@@ -1,4 +1,6 @@
 <script setup>
 </script>
 
-<template>Single transfer limit:</template>
+<template>
+    <p>Single transfer limit:</p>
+</template>

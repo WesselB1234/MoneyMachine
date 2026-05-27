@@ -8,5 +8,5 @@ const props = defineProps({
 </script>
 
 <template>
-    <h2>${{ bankAccount.bankAccountType }}</h2>
+    <h2>{{ bankAccount.bankAccountType }}</h2>
 </template>
