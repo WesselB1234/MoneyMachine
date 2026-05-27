@@ -28,7 +28,7 @@
             router.push('/atm/bank-account/' + selectedBankAccountIban.value)
         }
         catch (ex){
-            errorHandlingStore.errorMessage = ex.message   
+            errorAlertRef.value.displayErrorMessage(ex.message)   
         }
     }
 

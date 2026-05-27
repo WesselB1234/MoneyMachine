@@ -1,6 +1,5 @@
 <script setup>
     import { onMounted, ref } from 'vue'
-    import { getBankAccountByIban } from '@/utils/bankAccountLoader.js'
     import { getPriceFormatted } from '@/utils/stringFormatter.js'
     import router from '@/router/router.js'
     import { useErrorHandlingStore } from '@/stores/errorHandlingStore.js'
