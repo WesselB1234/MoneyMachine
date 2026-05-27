@@ -1,6 +1,6 @@
 package MoneyMachine.models.dtos.responses;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +16,6 @@ public class DepositTransactionResponse {
     private String toAccountIban;
     private String message;
     private Double amount;
-    private ZonedDateTime dateTime;
+    private LocalDateTime dateTime;
     private Boolean isActive;
 }

@@ -1,41 +1,38 @@
 package MoneyMachine.controllers;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import MoneyMachine.mappers.BankAccountMapper;
-import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.DepositTransaction;
-import MoneyMachine.models.User;
 import MoneyMachine.models.WithdrawTransaction;
-import MoneyMachine.models.dtos.responses.BankAccountResponse;
-import MoneyMachine.models.enums.Role;
-import MoneyMachine.services.interfaces.AuthenticationService;
-import MoneyMachine.services.interfaces.BankAccountService;
+import MoneyMachine.models.dtos.requests.DepositRequest;
+import MoneyMachine.models.dtos.requests.WithdrawRequest;
+import MoneyMachine.services.interfaces.TransactionService;
 
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
+    
+    private TransactionService transactionService;
 
-    private BankAccountService bankAccountService;
-    private AuthenticationService authenticationService;
-
-    public TransactionController(BankAccountService bankAccountService, AuthenticationService authenticationService) {
-        this.bankAccountService = bankAccountService;
-        this.authenticationService = authenticationService;
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
     }
 
     @PostMapping("deposit")
-    public ResponseEntity<DepositTransaction> deposit(@PathVariable String iban) {
+    public ResponseEntity<?> deposit(@RequestBody DepositRequest depositRequest) {
+        
+        //DepositTransaction transaction = transactionService.depositAmountIntoBankAccount(null, null);
+
         return null;
     }
 
     @PostMapping("withdraw")
-    public ResponseEntity<WithdrawTransaction> withdraw(@PathVariable String iban) {
+    public ResponseEntity<WithdrawTransaction> withdraw(@RequestBody WithdrawRequest withdrawRequest) {
         return null;
     }
 }
