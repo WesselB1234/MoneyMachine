@@ -4,7 +4,8 @@
     import { getBankAccountByIban } from '@/utils/bankAccountLoader.js'
     import { getPriceFormatted } from '@/utils/stringFormatter.js'
     import router from '@/router/router.js'
-    import { useErrorHandlingStore } from '@/stores/errorHandlingStore'
+    import { useErrorHandlingStore } from '@/stores/errorHandlingStore.js'
+    import { throwIfWithdrawAmountIsNotValid } from '@/utils/inputValidator.js'
 
     import BaseFormField from '@/components/molecules/forms/BaseFormField.vue'
     import SubmitBtn from '@/components/atoms/buttons/SubmitBtn.vue'
@@ -18,15 +19,8 @@
 
     function handleWithdraw(e) {
         try {
-            e.preventDefault()
-            
-            if (amount.value <= 0) {
-                throw new Error('Amount cannot be less or equal to 0.')
-            }
-            
-            // axios.post('/transactions/withdraw' + router.currentRoute.value.params.iban, {
-            //     'amount': amount
-            // })
+            e.preventDefault() 
+            throwIfWithdrawAmountIsNotValid(amount.value, bankAccount.value.balance, bankAccount.value.absoluteLimit)
 
             errorHandlingStore.successMessage = 'Successfully withdrawn [PRICE] from your balance.'
             router.push('/atm/bank-account/' + router.currentRoute.value.params.iban)
