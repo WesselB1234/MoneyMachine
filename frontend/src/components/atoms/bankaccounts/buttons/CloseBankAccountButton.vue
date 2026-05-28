@@ -1,7 +1,14 @@
 <script setup>
+const props = defineProps({
+    bankAccount: {
+        type: Object,
+        required: true
+    }
+})
 
+const emits = defineEmits(['closeAccount'])
 </script>
 
 <template>
-    <RouterLink :to="{path: '/bank-accounts'}" @click="deActivateBankAccount">Close bank account</RouterLink>
+    <button @click="$emit('closeAccount', bankAccount.iban)">Close bank account</button>
 </template>

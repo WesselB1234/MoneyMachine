@@ -6,6 +6,9 @@ import { useRoute } from 'vue-router';
 const loading = ref(true);
 const error = ref(null);
 const bankAccount = ref();
+const isActive = {
+    isActive: false
+};
 const route = useRoute();
 
 const fetchBankAccount = async () => {
@@ -32,7 +35,7 @@ const deActivateBankAccount = async () => {
     error.value = null;
     try
     {
-        const result = await axios.patch(`/bank-accounts/${route.params.iban}`, bankAccount.isActive == false);
+        const result = await axios.patch(`/bank-accounts/${route.params.iban}`, isActive);
         bankAccount.value = result.data;
         console.log(result.data)
     }
@@ -40,7 +43,7 @@ const deActivateBankAccount = async () => {
         console.log("Error fetching bank account", err);
         error.value =
             err.message || "Failed to fetch bank account. Please try again later.";
-        bankAccount.value = [];
+        bankAccount.value = null;
     }
     finally {
         loading.value = false;
@@ -75,6 +78,6 @@ onMounted(() => {
                 Try Again
             </button>
         </section>
-        <CloseBankAccountOrganism v-else :bankAccount="bankAccount" />
+        <CloseBankAccountOrganism @closeAccount="deActivateBankAccount" v-else :bankAccount="bankAccount" />
     </section>
 </template>

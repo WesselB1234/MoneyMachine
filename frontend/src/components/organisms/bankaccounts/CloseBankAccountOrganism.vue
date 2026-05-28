@@ -25,7 +25,7 @@ const props = defineProps({
         }
     }
 })
-
+const emits = defineEmits(['closeAccount'])
 </script>
 
 <template>
@@ -38,6 +38,6 @@ const props = defineProps({
         <DailyTransferLimitItemMolecule :bankAccount="bankAccount" />
         <IsActiveItemMolecule :bankAccount="bankAccount" />
         <SingleTransferLimitItemMolecule :bankAccount="bankAccount" />
-        <ButtonSetMolecule :bankAccount="bankAccount" />
+        <ButtonSetMolecule @closeAccount="$emit('closeAccount', bankAccount.iban)" :bankAccount="bankAccount" />
     </section>
 </template>

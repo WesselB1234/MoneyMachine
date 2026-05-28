@@ -8,5 +8,5 @@ const props = defineProps({
 </script>
 
 <template>
-     <RouterLink :to="{path: `/bank-accounts/${bankAccount.iban}/close`, params: {iban: bankAccount.iban}}" class="btn btn-danger">Close bank account</RouterLink>
+     <RouterLink :to="{path: `/bank-accounts/${bankAccount.iban}/close`}" class="btn btn-danger">Close bank account</RouterLink>
 </template>

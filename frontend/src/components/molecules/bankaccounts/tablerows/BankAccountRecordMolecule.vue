@@ -43,7 +43,7 @@ const props = defineProps({
         <SingleTransferLimitDataFieldAtom :bank-account="bankAccount" />
         <IsActiveDataFieldAtom :bank-account="bankAccount" />
         <td class="flex flex-column">
-            <CloseBankAccountButtonAtom />
+            <CloseBankAccountButtonAtom :bankAccount="bankAccount" />
             <UpdateTransferLimitsButtonAtom />
             <ViewTransactionHistoryButtonAtom />
             <TransferMoneyButtonAtom />

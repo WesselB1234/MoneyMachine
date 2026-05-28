@@ -1,5 +1,5 @@
 <script setup>
-import CancelCloseBankAccountButton from '../../../atoms/bankaccounts/buttons/CloseBankAccountButton.vue';
+import CancelCloseBankAccountButton from '../../../atoms/bankaccounts/buttons/CancelCloseBankAccountButton.vue';
 import CloseBankAccountButton from '../../../atoms/bankaccounts/buttons/CloseBankAccountButton.vue';
 
 const props = defineProps({
@@ -18,12 +18,12 @@ const props = defineProps({
         }
     }
 })
-
+const emits = defineEmits(['closeAccount'])
 </script>
 
 <template>
     <section class="flex flex-row">
-        <CloseBankAccountButton :bankAccount="bankAccount" />
+        <CloseBankAccountButton @closeAccount="$emit('closeAccount', bankAccount.iban)" :bankAccount="bankAccount" />
         <CancelCloseBankAccountButton />
     </section>
 </template>
