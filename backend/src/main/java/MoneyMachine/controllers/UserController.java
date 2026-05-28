@@ -7,7 +7,6 @@ import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
 import MoneyMachine.mappers.BankAccountMapper;
-import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.dtos.requests.LoginRequest;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;

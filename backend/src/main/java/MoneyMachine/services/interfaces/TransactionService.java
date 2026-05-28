@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
-import MoneyMachine.models.DepositTransaction;
-import MoneyMachine.models.WithdrawTransaction;
+import MoneyMachine.models.dtos.responses.DepositTransactionResponse;
+import MoneyMachine.models.dtos.responses.WithdrawTransactionResponse;
 
 @Service
 public interface TransactionService {
-    DepositTransaction depositAmountIntoBankAccount(String toIban, BigDecimal amount);
-    WithdrawTransaction withdrawAmountIntoBankAccount(String fromIban, BigDecimal amount);
+    DepositTransactionResponse depositAmountIntoBankAccount(String toIban, BigDecimal amount);
+    WithdrawTransactionResponse withdrawAmountIntoBankAccount(String fromIban, BigDecimal amount);
 }

@@ -5,10 +5,13 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 
 import MoneyMachine.exception.InvalidArgumentsException;
+import MoneyMachine.mappers.TransactionMapper;
 import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.DepositTransaction;
 import MoneyMachine.models.User;
 import MoneyMachine.models.WithdrawTransaction;
+import MoneyMachine.models.dtos.responses.DepositTransactionResponse;
+import MoneyMachine.models.dtos.responses.WithdrawTransactionResponse;
 import MoneyMachine.repositories.TransactionRepository;
 import MoneyMachine.services.interfaces.AuthenticationService;
 import MoneyMachine.services.interfaces.BankAccountService;
@@ -17,14 +20,16 @@ import MoneyMachine.services.interfaces.TransactionService;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private BankAccountService bankAccountService;
-    private AuthenticationService authenticationService;
-    private TransactionRepository transactionRepository;
+    private final BankAccountService bankAccountService;
+    private final AuthenticationService authenticationService;
+    private final TransactionRepository transactionRepository;
+    private final TransactionMapper transactionMapper;
 
-    public TransactionServiceImpl(BankAccountService bankAccountService, AuthenticationService authenticationService, TransactionRepository transactionRepository) {
+    public TransactionServiceImpl(BankAccountService bankAccountService, AuthenticationService authenticationService, TransactionRepository transactionRepository, TransactionMapper transactionMapper) {
         this.bankAccountService = bankAccountService;
         this.authenticationService = authenticationService;
         this.transactionRepository = transactionRepository;
+        this.transactionMapper = transactionMapper;
     }
 
     private void throwIfMoneyAmountIsNotValid(BigDecimal amount, BankAccount bankAccount) {
@@ -46,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public DepositTransaction depositAmountIntoBankAccount(String toIban, BigDecimal amount) {
+    public DepositTransactionResponse depositAmountIntoBankAccount(String toIban, BigDecimal amount) {
 
         BankAccount toBankAccount = bankAccountService.getBankAccountByIban(toIban);
         throwIfMoneyAmountIsNotValid(amount, toBankAccount);
@@ -64,11 +69,11 @@ public class TransactionServiceImpl implements TransactionService {
 
         transactionRepository.save(depositTransaction);
 
-        return depositTransaction;
+        return transactionMapper.toDepositTransactionResponse(depositTransaction);
     }
 
     @Override
-    public WithdrawTransaction withdrawAmountIntoBankAccount(String fromIban, BigDecimal amount) {
+    public WithdrawTransactionResponse withdrawAmountIntoBankAccount(String fromIban, BigDecimal amount) {
 
         BankAccount fromBankAccount = bankAccountService.getBankAccountByIban(fromIban);
         throwIfMoneyAmountIsNotValid(amount, fromBankAccount);
@@ -87,6 +92,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         transactionRepository.save(withdrawTransaction);
 
-        return withdrawTransaction;
+        return transactionMapper.toWithdrawTransactionResponse(withdrawTransaction);
     }
 }
