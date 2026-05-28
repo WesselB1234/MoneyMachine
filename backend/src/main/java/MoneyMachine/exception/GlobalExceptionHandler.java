@@ -75,4 +75,11 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(401, ErrorType.INVALID_AUTH_TOKEN, "Expired token", "Your authentication token has expired.");
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentExceptions(IllegalArgumentException ex) {
+        
+        ErrorResponse errorResponse = new ErrorResponse(400, ErrorType.ILLEGAL_ARGUMENTS, "Illegal arguments", ex.getMessage());
+        return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
+    }
 }

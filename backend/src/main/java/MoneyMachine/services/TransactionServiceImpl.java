@@ -35,11 +35,11 @@ public class TransactionServiceImpl implements TransactionService {
     private void throwIfMoneyAmountIsNotValid(BigDecimal amount, BankAccount bankAccount) {
     
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidArgumentsException("Amount cannot be less or equal to 0.");
+            throw new IllegalArgumentException("Amount cannot be less or equal to 0.");
         }
 
         if (amount.compareTo(bankAccount.getSingleTransferLimit()) > 0) {
-            throw new InvalidArgumentsException(String.format("Amount cannot be more than the single transfer limit %s.", bankAccount.getSingleTransferLimit()));
+            throw new IllegalArgumentException(String.format("Amount cannot be more than the single transfer limit %s.", bankAccount.getSingleTransferLimit()));
         }
     }
 
