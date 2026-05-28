@@ -2,16 +2,17 @@
 import { onMounted, ref } from 'vue';
 import axios from '@/utils/axios';
 import CloseBankAccountOrganism from '../../organisms/bankaccounts/CloseBankAccountOrganism.vue';
-
+import { useRoute } from 'vue-router';
 const loading = ref(true);
 const error = ref(null);
 const bankAccount = ref();
+const route = useRoute();
 
 const fetchBankAccount = async () => {
     loading.value = true;
     error.value = null;
     try {
-        const result = await axios.get("/bank-accounts/{iban}");
+        const result = await axios.get(`/bank-accounts/${route.params.iban}`);
         bankAccount.value = result.data;
         console.log(result.data)
     }
@@ -25,6 +26,26 @@ const fetchBankAccount = async () => {
         loading.value = false;
     }
 };
+
+const deActivateBankAccount = async () => {
+    loading.value = true;
+    error.value = null;
+    try
+    {
+        const result = await axios.patch(`/bank-accounts/${route.params.iban}`, bankAccount.isActive == false);
+        bankAccount.value = result.data;
+        console.log(result.data)
+    }
+    catch (err) {
+        console.log("Error fetching bank account", err);
+        error.value =
+            err.message || "Failed to fetch bank account. Please try again later.";
+        bankAccount.value = [];
+    }
+    finally {
+        loading.value = false;
+    }
+}
 
 onMounted(() => {
     fetchBankAccount();

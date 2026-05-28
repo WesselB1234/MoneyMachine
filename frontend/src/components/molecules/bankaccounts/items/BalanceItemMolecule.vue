@@ -8,7 +8,7 @@ const props = defineProps({
         required: true,
         validator: (value) => {
             return typeof value.iban === 'string' &&
-                typeof value.user === 'object' &&
+                typeof value.userId === 'number' &&
                 typeof value.balance === 'number' &&
                 typeof value.absoluteLimit === 'number' &&
                 typeof value.singleTransferLimit === 'number' &&

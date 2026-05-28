@@ -1,6 +1,7 @@
 <script setup>
+
 </script>
 
 <template>
-    <a href="/bank-accounts" class="btn btn-danger">Close bank account</a>
+    <RouterLink :to="{path: '/bank-accounts'}" @click="deActivateBankAccount">Close bank account</RouterLink>
 </template>

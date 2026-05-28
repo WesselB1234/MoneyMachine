@@ -111,7 +111,7 @@ const routes = [
                 }
             },
             {
-                path: '/bank-accounts/closeBankAccount',
+                path: '/bank-accounts/:iban/close',
                 component: CloseBankAccountPage,
                 meta: {
                     title: "close-bank-accounts-preview",
