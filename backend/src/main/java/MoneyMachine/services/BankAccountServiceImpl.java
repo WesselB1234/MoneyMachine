@@ -49,11 +49,12 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public BankAccountOverviewResponse getAllBankAccountsByUserId(Long id) {
-        
-        List<BankAccount> bankAccounts = bankAccountRepository.findAllByUserId(id);
+    public BankAccountOverviewResponse getAllBankAccountsByUserId(Long id, Pageable pageable) {
 
-        return new BankAccountOverviewResponse(bankAccountMapper.toResponseList(bankAccounts), 1, 999);
+        Page<BankAccount> page = bankAccountRepository.findAllByUserId(id, pageable);
+        List<BankAccount> bankAccounts = page.getContent();
+
+        return new BankAccountOverviewResponse(bankAccountMapper.toResponseList(bankAccounts), page.getNumber(), page.getSize());
     }
 
     @Override

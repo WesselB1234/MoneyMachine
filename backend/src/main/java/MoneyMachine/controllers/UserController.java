@@ -6,15 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
-import MoneyMachine.mappers.BankAccountMapper;
-import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.dtos.requests.LoginRequest;
 import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
-import MoneyMachine.models.dtos.responses.BankAccountResponse;
 import MoneyMachine.models.dtos.responses.ErrorResponse;
 import MoneyMachine.models.dtos.responses.LoginResponse;
 import MoneyMachine.models.dtos.responses.UserOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserResponse;
+import org.springframework.data.domain.Pageable;
 import MoneyMachine.services.interfaces.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,13 +28,11 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
     private final BankAccountService bankAccountService;
-    private final BankAccountMapper bankAccountMapper;
 
-    public UserController(UserService userService, AuthenticationService authenticationService, BankAccountService bankAccountService, BankAccountMapper bankAccountMapper) {
+    public UserController(UserService userService, AuthenticationService authenticationService, BankAccountService bankAccountService) {
         this.userService = userService;
         this.authenticationService = authenticationService;
         this.bankAccountService = bankAccountService;
-        this.bankAccountMapper = bankAccountMapper;
     }
 
     @PostMapping("login")
@@ -57,9 +53,9 @@ public class UserController {
 
     @GetMapping("{id}/bank-accounts")
     @PreAuthorize("@authorizationService.isAllowedToInteractWithUserId(#id)")
-    public ResponseEntity<BankAccountOverviewResponse> getBankAccountsByUserId(@PathVariable Long id) throws Exception {
+    public ResponseEntity<BankAccountOverviewResponse> getBankAccountsByUserId(@PathVariable Long id, Pageable pageable) throws Exception {
 
-        BankAccountOverviewResponse bankAccountOverviewResponse = bankAccountService.getAllBankAccountsByUserId(id);
+        BankAccountOverviewResponse bankAccountOverviewResponse = bankAccountService.getAllBankAccountsByUserId(id, pageable);
         
         return ResponseEntity.status(200).body(bankAccountOverviewResponse);
     }
