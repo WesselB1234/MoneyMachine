@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
-import MoneyMachine.exception.InvalidArgumentsException;
 import MoneyMachine.mappers.TransactionMapper;
 import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.DepositTransaction;
@@ -46,7 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
     private void throwIfWithdrawAmountIsNotValid(BigDecimal amount, BankAccount bankAccount) {
 
         if (bankAccount.getBalance().subtract(amount).compareTo(bankAccount.getAbsoluteLimit()) < 0) {
-            throw new InvalidArgumentsException("Total amount cannot be less the absolute limit.");
+            throw new IllegalArgumentException("Total amount cannot be less the absolute limit.");
         }
     }
 
