@@ -4,6 +4,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import MoneyMachine.exception.InvalidCredentialsException;
 import MoneyMachine.models.User;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.interfaces.AuthenticationService;
@@ -28,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return user;
         }
 
-        return null;
+        throw new InvalidCredentialsException("Password or email is not correct.");
     }
 
     @Override

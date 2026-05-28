@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
-import MoneyMachine.exception.InvalidCredentialsException;
 import MoneyMachine.mappers.BankAccountMapper;
 import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.BankAccount;
@@ -50,13 +49,7 @@ public class UserController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) throws Exception {
 
         User user = authenticationService.getUserByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
-
-        if (user == null){
-            throw new InvalidCredentialsException("Password or username is not correct.");
-        }
-
         String authToken = jwtUtil.generateAuthTokenFromUser(user, loginRequest.getLoginType());
-
         LoginResponse loginResponse = new LoginResponse(authToken, "Bearer", jwtUtil.getAuthTokenExpirationTime(), userMapper.toSummaryResponse(user));
 
         return ResponseEntity.status(201).body(loginResponse);

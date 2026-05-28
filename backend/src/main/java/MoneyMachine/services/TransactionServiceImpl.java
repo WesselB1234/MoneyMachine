@@ -1,17 +1,14 @@
 package MoneyMachine.services;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import MoneyMachine.exception.InvalidArgumentsException;
-import MoneyMachine.exception.NotFoundException;
 import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.DepositTransaction;
 import MoneyMachine.models.User;
 import MoneyMachine.models.WithdrawTransaction;
-import MoneyMachine.repositories.BankAccountRepository;
 import MoneyMachine.repositories.TransactionRepository;
 import MoneyMachine.services.interfaces.AuthenticationService;
 import MoneyMachine.services.interfaces.BankAccountService;
