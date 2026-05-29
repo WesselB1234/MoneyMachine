@@ -49,10 +49,9 @@ public class Transaction {
 
     @Column(nullable = false)
     @NotNull
-    private Boolean active;
+    private Boolean isActive;
 
-    
+    @Column(nullable = false)
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
     private LocalDateTime dateTime;
 }

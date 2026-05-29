@@ -55,7 +55,14 @@ public class SecurityConfig {
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                .requestMatchers("/users/login", "/h2-console/**","/swagger-ui/**","/v3/api-docs/**", "/openapi.yaml").permitAll()
+                .requestMatchers(
+                    "/users/login", 
+                    "/h2-console/**",
+                    "/swagger-ui.html", 
+                    "/swagger-ui/**", 
+                    "/v3/api-docs/**", 
+                    "/openapi.yaml"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

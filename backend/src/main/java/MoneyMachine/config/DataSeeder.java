@@ -1,7 +1,6 @@
 package MoneyMachine.config;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -64,36 +63,36 @@ public class DataSeeder implements ApplicationRunner {
 
         userWithoutBankAccount = userRepository.save(userWithoutBankAccount);
 
-        BankAccount bankAccount1 = new BankAccount();
-        bankAccount1.setIban("NL91ABNA0417164300");
-        bankAccount1.setUser(user);
-        bankAccount1.setBalance(new BigDecimal("100"));
-        bankAccount1.setAbsoluteLimit(new BigDecimal("-100"));
-        bankAccount1.setSingleTransferLimit(new BigDecimal("100"));
-        bankAccount1.setDailyTransferLimit(new BigDecimal("100"));
-        bankAccount1.setBankAccountType(BankAccountType.CHECKING);
-        bankAccount1.setIsActive(true);
+        BankAccount checkingBankAccount = new BankAccount();
+        checkingBankAccount.setIban("NL91ABNA0417164300");
+        checkingBankAccount.setUser(user);
+        checkingBankAccount.setBalance(new BigDecimal("100"));
+        checkingBankAccount.setAbsoluteLimit(new BigDecimal("-100"));
+        checkingBankAccount.setSingleTransferLimit(new BigDecimal("100"));
+        checkingBankAccount.setDailyTransferLimit(new BigDecimal("100"));
+        checkingBankAccount.setBankAccountType(BankAccountType.CHECKING);
+        checkingBankAccount.setIsActive(true);
 
-        bankAccount1 = bankAccountRepository.save(bankAccount1);
-        BankAccount bankAccount2 = new BankAccount();
-        bankAccount2.setIban("NL91ABNA0417164301");
-        bankAccount2.setUser(user);
-        bankAccount2.setBalance(new BigDecimal("100"));
-        bankAccount2.setAbsoluteLimit(new BigDecimal("-100"));
-        bankAccount2.setSingleTransferLimit(new BigDecimal("100"));
-        bankAccount2.setDailyTransferLimit(new BigDecimal("100"));
-        bankAccount2.setBankAccountType(BankAccountType.CHECKING);
-        bankAccount2.setIsActive(true);
+        bankAccountRepository.save(checkingBankAccount);
 
-        bankAccount2 = bankAccountRepository.save(bankAccount2);
+        BankAccount savingsBankAccount = new BankAccount();
+        savingsBankAccount.setIban("NL47ABNA0582937105");
+        savingsBankAccount.setUser(user);
+        savingsBankAccount.setBalance(new BigDecimal("133767"));
+        savingsBankAccount.setAbsoluteLimit(new BigDecimal("-1000"));
+        savingsBankAccount.setSingleTransferLimit(new BigDecimal("300"));
+        savingsBankAccount.setDailyTransferLimit(new BigDecimal("1000"));
+        savingsBankAccount.setBankAccountType(BankAccountType.SAVINGS);
+        savingsBankAccount.setIsActive(true);
+
+        bankAccountRepository.save(savingsBankAccount);
 
         DepositTransaction depositTransaction = new DepositTransaction();
         depositTransaction.setInitiatingUser(user);
         depositTransaction.setAmount(new BigDecimal("10"));
         depositTransaction.setMessage("Hello deposit!");
-        depositTransaction.setActive(true);
-        depositTransaction.setToBankAccount(bankAccount1);
-        depositTransaction.setDateTime(LocalDateTime.now());
+        depositTransaction.setIsActive(true);
+        depositTransaction.setToBankAccount(checkingBankAccount);
 
         depositTransaction = transactionRepository.save(depositTransaction);
 
@@ -101,9 +100,8 @@ public class DataSeeder implements ApplicationRunner {
         withdrawTransaction.setInitiatingUser(user);
         withdrawTransaction.setAmount(new BigDecimal("10"));
         withdrawTransaction.setMessage("Hello withdraw!");
-        withdrawTransaction.setActive(true);
-        withdrawTransaction.setFromBankAccount(bankAccount1);
-        withdrawTransaction.setDateTime(LocalDateTime.now());
+        withdrawTransaction.setIsActive(true);
+        withdrawTransaction.setFromBankAccount(checkingBankAccount);
 
         withdrawTransaction = transactionRepository.save(withdrawTransaction);
 
@@ -111,10 +109,9 @@ public class DataSeeder implements ApplicationRunner {
         transferTransaction.setInitiatingUser(user);
         transferTransaction.setAmount(new BigDecimal("10"));
         transferTransaction.setMessage("Hello transfer!");
-        transferTransaction.setActive(true);
-        transferTransaction.setFromBankAccount(bankAccount1);
-        transferTransaction.setToBankAccount(bankAccount2);
-        transferTransaction.setDateTime(LocalDateTime.now());
+        transferTransaction.setIsActive(true);
+        transferTransaction.setFromBankAccount(checkingBankAccount);
+        transferTransaction.setToBankAccount(checkingBankAccount);
 
        transferTransaction= transactionRepository.save(transferTransaction);
     }
