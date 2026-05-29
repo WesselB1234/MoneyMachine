@@ -12,6 +12,7 @@ onMounted(async () => {
         if (response.status === 200) {
 
             transactions.value = response.data
+            console.log(transactions)
 
 
         }
@@ -52,7 +53,7 @@ function formatDateTime(dateString) {
 <template>
     <div class="text-center">
     <h1 class="display-4">All Transactions</h1>
-    <router-link to="/transactions/create/employee" class="btn btn-primary mb-3">add transaction</router-link>
+    <router-link to="/transactions/create/employee" class="btn btn-primary mb-3">Add transaction</router-link>
 
     <table class="table table-bordered table-striped table-hover">
         <thead>
@@ -67,7 +68,7 @@ function formatDateTime(dateString) {
             </tr>
         </thead>
         <tbody>
-            <tr  v-for="transaction in transactions" :key="transaction.transactionId">
+            <tr v-for="transaction in transactions" :key="transaction.transactionId">
                 <td>{{ transaction.fromAccount }}</td>
                 <td> {{ transaction.toAccount }}</td>
                 <td>€ {{ transaction.amount }}</td>

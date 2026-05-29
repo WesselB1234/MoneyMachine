@@ -30,29 +30,27 @@ public class TransactionController {
     }
 
     @GetMapping("")
-     @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
+    @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
     public ResponseEntity<?> getTransactions() {
         return ResponseEntity.ok(transactionService.getAllTransactions());  
     }
 
     @PostMapping("transfer")
-     @PreAuthorize("@authorizationService.isLoggedIntoLoginType('WEBSITE')")
+    @PreAuthorize("@authorizationService.isLoggedIntoLoginType('WEBSITE')")
     public ResponseEntity<?> createTransfer(@RequestBody TransferRequest transaction) {
+        
         User loggedInUser = authenticationService.getLoggedInUser();
+        
         if(loggedInUser.getRole()==MoneyMachine.models.enums.Role.EMPLOYEE)
         {
             return ResponseEntity.ok(transactionService.createTransferAsEmployee(transaction,loggedInUser));
         }
-       else if (loggedInUser.getRole()==MoneyMachine.models.enums.Role.USER)
+        else if (loggedInUser.getRole()==MoneyMachine.models.enums.Role.USER)
         {
             return ResponseEntity.ok(transactionService.createTransferAsUser(transaction,loggedInUser));
         }
          
-            
-      
-
-       
-       return ResponseEntity.status(500).body("unknown role");
+        return ResponseEntity.status(500).body("unknown role");
     }
 
     @PostMapping("deposit")

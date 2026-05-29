@@ -22,8 +22,10 @@ import MoneyMachine.repositories.TransactionRepository;
 import MoneyMachine.services.interfaces.AuthenticationService;
 import MoneyMachine.services.interfaces.BankAccountService;
 import MoneyMachine.services.interfaces.TransactionService;
+
 @Service
 public class TransactionServiceImpl implements TransactionService {
+    
     private BankAccountRepository bankAccountRepository;
     private TransactionMapperService mapper;
     private final BankAccountService bankAccountService;
@@ -31,8 +33,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
 
-
-    public TransactionServiceImpl(TransactionRepository transactionRepository, BankAccountRepository bankAccountRepository, TransactionMapperService mapper,BankAccountService bankAccountService, AuthenticationService authenticationService, TransactionMapper transactionMapper) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, BankAccountRepository bankAccountRepository, TransactionMapperService mapper, BankAccountService bankAccountService, AuthenticationService authenticationService, TransactionMapper transactionMapper) {
         this.bankAccountRepository = bankAccountRepository;
         this.mapper = mapper;
         this.transactionRepository = transactionRepository;
@@ -45,15 +46,18 @@ public class TransactionServiceImpl implements TransactionService {
     {
         return mapper.getAllTransactions(transactionRepository.findAll());
     }
+
     public List<TransactionResponse> getAllTransactionsByAccountId(String iban)
     {
-       List<Transaction> transactions = transactionRepository.findAllByToOrFromIban(iban);
+        List<Transaction> transactions = transactionRepository.findAllByToOrFromIban(iban);
         return mapper.getAllTransactions(transactions);
     }
+
     public TransactionResponse getTransactionByid(long id)
     {
        return mapper.toResponse(transactionRepository.findById(id).orElseThrow());
     }
+
     @Transactional(rollbackFor = Exception.class)
     public TransactionResponse createTransferAsUser(TransferRequest transaction,User user)
     { 
@@ -70,7 +74,8 @@ public class TransactionServiceImpl implements TransactionService {
         TransferTransaction saved = transactionRepository.save(transferTransaction);
         return mapper.toResponse(saved);
     }  
-   @Transactional(rollbackFor = Exception.class)
+
+    @Transactional(rollbackFor = Exception.class)
     public TransactionResponse createTransferAsEmployee(TransferRequest transaction,User user)
     { 
         BankAccount fromAccount = bankAccountRepository.findByIdForUpdate(transaction.getFromAccount()).orElseThrow(() -> new RuntimeException("From bank account not found"));
@@ -134,25 +139,27 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void validateTransferForEmployee(TransferRequest transaction, BankAccount fromAccount, BankAccount toAccount) {
         baseValidateTransfer(transaction, fromAccount, toAccount);
-        
     }
+
     private void validateTransferForUser(TransferRequest transaction, BankAccount fromAccount, BankAccount toAccount, User user) {
         baseValidateTransfer(transaction, fromAccount, toAccount);
         validateUserOwnsFromAccount(fromAccount, user);
     }
+
     private void baseValidateTransfer(TransferRequest transaction, BankAccount fromAccount, BankAccount toAccount) {
         validateSufficientBalance(fromAccount, transaction.getAmount());
         validateWithinSingleTransferLimit(fromAccount, transaction.getAmount());
-        validateNotSameAccountTransfer(fromAccount,toAccount);
+        validateNotSameAccountTransfer(fromAccount, toAccount);
         validatePositiveAmount(transaction.getAmount());
-        validateNotDiffrentUserSavingsTransfer( fromAccount,toAccount);
-        
+        validateNotDiffrentUserSavingsTransfer(fromAccount, toAccount);
     }
+
     private void validateUserOwnsFromAccount(BankAccount fromAccount, User user) {
         if (fromAccount.getUser().getId() != user.getId()) {
             throw new IllegalArgumentException("Users can only transfer from their own accounts");
         }
     }
+
     private void validateSufficientBalance(BankAccount fromAccount, BigDecimal amount) {
         if (fromAccount.getBalance().subtract(amount).compareTo(fromAccount.getAbsoluteLimit()) < 0) {
             throw new IllegalArgumentException("Insufficient funds");
@@ -165,17 +172,18 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
 
-    private void validateNotSameAccountTransfer(BankAccount fromAccount, BankAccount toAccount)
-    {
+    private void validateNotSameAccountTransfer(BankAccount fromAccount, BankAccount toAccount){
         if (fromAccount.getIban().equals(toAccount.getIban())) {
             throw new IllegalArgumentException("transfer to the same account is not allowed");
         }
     }
+
     private void validatePositiveAmount(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Amount must be greater than 0");
         }
     }
+
     private void validateNotDiffrentUserSavingsTransfer(BankAccount fromAccount, BankAccount toAccount)
     {
         if (fromAccount.getUser().getId() != toAccount.getUser().getId() && ( fromAccount.getBankAccountType() == MoneyMachine.models.enums.BankAccountType.SAVINGS || toAccount.getBankAccountType() == MoneyMachine.models.enums.BankAccountType.SAVINGS)) {
@@ -200,8 +208,4 @@ public class TransactionServiceImpl implements TransactionService {
             throw new IllegalArgumentException("Total amount cannot be less the absolute limit.");
         }
     }
-
-   
-       
-
 }
