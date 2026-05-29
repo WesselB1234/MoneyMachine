@@ -1,28 +1,35 @@
 package MoneyMachine.controllers;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import MoneyMachine.models.User;
+import MoneyMachine.models.dtos.responses.BankAccountResponse;
+import MoneyMachine.models.enums.Role;
+import MoneyMachine.services.interfaces.AuthenticationService;
+import MoneyMachine.services.interfaces.BankAccountService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import MoneyMachine.models.dtos.requests.BankAccountCreationRequest;
 import MoneyMachine.models.dtos.requests.PatchRequest;
 import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
-import MoneyMachine.models.dtos.responses.BankAccountResponse;
-import MoneyMachine.services.interfaces.BankAccountService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/bank-accounts")
 public class BankAccountController {
-    private BankAccountService bankAccountService;
 
-    public BankAccountController(BankAccountService bankAccountService) {
+    private BankAccountService bankAccountService;
+    private AuthenticationService authenticationService;
+
+    public BankAccountController(BankAccountService bankAccountService, AuthenticationService authenticationService) {
         this.bankAccountService = bankAccountService;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping()
@@ -41,13 +48,20 @@ public class BankAccountController {
         return ResponseEntity.ok(bankAccounts);
     }
 
-    @GetMapping("/{iban}")
-    @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
-    public ResponseEntity<BankAccountResponse> getBankAccountByIban(@PathVariable String iban)
-    {
-        BankAccountResponse bankAccountResponse = bankAccountService.getBankAccountByIban(iban);
-        return ResponseEntity.ok(bankAccountResponse);
+@GetMapping("/{iban}")
+public ResponseEntity<BankAccountResponse> getBankAccountByIban(@PathVariable String iban) {
+
+    BankAccountResponse response;
+    User loggedInUser = authenticationService.getLoggedInUser();
+
+    if (loggedInUser.getRole() == Role.USER) {
+        response = bankAccountService.getBankAccountByIbanAndUserId(iban, loggedInUser.getId());
+    } else {
+        response = bankAccountService.getBankAccountByIban(iban);
     }
+
+    return ResponseEntity.ok(response);
+}
     
     @PatchMapping("/{iban}")
     @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
