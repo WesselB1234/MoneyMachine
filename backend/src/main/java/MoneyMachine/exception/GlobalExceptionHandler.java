@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 import MoneyMachine.models.enums.ErrorType;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -80,6 +81,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIllegalArgumentExceptions(IllegalArgumentException ex) {
         
         ErrorResponse errorResponse = new ErrorResponse(400, ErrorType.ILLEGAL_ARGUMENTS, "Illegal arguments", ex.getMessage());
+        return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundExceptions(NotFoundException ex) {
+        
+        ErrorResponse errorResponse = new ErrorResponse(404, ErrorType.NOT_FOUND, "Not found", ex.getMessage());
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
     }
 }

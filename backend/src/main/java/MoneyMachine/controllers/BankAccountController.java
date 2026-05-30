@@ -48,20 +48,21 @@ public class BankAccountController {
         return ResponseEntity.ok(bankAccounts);
     }
 
-@GetMapping("/{iban}")
-public ResponseEntity<BankAccountResponse> getBankAccountByIban(@PathVariable String iban) {
+    @GetMapping("/{iban}")
+    public ResponseEntity<BankAccountResponse> getBankAccountByIban(@PathVariable String iban) {
 
-    BankAccountResponse response;
-    User loggedInUser = authenticationService.getLoggedInUser();
+        BankAccountResponse bankAccountResponse;
+        User loggedInUser = authenticationService.getLoggedInUser();
 
-    if (loggedInUser.getRole() == Role.USER) {
-        response = bankAccountService.getBankAccountByIbanAndUserId(iban, loggedInUser.getId());
-    } else {
-        response = bankAccountService.getBankAccountByIban(iban);
+        if (loggedInUser.getRole() == Role.USER) {
+            bankAccountResponse = bankAccountService.getBankAccountByIbanAndUserId(iban, loggedInUser.getId());
+        } 
+        else {
+            bankAccountResponse = bankAccountService.getBankAccountByIban(iban);
+        }
+
+        return ResponseEntity.ok(bankAccountResponse);
     }
-
-    return ResponseEntity.ok(response);
-}
     
     @PatchMapping("/{iban}")
     @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
