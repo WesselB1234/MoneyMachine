@@ -1,9 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from "@/stores/authStore.js"
 import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
+import AllTransactions from '@/components/pages/website/transactions/allTransactions.vue'
+import CreateTransactionAsUser from '@/components/pages/website/transactions/CreateTransactionAsUser.vue'
+import CreateTransactionAsEmployee from '@/components/pages/website/transactions/CreateTransactionAsEmployee.vue'
 
 import ATMLayout from '@/components/layout/ATMLayout.vue'
 import WebsiteLayout from '@/components/layout/WebsiteLayout.vue'
+
+import temporaryAccountPage from"@/components/pages/website/bankAccounts/bankAccount.vue"
 
 import NotFound from '@/components/pages/website/NotFound.vue'
 
@@ -83,6 +88,40 @@ const routes = [
         ],
     },
     {
+        path: '/transactions',
+        component: WebsiteLayout,
+        children: [
+            {
+                path: '',
+                component: AllTransactions,
+                meta: {
+                    isWebsiteAuthenticated: true,
+                    title: 'All Transactions',
+                    roles: ['EMPLOYEE']
+                }
+            },
+            {
+                path: 'create/user',
+                component: CreateTransactionAsUser,
+                meta: {
+                    isWebsiteAuthenticated: true,
+                    title: 'Create Transaction',
+                }
+            },
+            {
+                path: 'create/employee',
+                component: CreateTransactionAsEmployee,
+                meta: {
+                    isWebsiteAuthenticated: true,
+                    title: 'Create Transaction',
+                }
+            },
+        ]
+    },
+    {
+        path: '/users', 
+        component: UsersWithoutBankAccountPage,
+
         path: '/',
         component: WebsiteLayout,
         children: [
@@ -148,6 +187,10 @@ const routes = [
         path: '/users/:user_id/bank-accounts',
         component: CreateBankAccountPage
     },
+    {
+        path: '/bank-accounts/temporary',
+        component: temporaryAccountPage
+    }
 ]
 
 const router = createRouter({
