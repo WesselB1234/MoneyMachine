@@ -49,6 +49,7 @@ public class AuthenticationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
+        user.setId(1L);
         user.setFirstName("userFirstName");
         user.setLastName("userLastName");
         user.setEmail("user@user.user");
