@@ -36,18 +36,18 @@ public class BankAccountController {
 
     @GetMapping("{iban}")
     public ResponseEntity<BankAccountResponse> getBankAccountByIban(@PathVariable String iban) {
-        
-        BankAccount bankAccount;
-        User loggedInUser = this.authenticationService.getLoggedInUser();
+
+        BankAccountResponse bankAccountResponse;
+        User loggedInUser = authenticationService.getLoggedInUser();
 
         if (loggedInUser.getRole() == Role.USER) {
-            bankAccount = bankAccountService.getBankAccountByIbanAndUserId(iban, loggedInUser.getId());
-        }
+            bankAccountResponse = bankAccountService.getBankAccountByIbanAndUserId(iban, loggedInUser.getId());
+        } 
         else {
-            bankAccount = bankAccountService.getBankAccountByIban(iban);
+            bankAccountResponse = bankAccountService.getBankAccountByIban(iban);
         }
 
-        return ResponseEntity.status(200).body(bankAccountMapper.toResponse(bankAccount));
+        return ResponseEntity.ok(bankAccountResponse);
     }
 
     @PostMapping()

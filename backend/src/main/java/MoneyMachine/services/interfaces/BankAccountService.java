@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
-import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.dtos.requests.BankAccountCreationRequest;
 import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
@@ -12,6 +11,7 @@ import MoneyMachine.models.enums.BankAccountType;
 
 import org.springframework.data.domain.Pageable;
 
+import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.User;
 
 @Service
@@ -20,7 +20,8 @@ public interface BankAccountService {
     BankAccountResponse createBankAccountForUser(BankAccountType bankAccountType, User user);
     BankAccountOverviewResponse getAllBankAccounts(Pageable pageable);
     BankAccountOverviewResponse getAllBankAccountsByUserId(Long id, Pageable pageable);
-    BankAccount getBankAccountByIban(String iban);
-    BankAccount getBankAccountByIbanAndUserId(String iban, Long id);
+    BankAccountResponse getBankAccountByIban(String iban);
+    BankAccountResponse getBankAccountByIbanAndUserId(String iban, Long id);
+    BankAccount findBankAccountEntityByIban(String iban);
     void setBankAccountBalance(String iban, BigDecimal newBalance);
 }
