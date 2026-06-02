@@ -35,13 +35,13 @@ const props = defineProps({
 
 <template>
     <tr class="tabe table-dark">
-        <IBANNumberDataFieldAtom :bank-account="bankAccount" />
-        <BankAccountTypeDataFieldAtom :bank-account="bankAccount" />
-        <BalanceDataFieldAtom :bank-account="bankAccount" />
-        <AbsoluteLimitDataFieldAtom :bank-account="bankAccount" />
-        <DailyTransferLimitDataFieldAtom :bank-account="bankAccount" />
-        <SingleTransferLimitDataFieldAtom :bank-account="bankAccount" />
-        <IsActiveDataFieldAtom :bank-account="bankAccount" />
+        <IBANNumberDataFieldAtom :bank-account="bankAccount.iban" />
+        <BankAccountTypeDataFieldAtom :bank-account="bankAccount.bankAccountType" />
+        <BalanceDataFieldAtom :bank-account="bankAccount.balance" />
+        <AbsoluteLimitDataFieldAtom :bank-account="bankAccount.absoluteLimit" />
+        <DailyTransferLimitDataFieldAtom :bank-account="bankAccount.DailyTransferLimitDataFieldAtom" />
+        <SingleTransferLimitDataFieldAtom :bank-account="bankAccount.SingleTransferLimitDataFieldAtom" />
+        <IsActiveDataFieldAtom :bank-account="bankAccount.IsActiveDataFieldAtom" />
         <td class="flex flex-column">
             <CloseBankAccountButtonAtom :bankAccount="bankAccount" />
             <UpdateTransferLimitsButtonAtom />
