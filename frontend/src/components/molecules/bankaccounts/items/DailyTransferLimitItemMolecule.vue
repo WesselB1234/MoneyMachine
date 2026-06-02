@@ -1,6 +1,6 @@
 <script setup>
-import DailyTransferLimitListDataFieldAtom from '../../../atoms/bankaccounts/textelements/listdatafields/DailyTransferLimitListDataFieldAtom.vue';
-import DailyTransferLimitLabelAtom from '../../../atoms/bankaccounts/textelements/labels/DailyTransferLimitLabelAtom.vue';
+import DailyTransferLimitListDataFieldAtom from "@/atoms/bankaccounts/textelements/listdatafields/DailyTransferLimitListDataFieldAtom.vue";
+import DailyTransferLimitLabelAtom from "@/atoms/bankaccounts/textelements/labels/DailyTransferLimitLabelAtom.vue";
 
 const props = defineProps({
     bankAccount: {

@@ -3,8 +3,8 @@ import UsersTableGridTemplate from '@/components/organisms/UsersTableGrid.vue';
 import { onMounted, ref } from 'vue';
 import axios from '@/utils/axios';
 import TabMolecule from '@/components/molecules/tabs/TabMolecule.vue';
-import BankAccountsTableGrid from '../../organisms/BankAccountsTableGrid.vue';
-import SuccessAlert from '../../atoms/errorHandling/SuccessAlert.vue';
+import BankAccountsTableGrid from "@/organisms/BankAccountsTableGrid.vue";
+import SuccessAlert from "@/atoms/errorHandling/SuccessAlert.vue";
 
 const loading = ref(true);
 const error = ref(null);

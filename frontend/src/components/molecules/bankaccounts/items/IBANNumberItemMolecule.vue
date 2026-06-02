@@ -1,6 +1,6 @@
 <script setup>
-import IBANNumberListDataFieldAtom from '../../../atoms/bankaccounts/textelements/listdatafields/IBANNumberListDataFieldAtom.vue';
-import IBANNumberLabelAtom from '../../../atoms/bankaccounts/textelements/labels/IBANNumberLabelAtom.vue';
+import IBANNumberListDataFieldAtom from "@/atoms/bankaccounts/textelements/listdatafields/IBANNumberListDataFieldAtom.vue";
+import IBANNumberLabelAtom from "@/atoms/bankaccounts/textelements/labels/IBANNumberLabelAtom.vue";
 
 const props = defineProps({
     bankAccount: {

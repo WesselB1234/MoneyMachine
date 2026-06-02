@@ -28,7 +28,6 @@ import MoneyMachine.models.dtos.requests.PatchRequest;
 import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -75,7 +74,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         BankAccount bankAccount = new BankAccount();
 
         String iban = generateIban();
-        BankAccount bankAccount = new BankAccount(iban, user, balance, absoluteLimit, singleTransferLimit, dailyTransferLimit, bankAccountType, true, LocalDateTime.now());
+        // BankAccount bankAccount = new BankAccount(iban, user, balance, absoluteLimit, singleTransferLimit, dailyTransferLimit, bankAccountType, true, LocalDateTime.now());
         BankAccountTypeStrategy strategy = bankAccountTypeFactory.getStrategy(bankAccountType);
         strategy.applyBankAccountRules(bankAccount);
         bankAccountRepository.save(bankAccount);

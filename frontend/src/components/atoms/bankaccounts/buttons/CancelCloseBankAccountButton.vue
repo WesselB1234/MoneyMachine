@@ -2,5 +2,5 @@
 </script>
 
 <template>
-    <a href="/bank-accounts" class="btn btn-primary">Cancel closing bankaccount</a>
+    <RouterLink :to="'/bank-accounts'" class="btn btn-primary">Cancel closing bankaccount</RouterLink>
 </template>

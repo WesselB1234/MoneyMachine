@@ -1,6 +1,6 @@
 <script setup>
-import IsActiveLidtDataFieldAtom from '../../../atoms/bankaccounts/textelements/listdatafields/IsActiveLidtDataFieldAtom.vue';
-import IsActiveLabelAtom from '../../../atoms/bankaccounts/textelements/labels/IsActiveLabelAtom.vue';
+import IsActiveLidtDataFieldAtom from "@/atoms/bankaccounts/textelements/listdatafields/IsActiveLidtDataFieldAtom.vue";
+import IsActiveLabelAtom from "@/atoms/bankaccounts/textelements/labels/IsActiveLabelAtom.vue";
 
 const props = defineProps({
     bankAccount: {

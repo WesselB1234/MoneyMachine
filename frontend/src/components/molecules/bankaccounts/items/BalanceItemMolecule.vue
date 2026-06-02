@@ -1,6 +1,6 @@
 <script setup>
-import BalanceListDataFieldAtom from '../../../atoms/bankaccounts/textelements/listdatafields/BalanceListDataFieldAtom.vue';
-import BalanceLabelAtom from '../../../atoms/bankaccounts/textelements/labels/BalanceLabelAtom.vue';
+import BalanceListDataFieldAtom from "@/atoms/bankaccounts/textelements/listdatafields/BalanceListDataFieldAtom.vue";
+import BalanceLabelAtom from "@/atoms/bankaccounts/textelements/labels/BalanceLabelAtom.vue";
 
 const props = defineProps({
     bankAccount: {

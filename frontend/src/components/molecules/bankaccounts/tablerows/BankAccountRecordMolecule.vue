@@ -1,20 +1,20 @@
 <script setup>
-import CloseBankAccountButtonAtom from '../../../atoms/bankaccounts/buttons/CloseBankAccountButtonAtom.vue';
-import TransferMoneyButtonAtom from '../../../atoms/bankaccounts/buttons/TransferMoneyButtonAtom.vue';
-import UpdateTransferLimitsButtonAtom from '../../../atoms/bankaccounts/buttons/UpdateTransferLimitsButtonAtom.vue';
-import ViewTransactionHistoryButtonAtom from '../../../atoms/bankaccounts/buttons/ViewTransactionHistoryButtonAtom.vue';
-import AbsoluteLimitDataFieldAtom from '../../../atoms/bankaccounts/textelements/datafields/AbsoluteLimitDataFieldAtom.vue';
-import BalanceDataFieldAtom from '../../../atoms/bankaccounts/textelements/datafields/BalanceDataFieldAtom.vue';
-import BankAccountTypeDataFieldAtom from '../../../atoms/bankaccounts/textelements/datafields/BankAccountTypeDataFieldAtom.vue';
-import DailyTransferLimitDataFieldAtom from '../../../atoms/bankaccounts/textelements/datafields/DailyTransferLimitDataFieldAtom.vue';
-import IBANNumberDataFieldAtom from '../../../atoms/bankaccounts/textelements/datafields/IBANNumberDataFieldAtom.vue';
-import IsActiveDataFieldAtom from '../../../atoms/bankaccounts/textelements/datafields/IsActiveDataFieldAtom.vue';
-import SingleTransferLimitDataFieldAtom from '../../../atoms/bankaccounts/textelements/datafields/SingleTransferLimitDataFieldAtom.vue';
-import BSNNumberDataFieldAtom from '../../../atoms/users/textelements/datafields/BSNNumberDataFieldAtom.vue';
-import EmailDataFieldAtom from '../../../atoms/users/textelements/datafields/EmailDataFieldAtom.vue';
-import FirstNameDataFieldAtom from '../../../atoms/users/textelements/datafields/FirstNameDataFieldAtom.vue';
-import LastNameDataFieldAtom from '../../../atoms/users/textelements/datafields/LastNameDataFieldAtom.vue';
-import PhoneNumberDataFieldAtom from '../../../atoms/users/textelements/datafields/PhoneNumberDataFieldAtom.vue';
+import CloseBankAccountButtonAtom from "@/atoms/bankaccounts/buttons/CloseBankAccountButtonAtom.vue";
+import TransferMoneyButtonAtom from "@/atoms/bankaccounts/buttons/TransferMoneyButtonAtom.vue";
+import UpdateTransferLimitsButtonAtom from "@/atoms/bankaccounts/buttons/UpdateTransferLimitsButtonAtom.vue";
+import ViewTransactionHistoryButtonAtom from "@/atoms/bankaccounts/buttons/ViewTransactionHistoryButtonAtom.vue";
+import AbsoluteLimitDataFieldAtom from "@/atoms/bankaccounts/textelements/datafields/AbsoluteLimitDataFieldAtom.vue";
+import BalanceDataFieldAtom from "@/atoms/bankaccounts/textelements/datafields/BalanceDataFieldAtom.vue";
+import BankAccountTypeDataFieldAtom from "@/atoms/bankaccounts/textelements/datafields/BankAccountTypeDataFieldAtom.vue";
+import DailyTransferLimitDataFieldAtom from "@/atoms/bankaccounts/textelements/datafields/DailyTransferLimitDataFieldAtom.vue";
+import IBANNumberDataFieldAtom from "@/atoms/bankaccounts/textelements/datafields/IBANNumberDataFieldAtom.vue";
+import IsActiveDataFieldAtom from "@/atoms/bankaccounts/textelements/datafields/IsActiveDataFieldAtom.vue";
+import SingleTransferLimitDataFieldAtom from "@/atoms/bankaccounts/textelements/datafields/SingleTransferLimitDataFieldAtom.vue";
+import BSNNumberDataFieldAtom from "@/atoms/users/textelements/datafields/BSNNumberDataFieldAtom.vue";
+import EmailDataFieldAtom from "@/atoms/users/textelements/datafields/EmailDataFieldAtom.vue";
+import FirstNameDataFieldAtom from "@/atoms/users/textelements/datafields/FirstNameDataFieldAtom.vue";
+import LastNameDataFieldAtom from "@/atoms/users/textelements/datafields/LastNameDataFieldAtom.vue";
+import PhoneNumberDataFieldAtom from "@/atoms/users/textelements/datafields/PhoneNumberDataFieldAtom.vue";
 const props = defineProps({
     bankAccount: {
         type: Object,

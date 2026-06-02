@@ -1,6 +1,6 @@
 <script setup>
-import CancelCloseBankAccountButton from '../../../atoms/bankaccounts/buttons/CancelCloseBankAccountButton.vue';
-import CloseBankAccountButton from '../../../atoms/bankaccounts/buttons/CloseBankAccountButton.vue';
+import CancelCloseBankAccountButton from "@/atoms/bankaccounts/buttons/CancelCloseBankAccountButton.vue";
+import CloseBankAccountButton from "@/atoms/bankaccounts/buttons/CloseBankAccountButton.vue";
 
 const props = defineProps({
     bankAccount: {

@@ -1,6 +1,6 @@
 <script setup>
-import AbsoluteLimitListDataFieldAtom from '../../../atoms/bankaccounts/textelements/listdatafields/AbsoluteLimitListDataFieldAtom.vue';
-import AbsoluteLimitLabelAtom from '../../../atoms/bankaccounts/textelements/labels/AbsoluteLimitLabelAtom.vue';
+import AbsoluteLimitListDataFieldAtom from "@/atoms/bankaccounts/textelements/listdatafields/AbsoluteLimitListDataFieldAtom.vue";
+import AbsoluteLimitLabelAtom from "@/atoms/bankaccounts/textelements/labels/AbsoluteLimitLabelAtom.vue";
 
 const props = defineProps({
     bankAccount: {
