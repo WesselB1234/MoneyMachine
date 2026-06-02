@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import MoneyMachine.mappers.BankAccountMapper;
-import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
 import MoneyMachine.models.enums.Role;
@@ -25,12 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class BankAccountController {
 
     private BankAccountService bankAccountService;
-    private BankAccountMapper bankAccountMapper;
     private AuthenticationService authenticationService;
 
-    public BankAccountController(BankAccountService bankAccountService, BankAccountMapper bankAccountMapper, AuthenticationService authenticationService) {
+    public BankAccountController(BankAccountService bankAccountService, AuthenticationService authenticationService) {
         this.bankAccountService = bankAccountService;
-        this.bankAccountMapper = bankAccountMapper;
         this.authenticationService = authenticationService;
     }
 
@@ -47,7 +43,7 @@ public class BankAccountController {
             bankAccountResponse = bankAccountService.getBankAccountByIban(iban);
         }
 
-        return ResponseEntity.ok(bankAccountResponse);
+        return ResponseEntity.status(200).body(bankAccountResponse);
     }
 
     @PostMapping()
