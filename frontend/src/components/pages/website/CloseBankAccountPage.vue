@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import axios from '@/utils/axios';
-import CloseBankAccountOrganism from "@/organisms/bankaccounts/CloseBankAccountOrganism"
+import CloseBankAccountOrganism from "@/organisms/bankaccounts/CloseBankAccountOrganism.vue"
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
 const loadingFetch = ref(true);

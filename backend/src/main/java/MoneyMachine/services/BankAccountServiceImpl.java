@@ -38,10 +38,10 @@ public class BankAccountServiceImpl implements BankAccountService {
     private IbanGenerator ibanGenerator;
     private BankAccountTypeFactory bankAccountTypeFactory;
     private UserRepository userRepository;
-    private static final BigDecimal balance = BigDecimal.valueOf(0);
-    private static final BigDecimal absoluteLimit = BigDecimal.valueOf(0);
-    private static final BigDecimal dailyTransferLimit = BigDecimal.valueOf(20000);
-    private static final BigDecimal singleTransferLimit = BigDecimal.valueOf(5000);
+    // private static final BigDecimal balance = BigDecimal.valueOf(0);
+    // private static final BigDecimal absoluteLimit = BigDecimal.valueOf(0);
+    // private static final BigDecimal dailyTransferLimit = BigDecimal.valueOf(20000);
+    // private static final BigDecimal singleTransferLimit = BigDecimal.valueOf(5000);
 
     public BankAccountServiceImpl(BankAccountRepository bankAccountRepository, UserRepository userRepository,
             BankAccountMapper bankAccountMapper, IbanGenerator ibanGenerator,
@@ -73,7 +73,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         BankAccount bankAccount = new BankAccount();
 
-        String iban = generateIban();
+        // String iban = generateIban();
         // BankAccount bankAccount = new BankAccount(iban, user, balance, absoluteLimit, singleTransferLimit, dailyTransferLimit, bankAccountType, true, LocalDateTime.now());
         BankAccountTypeStrategy strategy = bankAccountTypeFactory.getStrategy(bankAccountType);
         strategy.applyBankAccountRules(bankAccount);
