@@ -3,22 +3,15 @@ package MoneyMachine.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
-import MoneyMachine.models.enums.LoginType;
-import MoneyMachine.models.enums.Role;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import MoneyMachine.models.User;
-import MoneyMachine.util.JwtUtil;
-
-import org.springframework.http.MediaType;
-
 import tools.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -29,38 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    private String validAtmUserToken;
-    private String validAtmEmployeeToken;
-    private User user;
-    private User employee;
+public class UserControllerTest extends BaseControllerTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId(1L);
-        user.setFirstName("userFirstName");
-        user.setLastName("userLastName");
-        user.setEmail("user@user.user");
-        user.setRole(Role.USER);
-
-        employee = new User();
-        employee.setId(2L);
-        employee.setFirstName("employeeFirstName");
-        employee.setLastName("employeeLastName");
-        employee.setEmail("employee@employee.employee");
-        employee.setRole(Role.EMPLOYEE);
-    
-        validAtmUserToken = jwtUtil.generateAuthTokenFromUser(user, LoginType.ATM);
-        validAtmEmployeeToken = jwtUtil.generateAuthTokenFromUser(employee, LoginType.ATM);
+        super.setUpMockAuth();
     }
 
     @Test
@@ -98,7 +64,7 @@ public class UserControllerTest {
     @Test
     void getBankAccountsByUserId_whenGetCall_getBankAccounts() throws Exception {
         mockMvc.perform(get(String.format("/users/%s/bank-accounts", user.getId()))
-                .header("Authorization", "Bearer " + validAtmUserToken))
+                .header("Authorization", "Bearer " + atmUserAuthToken))
             .andExpect(status().is(200))
             .andExpect(jsonPath("$.items").exists());
     }
@@ -106,14 +72,14 @@ public class UserControllerTest {
     @Test
     void failGettingBankAccounts_whenNotAuthorized_getForbidden() throws Exception {
         mockMvc.perform(get(String.format("/users/%s/bank-accounts", employee.getId()))
-                .header("Authorization", "Bearer " + validAtmUserToken))
+                .header("Authorization", "Bearer " + atmUserAuthToken))
             .andExpect(status().is(403));
     }
 
     @Test
     void gettingBankAccountsOfOtherUser_whenAuthorized_getTheirBankAccounts() throws Exception {
         mockMvc.perform(get(String.format("/users/%s/bank-accounts", user.getId()))
-                .header("Authorization", "Bearer " + validAtmEmployeeToken))
+                .header("Authorization", "Bearer " + atmEmployeeAuthToken))
             .andExpect(status().is(200))
             .andExpect(jsonPath("$.items").exists());
     }
