@@ -19,7 +19,7 @@
         try {
             e.preventDefault()
 
-            const response = await axios.post('/users/login', {
+            const response = await axios.post('/auth/login', {
                 'email': vModel.value.email,
                 'password': vModel.value.password,
                 'loginType': 'ATM'
