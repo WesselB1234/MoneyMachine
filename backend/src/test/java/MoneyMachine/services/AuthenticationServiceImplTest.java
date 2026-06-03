@@ -24,6 +24,8 @@ import MoneyMachine.exception.InvalidCredentialsException;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationServiceImplTest {
 
@@ -58,7 +60,7 @@ public class AuthenticationServiceImplTest {
     @Test
     void login_whenLoginAsUser_getAuthenticationResponse() {
 
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(passwordEncoderMock.matches("password", user.getPassword())).thenReturn(true);
         when(jwtUtil.generateAuthTokenFromUser(user, LoginType.ATM)).thenReturn("Example JWT");
         
@@ -73,7 +75,7 @@ public class AuthenticationServiceImplTest {
     @Test
     void login_whenInvalidLogin_throwInvalidCredentialsException() {
 
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(passwordEncoderMock.matches("invalidPassword", user.getPassword())).thenReturn(false);
         
         assertThrows(InvalidCredentialsException.class, () ->

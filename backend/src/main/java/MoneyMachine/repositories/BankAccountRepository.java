@@ -22,10 +22,10 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, String
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT b FROM BankAccount b WHERE b.iban = :iban")
     Optional<BankAccount> findByIdForUpdate(String iban);
-    public Page<BankAccount> findAllByUserId(Long id, Pageable pageable);
-    public Optional<BankAccount> findByIbanAndUserId(String iban, Long id);
+    Page<BankAccount> findAllByUserId(Long id, Pageable pageable);
+    Optional<BankAccount> findByIbanAndUserId(String iban, Long id);
     @Modifying
     @Transactional
     @Query("UPDATE BankAccount SET balance = :newBalance WHERE iban = :iban")
-    public void updateBalanceByIban(@Param("iban") String iban, @Param("newBalance") BigDecimal newBalance);
+    void updateBalanceByIban(@Param("iban") String iban, @Param("newBalance") BigDecimal newBalance);
 }
