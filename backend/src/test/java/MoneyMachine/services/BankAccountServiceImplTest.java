@@ -25,6 +25,8 @@ import MoneyMachine.models.dtos.responses.BankAccountResponse;
 import MoneyMachine.models.enums.BankAccountType;
 import MoneyMachine.models.enums.Role;
 import org.springframework.data.domain.Pageable;
+
+
 @ExtendWith(MockitoExtension.class)
 public class BankAccountServiceImplTest {
 
@@ -90,8 +92,18 @@ public class BankAccountServiceImplTest {
         
     }
 
-    public void testGetBankAccountByIbanAndUserId()
-    {
+    @Test
+    void testGetBankAccountByIban() {
+
+    }
+
+    @Test
+    void testGetBankAccountByIbanAndUserId() {
+
+    }
+
+    @Test
+    void testSetBankAccountBalance() {
 
     }
 }
