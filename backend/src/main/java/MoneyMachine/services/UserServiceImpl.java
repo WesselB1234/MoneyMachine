@@ -14,6 +14,7 @@ import MoneyMachine.models.enums.Role;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.interfaces.BankAccountService;
 import MoneyMachine.services.interfaces.UserService;
+import io.jsonwebtoken.JwtException;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import MoneyMachine.exception.NotFoundException;
@@ -65,5 +66,11 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setIsApproved(true);
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(()
+            -> new NotFoundException(String.format("User with ID %s does not exist.", id))
+        );
     }
 }
