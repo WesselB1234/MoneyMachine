@@ -152,11 +152,6 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>default-compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
 						<configuration>
 <annotationProcessorPaths>
     <path>
@@ -168,11 +163,6 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>default-testCompile</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
 						<configuration>
 							<annotationProcessorPaths>
 								<path>
