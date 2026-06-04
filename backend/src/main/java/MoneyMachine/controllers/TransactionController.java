@@ -63,4 +63,44 @@ public class TransactionController {
 
         return ResponseEntity.status(201).body(withdrawTransactionResponse);
     }
+
+    /*
+        ALTERNATIVE IMPLEMENTATION IF AN UNIFIED ENDPOINT WOULD BE IMPLEMENTED THAT HAS NOT BEEN CHOSEN
+    */
+
+    // @PostMapping("transaction")
+    // public ResponseEntity<?> createTransaction(@RequestBody UnifiedRequest req) {
+
+    //     TransactionType type = inferType(req);
+
+    //     if (type == DEPOSIT || type == WITHDRAW) {
+    //         if (!authorizationService.isLoggedIntoLoginType("ATM")) {
+    //             return ResponseEntity.status(403).body("ATM login required");
+    //         }
+    //     } 
+    //     else if (!authorizationService.isLoggedIntoLoginType("WEBSITE")) {
+    //             return ResponseEntity.status(403).body("Website login required");
+    //     }
+
+    //     return switch (type) {
+    //         case DEPOSIT  -> transactionService.deposit(req.getToIban(), ...);
+    //         case WITHDRAW -> transactionService.withdraw(req.getFromIban(), ...);
+    //         case TRANSFER -> transactionService.createTransfer(...);
+    //     };
+    // }
+
+    // private TransactionType inferType(UnifiedRequest req) {
+
+    //     if (req.getFromIban() == null && req.getToIban() != null) {
+    //         return DEPOSIT;  
+    //     } 
+    //     else if (req.getToIban() == null && req.getFromIban() != null) {
+    //         return WITHDRAW;
+    //     }
+    //     else if (req.getFromIban() != null && req.getToIban() != null) {
+    //         return TRANSFER;
+    //     }
+
+    //     throw new IllegalArgumentException("Cannot determine transaction type");
+    // }
 }
