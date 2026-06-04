@@ -70,7 +70,7 @@ public class TransactionController {
         DRAWBACKS OF USING THE IMPLEMENTATION BELOW:
             * MANUAL AUTHORIZATON CHECK LOGIC BASED ON TRANSACTION TYPE 
                 (Deposit and withdraw can only happen when logged into atm while website login is required for withdraw)
-            * Nullables containing in requestBody
+            * Nullables are present in the requestBody
             * Needing to first check the transaction type based on nullable Ibans
             * Seperation of concerns violation due to one method handling transactions, deposits and withdraws
             * Unknown ResponseEntity type
