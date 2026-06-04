@@ -1,7 +1,5 @@
 package MoneyMachine.controllers;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import MoneyMachine.exception.NotFoundException;
 import MoneyMachine.models.dtos.requests.LoginRequest;
@@ -71,14 +69,12 @@ public class UserController {
 
     @GetMapping()
     @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
-    public ResponseEntity<?> getAllUsersWithoutAnAccount() {
-            List<UserResponse> users = userService.getAllUsersWithoutBankAccounts();
+    public ResponseEntity<UserOverviewResponse> getAllUsersWithoutAnAccount(Pageable pageable) {
+            UserOverviewResponse users = userService.getAllUsersWithoutBankAccounts(pageable);
             if(users == null)
             {
                 throw new NotFoundException("There are no users found in the database");
             }
-            UserOverviewResponse userOverviewResponse = new UserOverviewResponse();
-            userOverviewResponse.setUsers(users);
-            return ResponseEntity.ok(userOverviewResponse);
+            return ResponseEntity.ok(users);
     }
 }

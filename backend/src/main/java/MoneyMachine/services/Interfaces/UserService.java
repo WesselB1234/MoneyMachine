@@ -1,13 +1,11 @@
 package MoneyMachine.services.interfaces;
-
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
-import MoneyMachine.models.dtos.responses.UserResponse;
+import MoneyMachine.models.dtos.responses.UserOverviewResponse;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public interface UserService {
-    List<UserResponse> getAllUsersWithoutBankAccounts();
+    UserOverviewResponse getAllUsersWithoutBankAccounts(Pageable pageable);
     void approveUserAndCreateAccounts(Long userId);
 }

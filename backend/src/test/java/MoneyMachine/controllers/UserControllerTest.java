@@ -16,18 +16,30 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import MoneyMachine.models.User;
+import MoneyMachine.services.AuthenticationServiceImpl;
+import MoneyMachine.models.enums.Role;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 public class UserControllerTest extends BaseControllerTest {
 
-
-   private User user;
+    private User user;
+    private AuthenticationServiceImpl authenticationServiceImpl;
 
     @BeforeEach
     void setUp() {
         super.setUpMockAuth();
+        user = new User();
+        user.setFirstName("employeeFirstName");
+        user.setLastName("employeeLastName");
+        user.setEmail("employee@employee.employee");
+        user.setBsn("123456749");
+        user.setPhoneNumber("+31 6 12 34 54 78");
+        user.setRole(Role.EMPLOYEE);
+        user.setPassword(authenticationServiceImpl.getHashedPassword("password"));
+        user.setIsActive(false);
+        user.setIsApproved(false);
     }
 
     @Test
@@ -41,11 +53,11 @@ public class UserControllerTest extends BaseControllerTest {
         mockMvc.perform(post("/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().is(201))
-            .andExpect(jsonPath("$.accessToken").exists())
-            .andExpect(jsonPath("$.expiresIn").exists())
-            .andExpect(jsonPath("$.userSummaryResponse").exists())
-            .andExpect(jsonPath("$.userSummaryResponse.id").value(1));
+                .andExpect(status().is(201))
+                .andExpect(jsonPath("$.accessToken").exists())
+                .andExpect(jsonPath("$.expiresIn").exists())
+                .andExpect(jsonPath("$.userSummaryResponse").exists())
+                .andExpect(jsonPath("$.userSummaryResponse.id").value(1));
     }
 
     @Test
@@ -59,46 +71,46 @@ public class UserControllerTest extends BaseControllerTest {
         mockMvc.perform(post("/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().is(401));
+                .andExpect(status().is(401));
     }
 
     @Test
     void getBankAccountsByUserId_whenGetCall_getBankAccounts() throws Exception {
         mockMvc.perform(get(String.format("/users/%s/bank-accounts", user.getId()))
                 .header("Authorization", "Bearer " + atmUserAuthToken))
-            .andExpect(status().is(200))
-            .andExpect(jsonPath("$.items").exists());
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.items").exists());
     }
 
     @Test
     void failGettingBankAccounts_whenNotAuthorized_getForbidden() throws Exception {
         mockMvc.perform(get(String.format("/users/%s/bank-accounts", employee.getId()))
                 .header("Authorization", "Bearer " + atmUserAuthToken))
-            .andExpect(status().is(403));
+                .andExpect(status().is(403));
     }
 
     @Test
     void gettingBankAccountsOfOtherUser_whenAuthorized_getTheirBankAccounts() throws Exception {
         mockMvc.perform(get(String.format("/users/%s/bank-accounts", user.getId()))
                 .header("Authorization", "Bearer " + atmEmployeeAuthToken))
-            .andExpect(status().is(200))
-            .andExpect(jsonPath("$.items").exists());
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.items").exists());
     }
 
     @Test
     void getAllBankAccounts_whenAuthorized_getAllBankAccounts() throws Exception {
         mockMvc.perform(get(String.format("/users"))
-        .header("Authorization", "Bearer" + websiteEmployeeAuthToken))
-    .andExpect(status().is(200))
-    .andExpect(jsonPath("$.items").exists())
-    .andExpect(jsonPath("$.userId").value(user.getId()))
-    .andExpect(jsonPath("$.furstName").value(user.getFirstName()))
-    .andExpect(jsonPath("$.lastName").value(user.getLastName()))
-    .andExpect(jsonPath("$.email").value(user.getEmail()))
-    .andExpect(jsonPath("$.bsn").value(user.getBsn()))
-    .andExpect(jsonPath("$.phoneNumber").value(user.getPhoneNumber()))
-    .andExpect(jsonPath("$.role").value(user.getRole()))
-    .andExpect(jsonPath("$.isActive").value(user.getIsActive()))
-    .andExpect(jsonPath("$.isApproved").value(user.getIsApproved()));
+                .header("Authorization", "Bearer" + websiteEmployeeAuthToken))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.items").exists())
+                .andExpect(jsonPath("$.[items].userId").value(user.getId()))
+                .andExpect(jsonPath("$.[items].firstName").value(user.getFirstName()))
+                .andExpect(jsonPath("$.[items].lastName").value(user.getLastName()))
+                .andExpect(jsonPath("$.[items].email").value(user.getEmail()))
+                .andExpect(jsonPath("$.[items].bsn").value(user.getBsn()))
+                .andExpect(jsonPath("$.[items].phoneNumber").value(user.getPhoneNumber()))
+                .andExpect(jsonPath("$.[items].role").value(user.getRole()))
+                .andExpect(jsonPath("$.[items].isActive").value(user.getIsActive()))
+                .andExpect(jsonPath("$.[items].isApproved").value(user.getIsApproved()));
     }
 }

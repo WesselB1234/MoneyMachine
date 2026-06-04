@@ -1,6 +1,5 @@
 package MoneyMachine.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service;
 import MoneyMachine.exception.NotAuthorizedException;
 import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.User;
+import MoneyMachine.models.dtos.responses.UserOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserResponse;
 import MoneyMachine.models.enums.BankAccountType;
 import MoneyMachine.models.enums.Role;
@@ -17,6 +17,8 @@ import MoneyMachine.services.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import MoneyMachine.exception.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,16 +34,14 @@ public class UserServiceImpl implements UserService {
         this.bankAccountService = bankAccountService;
     }
 
-    public List<UserResponse> getAllUsersWithoutBankAccounts() {
+    public UserOverviewResponse getAllUsersWithoutBankAccounts(Pageable pageable) {
 
-        Iterable<User> users = userRepository.findByBankAccountsIsEmpty();
-        List<UserResponse> convertedUsers = new ArrayList<UserResponse>();
+        Page<User> page = userRepository.findByBankAccountsIsEmpty();
+        List<User> users = page.getContent();
+        List<UserResponse> items = userMapper.toResponseList(users);
+        UserOverviewResponse userOverviewResponse = new UserOverviewResponse(items, page.getNumber(), page.getSize());
 
-        for (User user : users) {
-            convertedUsers.add(userMapper.toResponse(user));
-        }
-
-        return convertedUsers;
+        return userOverviewResponse;
     }
 
     @Transactional

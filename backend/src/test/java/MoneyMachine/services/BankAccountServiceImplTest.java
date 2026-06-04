@@ -47,6 +47,7 @@ public class BankAccountServiceImplTest {
     private BankAccountMapper bankAccountMapper;
 
     private PatchRequest patchRequest;
+    private BankAccountResponse bankAccountResponse;
 
     @BeforeEach
     void setUp() {
@@ -79,16 +80,16 @@ public class BankAccountServiceImplTest {
     public void closeBankAccount_whenBankAccountIsClosed_setIsActiveFalseAndReturnUpdatedBankAccount() {
         when(bankAccountRepository.findById(bankAccount.getIban())).thenReturn(optionalBankAccount);
 
-        when(bankAccountMapper.toResponse(bankAccount));
-        BankAccountResponse bankAccountResponse = bankAccountServiceImpl.closeBankAccount(patchRequest,
+        when(bankAccountMapper.toResponse(bankAccount)).thenReturn(bankAccountResponse);
+        bankAccountResponse = bankAccountServiceImpl.closeBankAccount(patchRequest,
                 bankAccount.getIban());
 
-        assertEquals(bankAccount, bankAccountResponse);
+        assertEquals(bankAccount.getIsActive(), bankAccountResponse.isActive());
         verify(bankAccountRepository.save(bankAccount));
     }
 
     @Test
-    public void findAll_whenBankAccountsFound_returnsAllBankAccounts(Pageable pageable) {
+    public void getAllBankAccounts_whenBankAccountsFound_returnsAllBankAccounts(Pageable pageable) {
         List<BankAccount> bankAccounts = page.getContent();
         when(bankAccountRepository.findAll()).thenReturn(bankAccounts);
 

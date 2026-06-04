@@ -14,9 +14,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.User;
+import MoneyMachine.models.dtos.responses.UserOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserResponse;
 import MoneyMachine.models.enums.Role;
 import MoneyMachine.repositories.UserRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
@@ -31,6 +35,9 @@ public class UserServiceImplTest {
     private UserServiceImpl userServiceImpl;
 
     private User user;
+
+    @Mock
+    private Page<User> page;
 
     @InjectMocks
     private AuthenticationServiceImpl authenticationServiceImpl;
@@ -49,13 +56,17 @@ public class UserServiceImplTest {
         user.setIsApproved(false);
     }
 
-    public void getAllUsersWithoutBankAccounts_whenUsersWithoutBankAccountsFound_returnAllUsers()
+    @Test
+    public void getAllUsersWithoutBankAccounts_whenUsersWithoutBankAccountsFound_returnAllUsers(Pageable pageable)
     {
-        Iterable<User> iterableUsers = List.of(new User(), new User());
-        when(userRepository.findByBankAccountsIsEmpty()).thenReturn(iterableUsers);
+        List<User> users = page.getContent();
+        when(userRepository.findByBankAccountsIsEmpty()).thenReturn(page);
 
-        List<UserResponse> userResponses = userServiceImpl.getAllUsersWithoutBankAccounts();
-        assertEquals(userResponses, iterableUsers);
+        List<UserResponse> items = userMapper.toResponseList(users);
+        UserOverviewResponse userOverviewResponse = new UserOverviewResponse(items, page.getNumber(), page.getSize());
+        userOverviewResponse = userServiceImpl.getAllUsersWithoutBankAccounts(pageable);
+
+        assertEquals(users, userOverviewResponse);
 
         verify(userRepository.findByBankAccountsIsEmpty());
     }
