@@ -86,14 +86,10 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccount getBankAccountEntityByIban(String iban) {
+        
         return bankAccountRepository.findById(iban).orElseThrow(() 
             -> new NotFoundException(String.format("Bank account with IBAN %s does not exist.", iban))
         );
-    }
-
-    @Override
-    public void updateBalanceByIban(String iban, BigDecimal newBalance) {
-        this.bankAccountRepository.updateBalanceByIban(iban, newBalance);
     }
 
     @Override

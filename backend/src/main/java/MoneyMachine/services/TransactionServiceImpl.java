@@ -28,14 +28,16 @@ import MoneyMachine.services.interfaces.TransactionService;
 public class TransactionServiceImpl implements TransactionService {
     
     private final TransactionPolicy transactionPolicy;
-    private TransactionMapperService mapper;
+    private final TransactionMapperService mapper;
     private final BankAccountService bankAccountService;
     private final AuthenticationService authenticationService;
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
+    private final BankAccountRepository bankAccountRepository;
 
     public TransactionServiceImpl(TransactionRepository transactionRepository, BankAccountRepository bankAccountRepository, TransactionMapperService mapper, BankAccountService bankAccountService, AuthenticationService authenticationService, TransactionMapper transactionMapper, TransactionPolicy transactionPolicy) {
         this.mapper = mapper;
+        this.bankAccountRepository = bankAccountRepository;
         this.transactionRepository = transactionRepository;
         this.bankAccountService = bankAccountService;
         this.authenticationService = authenticationService;
@@ -72,12 +74,12 @@ public class TransactionServiceImpl implements TransactionService {
         BankAccount toBankAccount = bankAccountService.getBankAccountEntityByIban(toIban);
         
         transactionPolicy.enforceTransactionTransferPolicy(loggedInUser, amount, fromBankAccount, toBankAccount);
-        bankAccountService.updateBalanceByIban(fromIban, fromBankAccount.getBalance().subtract(amount));
-        bankAccountService.updateBalanceByIban(toIban, toBankAccount.getBalance().add(amount));
+        bankAccountRepository.decrementBalanceByIban(fromIban, amount);
+        bankAccountRepository.incrementBalanceByIban(toIban, amount);
 
         TransferTransaction transferTransaction = new TransferTransaction();
         fillCommonTransactionProperties(transferTransaction, loggedInUser, amount, message);
-        transferTransaction.setFromBankAccount(toBankAccount);
+        transferTransaction.setFromBankAccount(fromBankAccount);
         transferTransaction.setToBankAccount(toBankAccount);
 
         transactionRepository.save(transferTransaction);
@@ -88,12 +90,12 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public DepositTransactionResponse depositAmountIntoBankAccount(String toIban, BigDecimal amount, String message) {
-
-        BankAccount toBankAccount = bankAccountService.getBankAccountEntityByIban(toIban);
+        
         User loggedInUser = authenticationService.getLoggedInUser();
+        BankAccount toBankAccount = bankAccountService.getBankAccountEntityByIban(toIban);
 
         transactionPolicy.enforceTransactionPolicy(loggedInUser, amount, toBankAccount);
-        bankAccountService.updateBalanceByIban(toIban, toBankAccount.getBalance().add(amount));
+        bankAccountRepository.incrementBalanceByIban(toIban, amount);
 
         DepositTransaction depositTransaction = new DepositTransaction();
         fillCommonTransactionProperties(depositTransaction, loggedInUser, amount, message);
@@ -108,11 +110,11 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional(rollbackFor = Exception.class)
     public WithdrawTransactionResponse withdrawAmountIntoBankAccount(String fromIban, BigDecimal amount, String message) {
 
-        BankAccount fromBankAccount = bankAccountService.getBankAccountEntityByIban(fromIban);
         User loggedInUser = authenticationService.getLoggedInUser();
+        BankAccount fromBankAccount = bankAccountService.getBankAccountEntityByIban(fromIban);
         
         transactionPolicy.enforceTransactionWithdrawPolicy(loggedInUser, amount, fromBankAccount);
-        bankAccountService.updateBalanceByIban(fromIban, fromBankAccount.getBalance().subtract(amount));
+        bankAccountRepository.decrementBalanceByIban(fromIban, amount);
         
         WithdrawTransaction withdrawTransaction = new WithdrawTransaction();
         fillCommonTransactionProperties(withdrawTransaction, loggedInUser, amount, message);

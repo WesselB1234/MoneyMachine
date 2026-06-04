@@ -25,5 +25,4 @@ public interface BankAccountService {
     BankAccountResponse getBankAccountByIban(String iban);
     BankAccountResponse getBankAccountByIbanAndUserId(String iban, Long id);
     BankAccount getBankAccountEntityByIban(String iban);
-    void updateBalanceByIban(String iban, BigDecimal newBalance);
 }

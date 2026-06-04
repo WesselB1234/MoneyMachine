@@ -29,6 +29,7 @@ public class TransactionPolicy {
     public void enforceTransactionPolicy(User user, BigDecimal amount, BankAccount bankAccount) {
         
         if (user.getRole() == Role.USER) {
+            enforceUserIsApproved(user);
             enforceUserOwnsBankAccountAccount(user, bankAccount);
         }
 
@@ -40,6 +41,13 @@ public class TransactionPolicy {
 
         if (fromAccount.getUser().getId() != user.getId()) {
             throw new NotAuthorizedException("Users can only transfer from their own accounts.");
+        }
+    }
+
+    private void enforceUserIsApproved(User user) {
+
+        if (user.getIsApproved() == false) {
+            throw new NotAuthorizedException("Only approved users can make transactions");
         }
     }
 

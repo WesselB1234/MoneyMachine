@@ -25,7 +25,9 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, String
     Page<BankAccount> findAllByUserId(Long id, Pageable pageable);
     Optional<BankAccount> findByIbanAndUserId(String iban, Long id);
     @Modifying
-    @Transactional
-    @Query("UPDATE BankAccount SET balance = :newBalance WHERE iban = :iban")
-    void updateBalanceByIban(@Param("iban") String iban, @Param("newBalance") BigDecimal newBalance);
+    @Query("UPDATE BankAccount SET balance = balance - :amount WHERE iban = :iban")
+    void decrementBalanceByIban(@Param("iban") String iban, @Param("amount") BigDecimal amount);
+    @Modifying
+    @Query("UPDATE BankAccount b SET b.balance = b.balance + :amount WHERE b.iban = :iban")
+    void incrementBalanceByIban(@Param("iban") String iban, @Param("amount") BigDecimal amount);
 }
