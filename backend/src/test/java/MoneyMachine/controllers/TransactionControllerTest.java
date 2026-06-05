@@ -69,7 +69,6 @@ public class TransactionControllerTest extends BaseControllerTest {
         Map<String, Object> request = new HashMap<>();
         request.put("amount", amount);
         request.put("toBankAcountIban", userBankAccount.getIban());
-        request.put("message", "ATM deposit");
 
         mockMvc.perform(post("/transactions/deposit")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -94,7 +93,6 @@ public class TransactionControllerTest extends BaseControllerTest {
         Map<String, Object> request = new HashMap<>();
         request.put("amount", amount);
         request.put("toBankAcountIban", userBankAccount.getIban());
-        request.put("message", "ATM deposit");
 
         mockMvc.perform(post("/transactions/deposit")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -117,7 +115,6 @@ public class TransactionControllerTest extends BaseControllerTest {
         Map<String, Object> request = new HashMap<>();
         request.put("amount", 999999999);
         request.put("toBankAcountIban", userBankAccount.getIban());
-        request.put("message", "ATM deposit");
 
         mockMvc.perform(post("/transactions/deposit")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -132,7 +129,6 @@ public class TransactionControllerTest extends BaseControllerTest {
         Map<String, Object> request = new HashMap<>();
         request.put("amount", 100);
         request.put("toBankAcountIban", employeeBankAccount.getIban());
-        request.put("message", "ATM deposit");
 
         mockMvc.perform(post("/transactions/deposit")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -149,7 +145,6 @@ public class TransactionControllerTest extends BaseControllerTest {
         Map<String, Object> request = new HashMap<>();
         request.put("amount", amount);
         request.put("fromBankAcountIban", userBankAccount.getIban());
-        request.put("message", "ATM withdraw");
 
         mockMvc.perform(post("/transactions/withdraw")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -174,7 +169,6 @@ public class TransactionControllerTest extends BaseControllerTest {
         Map<String, Object> request = new HashMap<>();
         request.put("amount", amount);
         request.put("fromBankAcountIban", userBankAccount.getIban());
-        request.put("message", "ATM withdraw");
 
         mockMvc.perform(post("/transactions/withdraw")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -197,7 +191,6 @@ public class TransactionControllerTest extends BaseControllerTest {
         Map<String, Object> request = new HashMap<>();
         request.put("amount", 99999);
         request.put("fromBankAcountIban", userBankAccount.getIban());
-        request.put("message", "ATM withdraw");
 
         mockMvc.perform(post("/transactions/withdraw")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -215,7 +208,6 @@ public class TransactionControllerTest extends BaseControllerTest {
         Map<String, Object> request = new HashMap<>();
         request.put("amount", 100);
         request.put("fromBankAcountIban", employeeBankAccount.getIban());
-        request.put("message", "ATM withdraw");
 
         mockMvc.perform(post("/transactions/withdraw")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -230,7 +222,6 @@ public class TransactionControllerTest extends BaseControllerTest {
         Map<String, Object> request = new HashMap<>();
         request.put("amount", 100);
         request.put("fromBankAcountIban", employeeBankAccount.getIban());
-        request.put("message", "ATM withdraw");
 
         mockMvc.perform(post("/transactions/withdraw")
                 .contentType(MediaType.APPLICATION_JSON)
