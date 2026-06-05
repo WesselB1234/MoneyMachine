@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 
 import MoneyMachine.models.BankAccount;
 import jakarta.persistence.LockModeType;
-import jakarta.transaction.Transactional;
 
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccount, String> {
