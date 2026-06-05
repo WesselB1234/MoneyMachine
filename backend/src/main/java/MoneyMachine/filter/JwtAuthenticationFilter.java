@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+
 import java.util.Optional;
 
 @Component
@@ -34,7 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
 
         try {
-
             if("OPTIONS".equalsIgnoreCase(request.getMethod())) {
                 filterChain.doFilter(request, response);
                 return;
