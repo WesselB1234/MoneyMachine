@@ -14,7 +14,6 @@ import MoneyMachine.models.enums.Role;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.interfaces.BankAccountService;
 import MoneyMachine.services.interfaces.UserService;
-import io.jsonwebtoken.JwtException;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import MoneyMachine.exception.NotFoundException;

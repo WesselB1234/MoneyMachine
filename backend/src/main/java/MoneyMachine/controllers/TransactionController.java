@@ -8,15 +8,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import MoneyMachine.models.TransferTransaction;
-import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.requests.DepositRequest;
 import MoneyMachine.models.dtos.requests.TransferRequest;
 import MoneyMachine.models.dtos.requests.WithdrawRequest;
 import MoneyMachine.models.dtos.responses.DepositTransactionResponse;
 import MoneyMachine.models.dtos.responses.TransferTransactionResponse;
 import MoneyMachine.models.dtos.responses.WithdrawTransactionResponse;
-import MoneyMachine.services.AuthenticationServiceImpl;
 import MoneyMachine.services.interfaces.TransactionService;
 
 @RestController
@@ -24,11 +21,9 @@ import MoneyMachine.services.interfaces.TransactionService;
 public class TransactionController {
     
     private TransactionService transactionService;
-    private AuthenticationServiceImpl authenticationService;
 
-    public TransactionController(TransactionService transactionService, AuthenticationServiceImpl authenticationService) {
+    public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
-        this.authenticationService = authenticationService;
     }
 
     @GetMapping("")
