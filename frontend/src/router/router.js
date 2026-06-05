@@ -57,7 +57,7 @@ const routes = [
             },
             { 
                 path: 'bank-account/:iban', 
-                component: ATMMyBankAccount, 
+                component: AccountTransactions, 
                 meta: { 
                     title: 'My bank account',
                     isAtmAuthenticated: true

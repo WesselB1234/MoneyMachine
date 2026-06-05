@@ -110,7 +110,7 @@ public class DataSeeder implements ApplicationRunner {
         transferTransaction.setMessage("Hello transfer!");
         transferTransaction.setIsActive(true);
         transferTransaction.setFromBankAccount(checkingBankAccount);
-        transferTransaction.setToBankAccount(checkingBankAccount);
+        transferTransaction.setToBankAccount(savingsBankAccount);
 
         transactionRepository.save(transferTransaction);
     }

@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import MoneyMachine.services.interfaces.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -110,7 +111,7 @@ public class UserController {
     public ResponseEntity<?> getTransactionsByUserId(@PathVariable Long id, Pageable pageable) throws Exception {
         BankAccountOverviewResponse bankAccountOverviewResponse = bankAccountService.getAllBankAccountsByUserId(id, pageable);
         List<BankAccountResponse> bankAccounts = bankAccountOverviewResponse.getItems();
-       TransactionoverviewResponse transactions = new TransactionoverviewResponse();
+        TransactionoverviewResponse transactions = new TransactionoverviewResponse(new ArrayList<>(), pageable.getPageNumber(), pageable.getPageSize());
         for(BankAccountResponse bankAccount:bankAccounts)
         {
             String iban = bankAccount.getIban();

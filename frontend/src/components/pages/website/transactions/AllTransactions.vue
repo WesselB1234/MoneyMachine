@@ -1,5 +1,6 @@
 <script setup>
 import apiClient from '@/utils/axios.js';
+import TransactionsTable from "@/components/organisms/TransactionsTable.vue";
 import { ref, onMounted } from 'vue';
 const transactions = ref([])
 onMounted(async () => {
@@ -11,7 +12,7 @@ onMounted(async () => {
 
         if (response.status === 200) {
 
-            transactions.value = response.data
+            transactions.value = response.data.transactions
             console.log(transactions)
 
 

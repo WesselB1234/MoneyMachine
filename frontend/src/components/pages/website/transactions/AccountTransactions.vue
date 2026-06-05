@@ -1,6 +1,9 @@
 <script setup>
 import apiClient from '@/utils/axios.js';
+import TransactionsTable from "@/components/organisms/TransactionsTable.vue";
 import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const transactions = ref([])
 onMounted(async () => {
     try {
@@ -11,7 +14,7 @@ onMounted(async () => {
 
         if (response.status === 200) {
 
-            transactions.value = response.data
+            transactions.value = response.data.transactions
 
 
         }

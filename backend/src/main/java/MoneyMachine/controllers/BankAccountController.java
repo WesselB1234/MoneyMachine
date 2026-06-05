@@ -19,7 +19,6 @@ import MoneyMachine.models.dtos.requests.PatchRequest;
 import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import MoneyMachine.services.interfaces.TransactionService;
 
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -55,7 +54,7 @@ public class BankAccountController {
     }
     @GetMapping("/{iban}/transactions")
     @PreAuthorize("@authorizationService.isLoggedIntoLoginType('WEBSITE')")
-    public ResponseEntity<?> getTransactionsByIban(@RequestParam String iban,@PageableDefault(page = 0, size = 20) Pageable pageable) {
+    public ResponseEntity<?> getTransactionsByIban(@PathVariable String iban,@PageableDefault(page = 0, size = 20) Pageable pageable) {
         return ResponseEntity.ok(transactionService.getTransactionsByIban(iban, pageable));
     }
     
