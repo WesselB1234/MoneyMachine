@@ -36,7 +36,7 @@ const routes = [
     },
     {
         path: '/atm',
-        component: ATMLayout,
+        component: AtmLayout,
         children: [
             {
                 path: 'login',
