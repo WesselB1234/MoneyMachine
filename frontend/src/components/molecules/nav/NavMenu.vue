@@ -14,7 +14,9 @@
             <NavLink v-if="websiteDecodedAuthToken.role === 'EMPLOYEE'" to="/employee-test" text="Test your employee rights" /> 
             <NavLink v-if="websiteDecodedAuthToken.role === 'EMPLOYEE'" to="/users" text="Users" />
             <NavLink v-if="websiteDecodedAuthToken.role === 'EMPLOYEE'" to="/transactions" text="Transactions" />
-            <NavLink v-if="websiteDecodedAuthToken.role === 'EMPLOYEE'" to="/bank-accounts" text="Bank Accounts" /> 
+            <NavLink v-if="websiteDecodedAuthToken.role === 'EMPLOYEE'" to="/bank-accounts" text="Bank Accounts" />
+            <NavLink v-if="websiteDecodedAuthToken.role === 'USER'" :to="`/transactions/user/${websiteDecodedAuthToken.sub}`" text="your transactions" /> 
+    
         </template>
 
         <NavLink to="/atm/login" text="Go to ATM" /> 

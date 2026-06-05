@@ -1,14 +1,18 @@
 <script setup>
 import apiClient from '@/utils/axios.js'
-import { ref } from 'vue'
+import { useAuthStore } from '@/stores/authStore.js'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import TransferForm from '@/components/organisms/forms/transactions/transferForm.vue'
 const router = useRouter()
+const authStore = useAuthStore()
+const websiteDecodedAuthToken = computed(() => authStore.websiteDecodedAuthToken ?? null)
 
 const createTransaction = async (transaction) => {
   try {
-    await apiClient.post("transactions/transfer", transaction)
-    router.push("/bank-accounts/temporary") 
+    console.log(transaction)
+    await apiClient.post("/transactions/transfer", transaction)
+    router.push(`/transactions/user/${websiteDecodedAuthToken.value.sub}`) 
   }catch (error) {
     console.log("FULL ERROR OBJECT:", error)
 
@@ -28,8 +32,8 @@ const createTransaction = async (transaction) => {
 </script>
                 
 <template>
-  <router-link to="/bank-accounts/temporary" class="btn btn-primary mb-3">Return</router-link>
+  <router-link :to="`/transactions/user/${websiteDecodedAuthToken.sub}`" class="btn btn-primary mb-3">Return</router-link>
   <h1>User transfer</h1>
-  <transferForm  @createTransaction="createTransaction"/>  
+  <transferForm @createTransaction="createTransaction"/>  
  
 </template>

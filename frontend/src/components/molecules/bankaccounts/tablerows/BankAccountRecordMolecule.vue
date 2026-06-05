@@ -36,6 +36,7 @@ const props = defineProps({
             <UpdateTransferLimitsButtonAtom />
             <ViewTransactionHistoryButtonAtom />
             <TransferMoneyButtonAtom />
+            <router-link :to="`/transactions/bank-account/${bankAccount.iban}`" class="btn btn-primary mb-3">view transactions</router-link>
         </td>
     </tr>
 </template>

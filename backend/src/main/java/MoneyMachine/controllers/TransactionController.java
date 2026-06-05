@@ -38,6 +38,7 @@ public class TransactionController {
     @PostMapping("transfer")
     @PreAuthorize("@authorizationService.isLoggedIntoLoginType('WEBSITE')")
     public ResponseEntity<?> createTransfer(@RequestBody TransferRequest transaction) {
+        System.out.println("Received transfer request: " + transaction);
         
         User loggedInUser = authenticationService.getLoggedInUser();
         

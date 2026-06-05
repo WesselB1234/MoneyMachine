@@ -40,7 +40,8 @@ onMounted(async () => {
 <template>
     <div class="text-center">
         <h1 class="display-4">Account transactions</h1>
-        <router-link to="/transactions/create/employee" class="btn btn-primary mb-3">add transaction</router-link>
+        <router-link v-if="websiteDecodedAuthToken.role === 'EMPLOYEE'" to="/transactions/create/employee" class="btn btn-primary mb-3">add transaction</router-link>
+        <router-link v-else to="/transactions/create/user" class="btn btn-primary mb-3">add transaction</router-link>
         <TransactionsTable :transactions="transactions" />
     </div>
 </template>

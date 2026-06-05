@@ -1,6 +1,8 @@
 package MoneyMachine.controllers;
 
 import java.util.List;
+import java.util.Objects;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
@@ -116,9 +118,22 @@ public class UserController {
         {
             String iban = bankAccount.getIban();
             TransactionoverviewResponse overview=transactionService.getTransactionsByIban(iban,pageable);
-            for(TransactionResponse transactionResponse:overview.getTransactions())
-            {
-                transactions.getTransactions().add(transactionResponse);
+            for (TransactionResponse transactionResponse : overview.getTransactions()) {
+
+                boolean isNewTransaction = true;
+
+                for (TransactionResponse existing : transactions.getTransactions()) {
+
+                    if (Objects.equals(existing.getTransactionId(),transactionResponse.getTransactionId())) {
+
+                        isNewTransaction = false;
+                        break;
+                    }
+                }
+
+                if (isNewTransaction) {
+                    transactions.getTransactions().add(transactionResponse);
+                }
             }
         }
         return ResponseEntity.status(200).body(transactions);

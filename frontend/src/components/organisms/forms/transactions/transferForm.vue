@@ -14,7 +14,6 @@
         toAccount: "",
         amount: "",
         message: "",
-        initiatedBy: ""
     })
     const emit = defineEmits(['createTransaction'])
 </script>
