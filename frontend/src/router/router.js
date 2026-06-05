@@ -117,8 +117,11 @@ const routes = [
     {
         path: '/',
         component: WebsiteLayout,
-        redirect: '/login',
         children: [
+            {
+                path: '',
+                redirect: '/login'
+            },
             {
                 path: 'users',
                 component: UsersWithoutBankAccountPage,
