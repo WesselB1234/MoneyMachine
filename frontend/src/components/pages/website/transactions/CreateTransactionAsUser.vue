@@ -7,6 +7,7 @@ import TransferForm from '@/components/organisms/forms/transactions/transferForm
 const router = useRouter()
 const authStore = useAuthStore()
 const websiteDecodedAuthToken = computed(() => authStore.websiteDecodedAuthToken ?? null)
+const errorAlertRef = ref(null)
 
 const createTransaction = async (transaction) => {
   try {
@@ -20,6 +21,7 @@ const createTransaction = async (transaction) => {
     console.log("DATA:", error.response?.data)
 
     console.log("MESSAGE:", error.response?.data?.message)
+    errorAlertRef.value.displayErrorMessage(error.response?.data?.message)
     console.log("TYPE:", error.response?.data?.errorType)
     console.log("CODE:", error.response?.data?.code)
     console.log("LOCATION:", error.response?.data?.location)
@@ -34,6 +36,7 @@ const createTransaction = async (transaction) => {
 <template>
   <router-link :to="`/transactions/user/${websiteDecodedAuthToken.sub}`" class="btn btn-primary mb-3">Return</router-link>
   <h1>User transfer</h1>
+  <ErrorAlert ref="errorAlertRef" />
   <transferForm @createTransaction="createTransaction"/>  
  
 </template>
