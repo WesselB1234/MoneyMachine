@@ -38,10 +38,12 @@ public class BankAccountServiceImpl implements BankAccountService {
     private IbanGenerator ibanGenerator;
     private BankAccountTypeFactory bankAccountTypeFactory;
     private UserRepository userRepository;
-    // private static final BigDecimal balance = BigDecimal.valueOf(0);
-    // private static final BigDecimal absoluteLimit = BigDecimal.valueOf(0);
-    // private static final BigDecimal dailyTransferLimit = BigDecimal.valueOf(20000);
-    // private static final BigDecimal singleTransferLimit = BigDecimal.valueOf(5000);
+    private static final BigDecimal balance = BigDecimal.valueOf(0);
+    private static final BigDecimal absoluteLimit = BigDecimal.valueOf(0);
+    private static final BigDecimal dailyTransferLimit = BigDecimal.valueOf(20000);
+    private static final BigDecimal singleTransferLimit = BigDecimal.valueOf(5000);
+    private static final boolean isActive = false;
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
     public BankAccountServiceImpl(BankAccountRepository bankAccountRepository, UserRepository userRepository,
             BankAccountMapper bankAccountMapper, IbanGenerator ibanGenerator,
@@ -98,11 +100,8 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccountResponse createBankAccountForUser(BankAccountType bankAccountType, User user) {
-
-        BankAccount bankAccount = new BankAccount();
-
         String iban = generateIban();
-        // BankAccount bankAccount = new BankAccount(iban, user, balance, absoluteLimit, singleTransferLimit, dailyTransferLimit, bankAccountType, true, LocalDateTime.now());
+        BankAccount bankAccount = new BankAccount(iban, user, balance, absoluteLimit, dailyTransferLimit, singleTransferLimit, bankAccountType, isActive, createdAt);
         BankAccountTypeStrategy strategy = bankAccountTypeFactory.getStrategy(bankAccountType);
         strategy.applyBankAccountRules(bankAccount);
         bankAccountRepository.save(bankAccount);
