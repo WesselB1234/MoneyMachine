@@ -1,50 +1,59 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import axios from '@/utils/axios';
-import router from "@/router/router";
-import ApproveCustomerOrganism from '../../organisms/users/ApproveCustomerOrganism.vue';
+import ApproveCustomerOrganism from '@/organisms/users/ApproveCustomerOrganism.vue';
 import { useRouter } from 'vue-router';
-const loading = ref(true);
+import { useAccountApprovalStore } from '@/stores/accountApprovalStore.js';
+const loading = ref(false);
 const error = ref(null);
 const bankAccounts = ref([]);
 const router = useRouter();
 const currentRoute = router.currentRoute.value.params;
-const fetchUserWithoutABankAccount = async () => {
+const accountApprovalStore = useAccountApprovalStore();
+function fetchUsersWithoutAccount() {
     loading.value = true;
-    error.value = null;
+    error.value = null
+    accountApprovalStore.pendingBankAccounts;
 }
 
-const createBankAccounts = async () => {
-    loading, value = true;
+const approveAndCreateAccounts = async () => {
+    loading.value = true;
     error.value = null;
-
     try {
-        const result = await axios.post('/bank-accounts', bankAccounts);
-        bankAccounts.value = result.data;
-        console.log(result.data);
-        await router.push('/users');
+        await axios.post("/bank-accounts", accountApprovalStore.pendingBankAccounts.checking);
+        await axios.post("/bank-accounts", accountApprovalStore.pendingBankAccounts.savings);
 
+        accountApprovalStore.clearApproval();
+
+        await router.push({
+            path: "/users",
+            query: {
+                success: "Successfully created bank accounts"
+            }
+        })
     } catch (err) {
         console.log("Error creating bank accounts", err);
         error.value =
+            err?.response?.data?.details ||
             err.message || "Failed to create bank accounts. Please try again later.";
-        bankAccounts.value = null;
+    } finally {
+        loading.value = false;
     }
-
 }
-onMounted(() => {
-    fetchUsersWithoutABankAccount();
-})
 
+const cancel = () => {
+    accountApprovalStore.clearApproval();
+    router.push("/users");
+}
 </script>
 
 <template>
     <section>
         <!-- Loading State -->
-        <section v-if="loadingFetch" class="min-h-screen flex items-center justify-center">
+        <section v-if="loading" class="min-h-screen flex items-center justify-center">
             <section class="text-center">
                 <section class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4">
-                    <p class="text-blue">Loading bankaccount</p>
+                    <p class="text-blue">Creating bankaccounts...</p>
                 </section>
             </section>
         </section>
@@ -56,11 +65,15 @@ onMounted(() => {
                 Error Loading a bankaccount
             </h2>
             <p class="text-gray-600 mb-4">{{ error }}</p>
-            <button @click="fetchBankAccount"
+            <button @click="approveAndCreateAccounts"
                 class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 Try Again
             </button>
+            <button @click="cancel"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                Cancel
+            </button>
         </section>
-        <ApproveCustomerOrganism @createBankAccount="createBankAccounts" v-else :bankAccount="bankAccount" />
+        <ApproveCustomerOrganism @createBankAccount="approveAndCreateAccounts" v-else :bankAccount="bankAccount" />
     </section>
 </template>

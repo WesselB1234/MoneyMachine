@@ -13,7 +13,7 @@ const emits = defineEmits(['approveCustomer']);
   <td>
   <RouterLink @click="$emit('approveCustomer', user.userId)"
     :to="{
-      path: `/users/${userId}/bank-accounts`
+      path: `/users/${user.userId}/bank-accounts`
     }"
   >
     Approve Customer
