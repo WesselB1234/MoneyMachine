@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import MoneyMachine.exception.NotFoundException;
@@ -60,17 +59,15 @@ public class BankAccountServiceImplTest {
         user.setIsActive(true);
         user.setIsApproved(true);
 
-        bankAccount = new BankAccount(
-            "NL01MONE0123456789",
-            user,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            new BigDecimal("5000"),
-            new BigDecimal("20000"),
-            BankAccountType.CHECKING,
-            true,
-            LocalDateTime.now()
-        );
+        bankAccount = new BankAccount();
+        bankAccount.setIban("NL01MONE0123456789");
+        bankAccount.setUser(user);
+        bankAccount.setBalance(new BigDecimal("1000.00"));
+        bankAccount.setAbsoluteLimit(new BigDecimal("0.00"));
+        bankAccount.setSingleTransferLimit(new BigDecimal("5000.00"));
+        bankAccount.setDailyTransferLimit(new BigDecimal("20000.00"));
+        bankAccount.setBankAccountType(BankAccountType.CHECKING);
+        bankAccount.setIsActive(true);
 
         bankAccountResponse = new BankAccountResponse();
         bankAccountResponse.setIban(bankAccount.getIban());
@@ -95,8 +92,8 @@ public class BankAccountServiceImplTest {
         
         when(bankAccountRepository.findById(bankAccount.getIban())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () 
-            -> bankAccountService.getBankAccountByIban(bankAccount.getIban())
+        assertThrows(NotFoundException.class, () -> 
+            bankAccountService.getBankAccountByIban(bankAccount.getIban())
         );
 
         verify(bankAccountRepository).findById(bankAccount.getIban());

@@ -66,17 +66,15 @@ public class TransactionServiceImplTest {
         user.setIsActive(true);
         user.setIsApproved(true);
 
-        bankAccount = new BankAccount(
-            "NL01MONE0123456789",
-            user,
-            new BigDecimal("1000.00"),
-            new BigDecimal("0.00"),
-            new BigDecimal("5000.00"),
-            new BigDecimal("20000.00"),
-            BankAccountType.CHECKING,
-            true,
-            LocalDateTime.now()
-        );
+        bankAccount = new BankAccount();
+        bankAccount.setIban("NL01MONE0123456789");
+        bankAccount.setUser(user);
+        bankAccount.setBalance(new BigDecimal("1000.00"));
+        bankAccount.setAbsoluteLimit(new BigDecimal("0.00"));
+        bankAccount.setSingleTransferLimit(new BigDecimal("5000.00"));
+        bankAccount.setDailyTransferLimit(new BigDecimal("20000.00"));
+        bankAccount.setBankAccountType(BankAccountType.CHECKING);
+        bankAccount.setIsActive(true);
     }
 
     @Test
@@ -109,8 +107,8 @@ public class TransactionServiceImplTest {
         when(bankAccountService.getBankAccountEntityByIban(bankAccount.getIban())).thenReturn(bankAccount);
         doThrow(new RuntimeException("Policy violation")).when(transactionPolicy).enforceTransactionPolicy(user, amount, bankAccount);
 
-        assertThrows(RuntimeException.class, () 
-            -> transactionService.depositAmountIntoBankAccount(bankAccount.getIban(), amount)
+        assertThrows(RuntimeException.class, () -> 
+            transactionService.depositAmountIntoBankAccount(bankAccount.getIban(), amount)
         );
 
         verify(bankAccountRepository, never()).incrementBalanceByIban(any(), any());
@@ -147,8 +145,8 @@ public class TransactionServiceImplTest {
         when(bankAccountService.getBankAccountEntityByIban(bankAccount.getIban())).thenReturn(bankAccount);
         doThrow(new RuntimeException("Policy violation")).when(transactionPolicy).enforceTransactionWithdrawPolicy(user, amount, bankAccount);
 
-        assertThrows(RuntimeException.class, () 
-            -> transactionService.withdrawAmountIntoBankAccount(bankAccount.getIban(), amount)
+        assertThrows(RuntimeException.class, () -> 
+            transactionService.withdrawAmountIntoBankAccount(bankAccount.getIban(), amount)
         );
 
         verify(bankAccountRepository, never()).decrementBalanceByIban(any(), any());
