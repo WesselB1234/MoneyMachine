@@ -20,6 +20,7 @@ const props = defineProps({
     }
 })
 
+const emits = defineEmits(['approveCustomer']);
 </script>
 
 <template>
@@ -29,6 +30,6 @@ const props = defineProps({
     <BaseTableDataFieldAtom :text="user.email" />
     <BaseTableDataFieldAtom :text="user.bsn" />
     <BaseTableDataFieldAtom :text="user.phoneNumber" />
-    <ApproveCustomerButtonAtom :user="user"/>
+    <ApproveCustomerButtonAtom @approveCustomer="$emit('approveCustomer', user.userId)" :user="user"/>
     </tr>  
 </template>

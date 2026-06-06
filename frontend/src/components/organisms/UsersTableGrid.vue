@@ -21,6 +21,8 @@
             }
         }
     })
+
+const emits = defineEmits(['approveCustomer']);
 </script>
 
 <template>
@@ -29,7 +31,7 @@
             <UserTableHeader />
         </thead>
         <tbody>
-            <UserRecordMolecule v-for="user in items" :key="user.userId" :user="user" />
+            <UserRecordMolecule @approveCustomer="$emit('approveCustomer', user.userId)" v-for="user in items" :key="user.userId" :user="user" />
         </tbody>
     </table>
 </template>

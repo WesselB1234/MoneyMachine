@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         return userOverviewResponse;
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public void approveUserAndCreateAccounts(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         User user = optionalUser.get();
