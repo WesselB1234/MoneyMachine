@@ -4,7 +4,7 @@ import { useErrorHandlingStore } from "@/stores/errorHandlingStore"
 import AllTransactions from '@/components/pages/website/transactions/AllTransactions.vue'
 import CreateTransactionAsUser from '@/components/pages/website/transactions/CreateTransactionAsUser.vue'
 import CreateTransactionAsEmployee from '@/components/pages/website/transactions/CreateTransactionAsEmployee.vue'
-
+console.log('refres')
 import ATMLayout from '@/components/layout/AtmLayout.vue'
 import WebsiteLayout from '@/components/layout/WebsiteLayout.vue'
 
