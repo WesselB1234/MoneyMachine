@@ -4,19 +4,17 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import MoneyMachine.exception.NotAuthorizedException;
 import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.responses.UserOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserResponse;
 import MoneyMachine.models.enums.BankAccountType;
-import MoneyMachine.models.enums.Role;
+import MoneyMachine.models.policies.ApprovingPolicy;
 import MoneyMachine.repositories.UserRepository;
 import MoneyMachine.services.interfaces.BankAccountService;
 import MoneyMachine.services.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
-import MoneyMachine.exception.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -48,17 +46,11 @@ public class UserServiceImpl implements UserService {
     public void approveUserAndCreateAccounts(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         User user = optionalUser.get();
-        if (user == null) {
-            throw new NotFoundException("User with user id" + userId + "Not found");
-        }
 
-        if (user.getIsActive() == false) {
-            throw new NotAuthorizedException("User is not active");
-        }
-
-        if (user.getRole() == Role.USER) {
-            throw new NotAuthorizedException("User is not allowed to create account");
-        }
+        ApprovingPolicy approvingPolicy = new ApprovingPolicy();
+        approvingPolicy.enforceUserIsNotNull(user);
+        approvingPolicy.enforceUserIsNotActive(user);
+        approvingPolicy.enforceUserIsNotAuthorizedToCreateAccount(user);
 
         for (BankAccountType bankAccountType : BankAccountType.values()) {
             bankAccountService.createBankAccountForUser(bankAccountType, user);
