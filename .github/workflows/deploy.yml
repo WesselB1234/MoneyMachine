@@ -39,6 +39,9 @@ jobs:
         run: |
           echo "VITE_API_URL=${{ vars.VITE_API_URL }}" > .env
 
+      - name: Debug env
+        run: cat .env
+
       - name: Build project
         run: npm run build
 
