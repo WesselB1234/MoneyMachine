@@ -4,13 +4,10 @@ import java.math.BigDecimal;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import MoneyMachine.models.User;
-import MoneyMachine.models.dtos.requests.TransferRequest;
 import MoneyMachine.models.dtos.responses.DepositTransactionResponse;
 import MoneyMachine.models.dtos.responses.TransactionoverviewResponse;
 import MoneyMachine.models.dtos.responses.ITransactionResponse;
 
-import MoneyMachine.models.dtos.responses.DepositTransactionResponse;
 import MoneyMachine.models.dtos.responses.TransferTransactionResponse;
 import MoneyMachine.models.dtos.responses.WithdrawTransactionResponse;
 

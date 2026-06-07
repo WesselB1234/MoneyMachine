@@ -31,19 +31,17 @@ function formatDateTime(dateString) {
                 <th>toAccount </th>
                 <th> amount </th>
                 <th> time </th>
-                <th> type </th>
                 <th> initiated by </th>
                 <th> message </th>
             </tr>
         </thead>
         <tbody>
             <tr  v-for="transaction in transactions" :key="transaction.transactionId">
-                <td>{{ transaction.fromAccount }}</td>
-                <td> {{ transaction.toAccount }}</td>
+                <td>{{ transaction.fromAccountIban }}</td>
+                <td> {{ transaction.toAccountIban }}</td>
                 <td>€ {{ transaction.amount }}</td>
-                <td>{{ formatDateTime(transaction.time) }}</td>
-                <td> {{ transaction.type }}</td>
-                <td> {{ transaction.initiatedBy }}</td>
+                <td>{{ formatDateTime(transaction.dateTime) }}</td>
+                <td> {{ transaction.initiatingUserId }}</td>
                 <td> {{ transaction.message }}</td>
             </tr>
         </tbody>

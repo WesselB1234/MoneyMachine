@@ -1,7 +1,5 @@
 package MoneyMachine.controllers;
 
-import java.math.BigDecimal;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -11,26 +9,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.requests.DepositRequest;
 import MoneyMachine.models.dtos.requests.TransferRequest;
 import MoneyMachine.models.dtos.requests.WithdrawRequest;
 import MoneyMachine.models.dtos.responses.DepositTransactionResponse;
-import MoneyMachine.models.dtos.responses.TransferTransactionResponse;
 import MoneyMachine.models.dtos.responses.WithdrawTransactionResponse;
 import MoneyMachine.services.interfaces.TransactionService;
-import MoneyMachine.services.interfaces.AuthenticationService;
+
 
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
     
     private TransactionService transactionService;
-    private AuthenticationService authenticationService;
 
-    public TransactionController(TransactionService transactionService, AuthenticationService authenticationService) {
+    public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
-        this.authenticationService = authenticationService;
     }
 
     @GetMapping("")

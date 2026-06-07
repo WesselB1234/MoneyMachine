@@ -2,7 +2,10 @@
 import apiClient from '@/utils/axios.js'
 import { ref, onMounted } from 'vue'
 const accounts = ref([])
-const Ibans = ref([])
+const ibans = ref([])
+const selectedIban = ref('')
+
+const emit = defineEmits(['select'])
     
    onMounted(async () => {
     try {
@@ -14,9 +17,9 @@ const Ibans = ref([])
         if (response.status === 200) {
 
             accounts.value = response.data.items
-            Ibans.value = accounts.value.map(account => account.iban)
+            ibans.value = accounts.value.map(account => account.iban)
             console.log(accounts)
-            console.log(Ibans)
+            console.log(ibans)
 
         }
 
@@ -36,15 +39,36 @@ const Ibans = ref([])
 
     }
 }) 
+const selectIban = (iban) => {
+  selectedIban.value = iban   // UI update
+  emit('select', iban)        // naar parent
+}
 </script>
 
-<template>
+
+   <template>
     <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-  to iban
+  <button
+    class="btn btn-secondary dropdown-toggle"
+    type="button"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    {{ selectedIban || 'Select to IBAN' }}
   </button>
+
   <ul class="dropdown-menu">
-    <li v-for="iban in Ibans" :key="iban"><a class="dropdown-item" href="#">{{ iban }}</a></li>
+    <li v-for="iban in ibans" :key="iban">
+      <a
+        class="dropdown-item"
+        href="#"
+       @click.prevent="selectIban(iban)"
+      >
+        {{ iban }}
+      </a>
+    </li>
   </ul>
 </div>
 </template>
+
+
