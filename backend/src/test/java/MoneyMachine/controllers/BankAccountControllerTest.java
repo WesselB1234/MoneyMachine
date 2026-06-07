@@ -31,6 +31,7 @@ public class BankAccountControllerTest extends BaseControllerTest {
         super.setUpMockAuth();
         
         user = new User();
+        user.setId(1l);
         user.setFirstName("employeeFirstName");
         user.setLastName("employeeLastName");
         user.setEmail("employee@employee.employee");
@@ -50,7 +51,7 @@ public class BankAccountControllerTest extends BaseControllerTest {
         bankAccount.setDailyTransferLimit(new BigDecimal("100"));
         bankAccount.setBankAccountType(BankAccountType.CHECKING);
         bankAccount.setIsActive(true);
-
+        errorResponse = new ErrorResponse();
     }
 
     @Test
@@ -79,24 +80,24 @@ public class BankAccountControllerTest extends BaseControllerTest {
     @Test
     void getAllBankAccounts_whenAuthorized_getAllBankAccounts() throws Exception {
         mockMvc.perform(get(String.format("/bank-accounts", pageable))
-                .header("Authorization", "Bearer" + websiteEmployeeAuthToken))
+                .header("Authorization", "Bearer " + websiteEmployeeAuthToken))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$.items").exists())
-                .andExpect(jsonPath("$.[items].iban").value(bankAccount.getIban()))
-                .andExpect(jsonPath("$.[items].userId").value(bankAccount.getUser().getId()))
-                .andExpect(jsonPath("$.[items].bankAccountType").value(bankAccount.getBankAccountType()))
-                .andExpect(jsonPath("$.[items].balance").value(bankAccount.getBalance()))
-                .andExpect(jsonPath("$.[items].singleTransferLimit").value(bankAccount.getSingleTransferLimit()))
-                .andExpect(jsonPath("$.[items].dailyTransferLimit").value(bankAccount.getDailyTransferLimit()))
-                .andExpect(jsonPath("$.[items].absoluteLimit").value(bankAccount.getAbsoluteLimit()))
-                .andExpect(jsonPath("$.[items].isActive").value(bankAccount.getIsActive()));
+                .andExpect(jsonPath("$.items[0].iban").value(bankAccount.getIban()))
+                .andExpect(jsonPath("$.items[0].userId").value(bankAccount.getUser().getId()))
+                .andExpect(jsonPath("$.items[0].bankAccountType").value(bankAccount.getBankAccountType()))
+                .andExpect(jsonPath("$.items[0].balance").value(bankAccount.getBalance()))
+                .andExpect(jsonPath("$.items[0].singleTransferLimit").value(bankAccount.getSingleTransferLimit()))
+                .andExpect(jsonPath("$.items[0].dailyTransferLimit").value(bankAccount.getDailyTransferLimit()))
+                .andExpect(jsonPath("$.items[0].absoluteLimit").value(bankAccount.getAbsoluteLimit()))
+                .andExpect(jsonPath("$.items[0].isActive").value(bankAccount.getIsActive()));
     }
 
 
     @Test
     void failedGetAllBankAccounts_WhenNotAuthorized_GetUnAuthorizedError() throws Exception {
         mockMvc.perform(get(String.format("/bank-accounts", pageable))
-        .header("Authorization", "Bearer" + websiteEmployeeAuthToken))
+        .header("Authorization", "Bearer " + websiteEmployeeAuthToken))
         .andExpect(status().is(403))
         .andExpect(jsonPath("$.code").value(errorResponse.getCode()))
         .andExpect(jsonPath("$.type").value(errorResponse.getErrorType()))
@@ -106,7 +107,7 @@ public class BankAccountControllerTest extends BaseControllerTest {
     @Test
     void closeBankAccount_whenBankAccountIsClosed_setIsActiveFalseAndReturnUpdatedBankAccount() throws Exception {
         mockMvc.perform(patch(String.format("/bank-accounts/{iban}", userBankAccountIban))
-                .header("Authorization", "Bearer" + websiteEmployeeAuthToken))
+                .header("Authorization", "Bearer " + websiteEmployeeAuthToken))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$.isActive").value(isActive));
     }

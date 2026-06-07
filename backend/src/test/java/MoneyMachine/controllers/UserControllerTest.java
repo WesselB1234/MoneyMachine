@@ -17,6 +17,7 @@ public class UserControllerTest extends BaseControllerTest {
     void setUp() {
         super.setUpMockAuth();
         user = new User();
+        user.setId(1l);
         user.setFirstName("employeeFirstName");
         user.setLastName("employeeLastName");
         user.setEmail("employee@employee.employee");
@@ -56,7 +57,6 @@ public class UserControllerTest extends BaseControllerTest {
         mockMvc.perform(get(String.format("/users"))
                 .header("Authorization", "Bearer " + websiteEmployeeAuthToken))
                 .andExpect(status().isOk())
-                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.items").exists())
                 .andExpect(jsonPath("$.items[0].userId").value(user.getId()))
                 .andExpect(jsonPath("$.items[0].firstName").value(user.getFirstName()))
