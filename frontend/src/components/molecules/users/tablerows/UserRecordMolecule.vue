@@ -24,7 +24,7 @@ const emits = defineEmits(['approveCustomer']);
 </script>
 
 <template>
-  <tr class="table table-dark">
+  <tr class="table table-light">
     <BaseTableDataFieldAtom :text="user.firstName" />
     <BaseTableDataFieldAtom :text="user.lastName" />
     <BaseTableDataFieldAtom :text="user.email" />
