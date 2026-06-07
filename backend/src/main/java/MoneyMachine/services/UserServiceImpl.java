@@ -8,13 +8,10 @@ import MoneyMachine.mappers.UserMapper;
 import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.responses.UserOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserResponse;
-import MoneyMachine.models.enums.BankAccountType;
-import MoneyMachine.models.policies.ApprovingPolicy;
+import MoneyMachine.policies.ApprovingPolicy;
 import MoneyMachine.repositories.UserRepository;
-import MoneyMachine.services.interfaces.BankAccountService;
 import MoneyMachine.services.interfaces.UserService;
 import jakarta.transaction.Transactional;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import MoneyMachine.exception.NotFoundException;
@@ -24,13 +21,10 @@ public class UserServiceImpl implements UserService {
 
     private UserMapper userMapper;
     private UserRepository userRepository;
-    private BankAccountService bankAccountService;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper,
-            BankAccountService bankAccountService) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userMapper = userMapper;
         this.userRepository = userRepository;
-        this.bankAccountService = bankAccountService;
     }
 
     public UserOverviewResponse getAllUsersWithoutBankAccounts(Pageable pageable) {
@@ -44,20 +38,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public void approveUserAndCreateAccounts(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.get();
-
+    public void approveUser(User user) {
         ApprovingPolicy approvingPolicy = new ApprovingPolicy();
         approvingPolicy.enforceUserIsNotNull(user);
         approvingPolicy.enforceUserIsNotActive(user);
         approvingPolicy.enforceUserIsNotAuthorizedToCreateAccount(user);
-
-        for (BankAccountType bankAccountType : BankAccountType.values()) {
-            bankAccountService.createBankAccountForUser(bankAccountType, user);
-        }
-
-        user.setIsApproved(true);
     }
 
     public User getUserById(Long id) {

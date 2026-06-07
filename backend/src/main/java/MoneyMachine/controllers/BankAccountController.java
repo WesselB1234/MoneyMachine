@@ -34,7 +34,7 @@ public class BankAccountController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasRole('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
+    @PreAuthorize("hasAuthority('EMPLOYEE') && @authorizationService.isLoggedIntoLoginType('WEBSITE')")
     public ResponseEntity<BankAccountResponse> createBankAccount(
             @RequestBody BankAccountCreationRequest bankAccountCreationRequest) throws Exception {
         BankAccountResponse bankAccountResponse = bankAccountService

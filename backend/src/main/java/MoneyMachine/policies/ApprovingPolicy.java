@@ -1,4 +1,4 @@
-package MoneyMachine.models.policies;
+package MoneyMachine.policies;
 
 import MoneyMachine.models.User;
 import MoneyMachine.exception.NotAuthorizedException;
@@ -25,7 +25,7 @@ public class ApprovingPolicy {
     }
 
     public void enforceUserIsNotAuthorizedToCreateAccount(User user) {
-        if (user.getRole() == Role.USER) {
+        if (user.getRole() != Role.USER) {
             throw new NotAuthorizedException("User is not allowed to create account");
         }
     }

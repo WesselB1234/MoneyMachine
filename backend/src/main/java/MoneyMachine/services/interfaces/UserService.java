@@ -6,6 +6,6 @@ import MoneyMachine.models.User;
 
 public interface UserService {
     UserOverviewResponse getAllUsersWithoutBankAccounts(Pageable pageable);
-    void approveUserAndCreateAccounts(Long userId);
     User getUserById(Long id); 
+    void approveUser(User user);
 }
