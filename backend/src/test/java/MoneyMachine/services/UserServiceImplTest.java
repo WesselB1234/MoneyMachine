@@ -1,6 +1,7 @@
 package MoneyMachine.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,7 +18,6 @@ import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.responses.UserOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserResponse;
 import MoneyMachine.models.enums.Role;
-import MoneyMachine.policies.ApprovingPolicy;
 import MoneyMachine.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
@@ -28,21 +28,25 @@ public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
-    
+
     @Mock
     private UserMapper userMapper;
 
     @Mock
     private Page<User> page;
 
+    @Mock
+    private List<User> users;
+
     @InjectMocks
     private UserServiceImpl userServiceImpl;
 
     private User user;
+    private User customer;
+    private Pageable pageable;
 
     @BeforeEach
-    void setUp()
-    {
+    void setUp() {
         user = new User();
         user.setFirstName("employeeFirstName");
         user.setLastName("employeeLastName");
@@ -53,20 +57,41 @@ public class UserServiceImplTest {
         user.setPassword("MockedPassword");
         user.setIsActive(false);
         user.setIsApproved(false);
+
+        customer = new User();
+        customer.setFirstName("customerFirstName");
+        customer.setLastName("customerLastName");
+        customer.setEmail("customer@customer.customer");
+        customer.setBsn("987654321");
+        customer.setPhoneNumber("+31 6 87 65 43 21");
+        customer.setRole(Role.USER);
+        customer.setPassword("MockedPassword");
+        customer.setIsActive(false);
+        customer.setIsApproved(false);
     }
 
     @Test
-    public void getAllUsersWithoutBankAccounts_whenUsersWithoutBankAccountsFound_returnAllUsers(Pageable pageable)
-    {
-        List<User> users = page.getContent();
+    public void getAllUsersWithoutBankAccounts_whenUsersWithoutBankAccountsFound_returnAllUsers() {
+        users = List.of(customer, user);
         when(userRepository.findByBankAccountsIsEmpty(pageable)).thenReturn(page);
+        when(page.getContent()).thenReturn(users);
+        when(page.getNumber()).thenReturn(0);
+        when(page.getSize()).thenReturn(2);
 
-        List<UserResponse> items = userMapper.toResponseList(users);
-        UserOverviewResponse userOverviewResponse = new UserOverviewResponse(items, page.getNumber(), page.getSize());
-        userOverviewResponse = userServiceImpl.getAllUsersWithoutBankAccounts(pageable);
+        List<UserResponse> expectedItems = List.of(
+            new UserResponse(),
+            new UserResponse()
+        );
 
-        assertEquals(users, userOverviewResponse);
+        when(userMapper.toResponseList(users)).thenReturn(expectedItems);
 
-        verify(userRepository.findByBankAccountsIsEmpty(pageable));
+        UserOverviewResponse userOverviewResponse = userServiceImpl.getAllUsersWithoutBankAccounts(pageable);
+        assertEquals(2, userOverviewResponse.getItems().size());
+        assertEquals(0, userOverviewResponse.getPage());
+        assertEquals(2, userOverviewResponse.getPageSize());
+        assertNotNull(userOverviewResponse);
+
+        verify(userRepository).findByBankAccountsIsEmpty(pageable);
+        verify(userMapper).toResponseList(users);
     }
 }

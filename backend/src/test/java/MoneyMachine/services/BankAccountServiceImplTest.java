@@ -1,6 +1,7 @@
 package MoneyMachine.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,12 +40,19 @@ public class BankAccountServiceImplTest {
 
     @InjectMocks
     private BankAccount bankAccount;
+
+    private BankAccount savingsBankAccount;
+
     private User user;
-    private Optional<BankAccount> optionalBankAccount;
+
+    @Mock
     private Page<BankAccount> page;
 
+    @Mock
+    private List<BankAccount> bankAccounts;
+
     private PatchRequest patchRequest;
-    private BankAccountResponse bankAccountResponse;
+    private Pageable pageable;
 
     @BeforeEach
     void setUp() {
@@ -69,37 +77,60 @@ public class BankAccountServiceImplTest {
         bankAccount.setBankAccountType(BankAccountType.CHECKING);
         bankAccount.setIsActive(true);
 
+        savingsBankAccount = new BankAccount();
+        savingsBankAccount.setIban("NL91ABN2417164300");
+        savingsBankAccount.setUser(user);
+        savingsBankAccount.setBalance(new BigDecimal("300"));
+        savingsBankAccount.setAbsoluteLimit(new BigDecimal("0"));
+        savingsBankAccount.setSingleTransferLimit(new BigDecimal("1000"));
+        savingsBankAccount.setDailyTransferLimit(new BigDecimal("2000"));
+        savingsBankAccount.setBankAccountType(BankAccountType.SAVINGS);
+        savingsBankAccount.setIsActive(true);
         patchRequest = new PatchRequest();
         patchRequest.setActive(false);
-
-        optionalBankAccount = Optional.of(bankAccount);
     }
 
     @Test
     public void closeBankAccount_whenBankAccountIsClosed_setIsActiveFalseAndReturnUpdatedBankAccount() {
-        when(bankAccountRepository.findById(bankAccount.getIban())).thenReturn(optionalBankAccount);
+        String iban = bankAccount.getIban();
+        when(bankAccountRepository.findById(iban)).thenReturn(Optional.of(bankAccount));
 
-        when(bankAccountMapper.toResponse(bankAccount)).thenReturn(bankAccountResponse);
-        bankAccountResponse = bankAccountServiceImpl.closeBankAccount(patchRequest,
-                bankAccount.getIban());
+        BankAccountResponse expectedResponse = new BankAccountResponse();
+        expectedResponse.setActive(false);
 
-        assertEquals(bankAccount.getIsActive(), bankAccountResponse.isActive());
-        verify(bankAccountRepository.save(bankAccount));
+        when(bankAccountMapper.toResponse(bankAccount)).thenReturn(expectedResponse);
+        expectedResponse = bankAccountServiceImpl.closeBankAccount(patchRequest,
+                iban);
+
+        assertNotNull(expectedResponse);
+        
+        verify(bankAccountRepository).findById(iban);
+        verify(bankAccountRepository).save(bankAccount);
+        verify(bankAccountMapper).toResponse(bankAccount);
     }
 
     @Test
-    public void getAllBankAccounts_whenBankAccountsFound_returnsAllBankAccounts(Pageable pageable) {
-        List<BankAccount> bankAccounts = page.getContent();
-        when(bankAccountRepository.findAll()).thenReturn(bankAccounts);
+    public void getAllBankAccounts_whenBankAccountsFound_returnsAllBankAccounts() {
+        bankAccounts = List.of(bankAccount, savingsBankAccount);
+        when(bankAccountRepository.findAll(pageable)).thenReturn(page);
+        when(page.getContent()).thenReturn(bankAccounts);
+        when(page.getNumber()).thenReturn(0);
+        when(page.getSize()).thenReturn(2);
 
-        List<BankAccountResponse> items = bankAccountMapper.toResponseList(bankAccounts);
-        BankAccountOverviewResponse bankAccountOverviewResponse = new BankAccountOverviewResponse(items,
-                page.getNumber(), page.getSize());
+        List<BankAccountResponse> expectedBankAccounts = List.of(
+            new BankAccountResponse(),
+            new BankAccountResponse()
+        );
 
-        bankAccountOverviewResponse = bankAccountServiceImpl.getAllBankAccounts(pageable);
-        assertEquals(bankAccounts, bankAccountOverviewResponse);
+        when(bankAccountMapper.toResponseList(bankAccounts)).thenReturn(expectedBankAccounts);
 
-        verify(bankAccountRepository.findAll());
+        BankAccountOverviewResponse bankAccountOverviewResponse = bankAccountServiceImpl.getAllBankAccounts(pageable);
+        assertEquals(2, bankAccountOverviewResponse.getItems().size());
+        assertEquals(0, bankAccountOverviewResponse.getPage());
+        assertEquals(2, bankAccountOverviewResponse.getPageSize());
+        assertNotNull(bankAccountOverviewResponse);
+        verify(bankAccountRepository).findAll(pageable);
+        verify(bankAccountMapper).toResponseList(bankAccounts);
     }
 
     public void testGetAllBankAccountsByUserId() {
