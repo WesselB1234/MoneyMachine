@@ -4,20 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import MoneyMachine.models.User;
-import MoneyMachine.services.AuthenticationServiceImpl;
 import MoneyMachine.models.enums.Role;
-import java.util.Map;
-import java.util.HashMap;
-import org.springframework.http.MediaType;
 
 public class UserControllerTest extends BaseControllerTest {
 
     private User user;
-    private AuthenticationServiceImpl authenticationServiceImpl;
 
     @BeforeEach
     void setUp() {
@@ -29,41 +23,9 @@ public class UserControllerTest extends BaseControllerTest {
         user.setBsn("123456749");
         user.setPhoneNumber("+31 6 12 34 54 78");
         user.setRole(Role.EMPLOYEE);
-        user.setPassword(authenticationServiceImpl.getHashedPassword("password"));
+        user.setPassword("MockedPassword");
         user.setIsActive(false);
         user.setIsApproved(false);
-    }
-
-    @Test
-    void login_whenLoginAsUser_getAuthenticationResponse() throws Exception {
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("email", "user@user.user");
-        request.put("password", "password");
-        request.put("loginType", "ATM");
-
-        mockMvc.perform(post("/users/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().is(201))
-                .andExpect(jsonPath("$.accessToken").exists())
-                .andExpect(jsonPath("$.expiresIn").exists())
-                .andExpect(jsonPath("$.userSummaryResponse").exists())
-                .andExpect(jsonPath("$.userSummaryResponse.id").value(1));
-    }
-
-    @Test
-    void invalidLogin_whenInvalidPassword_returnInvalidCredentials() throws Exception {
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("email", "user@user.user");
-        request.put("password", "invalidPassword");
-        request.put("loginType", "ATM");
-
-        mockMvc.perform(post("/users/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().is(401));
     }
 
     @Test

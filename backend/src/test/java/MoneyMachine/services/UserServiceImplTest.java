@@ -31,16 +31,14 @@ public class UserServiceImplTest {
     @Mock
     private UserMapper userMapper;
 
+    @Mock
+    private Page<User> page;
+
     @InjectMocks
     private UserServiceImpl userServiceImpl;
 
     private User user;
 
-    @Mock
-    private Page<User> page;
-
-    @InjectMocks
-    private AuthenticationServiceImpl authenticationServiceImpl;
     @BeforeEach
     void setUp()
     {
@@ -51,7 +49,7 @@ public class UserServiceImplTest {
         user.setBsn("123456749");
         user.setPhoneNumber("+31 6 12 34 54 78");
         user.setRole(Role.EMPLOYEE);
-        user.setPassword(authenticationServiceImpl.getHashedPassword("password"));
+        user.setPassword("MockedPassword");
         user.setIsActive(false);
         user.setIsApproved(false);
     }

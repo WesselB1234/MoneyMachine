@@ -40,9 +40,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackOn = Exception.class)
     public void approveUser(User user) {
         ApprovingPolicy approvingPolicy = new ApprovingPolicy();
-        approvingPolicy.enforceUserIsNotNull(user);
-        approvingPolicy.enforceUserIsNotActive(user);
-        approvingPolicy.enforceUserIsNotAuthorizedToCreateAccount(user);
+        approvingPolicy.enforceApprovingPolicy(user);
     }
 
     public User getUserById(Long id) {

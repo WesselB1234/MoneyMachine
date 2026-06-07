@@ -36,6 +36,7 @@ public class BaseControllerTest {
     public String websiteEmployeeAuthToken;
 
     void setUpMockAuth() {
+        
         user = new User();
         user.setId(1L);
         user.setFirstName("userFirstName");

@@ -31,20 +31,17 @@ import org.springframework.data.domain.Pageable;
 public class BankAccountServiceImplTest {
 
     @Mock
+    private BankAccountMapper bankAccountMapper;
+    @Mock
     private BankAccountRepository bankAccountRepository;
-
     @InjectMocks
     private BankAccountServiceImpl bankAccountServiceImpl;
 
     @InjectMocks
-    private AuthenticationServiceImpl authenticationServiceImpl;
     private BankAccount bankAccount;
     private User user;
     private Optional<BankAccount> optionalBankAccount;
     private Page<BankAccount> page;
-
-    @Mock
-    private BankAccountMapper bankAccountMapper;
 
     private PatchRequest patchRequest;
     private BankAccountResponse bankAccountResponse;
@@ -58,9 +55,10 @@ public class BankAccountServiceImplTest {
         user.setBsn("123456749");
         user.setPhoneNumber("+31 6 12 34 54 78");
         user.setRole(Role.EMPLOYEE);
-        user.setPassword(authenticationServiceImpl.getHashedPassword("password"));
+        user.setPassword("MockedPassword");
         user.setIsActive(false);
         user.setIsApproved(false);
+
         bankAccount = new BankAccount();
         bankAccount.setIban("NL91ABNA0417164300");
         bankAccount.setUser(user);
@@ -70,6 +68,7 @@ public class BankAccountServiceImplTest {
         bankAccount.setDailyTransferLimit(new BigDecimal("100"));
         bankAccount.setBankAccountType(BankAccountType.CHECKING);
         bankAccount.setIsActive(true);
+
         patchRequest = new PatchRequest();
         patchRequest.setActive(false);
 

@@ -13,7 +13,6 @@ import org.springdoc.core.converters.models.Pageable;
 
 import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.enums.BankAccountType;
-import MoneyMachine.services.AuthenticationServiceImpl;
 import MoneyMachine.models.User;
 import MoneyMachine.models.dtos.responses.ErrorResponse;
 import MoneyMachine.models.enums.Role;
@@ -25,12 +24,12 @@ public class BankAccountControllerTest extends BaseControllerTest {
     private boolean isActive = false;
     private BankAccount bankAccount;
     private User user;
-    private AuthenticationServiceImpl authenticationServiceImpl;
     private ErrorResponse errorResponse;
 
     @BeforeEach
     void setUp() {
         super.setUpMockAuth();
+        
         user = new User();
         user.setFirstName("employeeFirstName");
         user.setLastName("employeeLastName");
@@ -38,9 +37,10 @@ public class BankAccountControllerTest extends BaseControllerTest {
         user.setBsn("123456749");
         user.setPhoneNumber("+31 6 12 34 54 78");
         user.setRole(Role.EMPLOYEE);
-        user.setPassword(authenticationServiceImpl.getHashedPassword("password"));
+        user.setPassword("MockedPassword");
         user.setIsActive(false);
         user.setIsApproved(false);
+
         bankAccount = new BankAccount();
         bankAccount.setIban("NL91ABNA0417164300");
         bankAccount.setUser(user);
