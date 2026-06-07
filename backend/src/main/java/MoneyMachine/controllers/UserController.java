@@ -6,21 +6,15 @@ import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
-import MoneyMachine.models.dtos.requests.LoginRequest;
 import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
 import MoneyMachine.models.dtos.responses.BankAccountResponse;
 import MoneyMachine.models.dtos.responses.ErrorResponse;
+import MoneyMachine.models.dtos.responses.ITransactionResponse;
 import MoneyMachine.exception.NotFoundException;
-import MoneyMachine.models.dtos.responses.LoginResponse;
-import MoneyMachine.models.dtos.responses.TransactionResponse;
 import MoneyMachine.models.dtos.responses.TransactionoverviewResponse;
-import MoneyMachine.exception.NotFoundException;
-import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserResponse;
 import MoneyMachine.services.interfaces.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
 import org.springframework.data.domain.Pageable;
@@ -86,12 +80,12 @@ public class UserController {
             return ResponseEntity.ok(userOverviewResponse);
         } catch (Unauthorized exUnauthorized) {
             ErrorResponse errorResponse = new ErrorResponse(401, MoneyMachine.models.enums.ErrorType.UNAUTHORIZED,
-                    "Unauthorized - Authentication required", exUnauthorized.getMessage());
+                    "Unauthorized - Authentication required");
             return ResponseEntity.status(401).body(errorResponse);
         } catch (InternalServerError exInternalServerError) {
             ErrorResponse errorResponse = new ErrorResponse(500,
                     MoneyMachine.models.enums.ErrorType.INTERNAL_SERVER_ERROR,
-                    "Internal Server Error - An unexpected error occurred", exInternalServerError.getMessage());
+                    "Internal Server Error - An unexpected error occurred");
             return ResponseEntity.status(500).body(errorResponse);
         }
     }
@@ -105,11 +99,11 @@ public class UserController {
         {
             String iban = bankAccount.getIban();
             TransactionoverviewResponse overview=transactionService.getTransactionsByIban(iban,pageable);
-            for (TransactionResponse transactionResponse : overview.getTransactions()) {
+            for (ITransactionResponse transactionResponse : overview.getTransactions()) {
 
                 boolean isNewTransaction = true;
 
-                for (TransactionResponse existing : transactions.getTransactions()) {
+                for (ITransactionResponse existing : transactions.getTransactions()) {
 
                     if (Objects.equals(existing.getTransactionId(),transactionResponse.getTransactionId())) {
 

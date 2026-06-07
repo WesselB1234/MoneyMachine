@@ -1,5 +1,7 @@
 package MoneyMachine.controllers;
 
+import java.math.BigDecimal;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +19,18 @@ import MoneyMachine.models.dtos.responses.DepositTransactionResponse;
 import MoneyMachine.models.dtos.responses.TransferTransactionResponse;
 import MoneyMachine.models.dtos.responses.WithdrawTransactionResponse;
 import MoneyMachine.services.interfaces.TransactionService;
+import MoneyMachine.services.interfaces.AuthenticationService;
 
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
     
     private TransactionService transactionService;
+    private AuthenticationService authenticationService;
 
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(TransactionService transactionService, AuthenticationService authenticationService) {
         this.transactionService = transactionService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("")
@@ -35,21 +40,8 @@ public class TransactionController {
     }
     @PostMapping("transfer")
     @PreAuthorize("@authorizationService.isLoggedIntoLoginType('WEBSITE')")
-    public ResponseEntity<?> createTransfer(@RequestBody TransferRequest transaction) {
-        System.out.println("Received transfer request: " + transaction);
-        
-        User loggedInUser = authenticationService.getLoggedInUser();
-        
-        if(loggedInUser.getRole()==MoneyMachine.models.enums.Role.EMPLOYEE)
-        {
-            return ResponseEntity.ok(transactionService.createTransferAsEmployee(transaction,loggedInUser));
-        }
-        else if (loggedInUser.getRole()==MoneyMachine.models.enums.Role.USER)
-        {
-            return ResponseEntity.ok(transactionService.createTransferAsUser(transaction,loggedInUser));
-        }
-
-       return ResponseEntity.status(500).body("unknown role");
+    public ResponseEntity<?> createTransfer(@RequestBody TransferRequest transaction) { 
+        return ResponseEntity.ok(transactionService.transferAmountBetweenBankAccounts(transaction.getFromBankAcountIban(), transaction.getToBankAcountIban(), transaction.getAmount(), transaction.getMessage()));
     }
 
     @PostMapping("deposit")

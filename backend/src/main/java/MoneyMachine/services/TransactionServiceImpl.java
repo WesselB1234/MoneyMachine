@@ -8,12 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import MoneyMachine.models.enums.Role;
 import MoneyMachine.exception.NotAuthorizedException;
-
 import MoneyMachine.policies.TransactionPolicy;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import MoneyMachine.mappers.TransactionMapper;
 import MoneyMachine.models.BankAccount;
 import MoneyMachine.models.DepositTransaction;
@@ -23,7 +18,7 @@ import MoneyMachine.models.User;
 import MoneyMachine.models.WithdrawTransaction;
 import MoneyMachine.models.dtos.responses.DepositTransactionResponse;
 import MoneyMachine.models.dtos.responses.TransactionoverviewResponse;
-import MoneyMachine.models.dtos.responses.TransactionResponse;
+import MoneyMachine.models.dtos.responses.ITransactionResponse;
 import MoneyMachine.models.dtos.responses.TransferTransactionResponse;
 import MoneyMachine.models.dtos.responses.WithdrawTransactionResponse;
 import MoneyMachine.repositories.BankAccountRepository;
@@ -57,16 +52,16 @@ public class TransactionServiceImpl implements TransactionService {
     {
         Page<Transaction> page = transactionRepository.findAll(pageable);
         List<Transaction> transferTransactions = page.getContent();
-        List<TransactionResponse> items = mapper.getAllTransactions(transferTransactions);
+        List<ITransactionResponse> items = mapper.getAllTransactions(transferTransactions);
         TransactionoverviewResponse response = new TransactionoverviewResponse(items,page.getNumber(),page.getSize());
         return response;
     }
     public TransactionoverviewResponse getTransactionsByIban(String iban,Pageable pageable)
     {
-        throwIfUserCannotInteractWithBankAccount(authenticationService.getLoggedInUser(), bankAccountService.findBankAccountEntityByIban(iban));
+        throwIfUserCannotInteractWithBankAccount(authenticationService.getLoggedInUser(), bankAccountService.getBankAccountEntityByIban(iban));
         Page<Transaction> page = transactionRepository.findAllByToOrFromIban(iban,pageable);
         List<Transaction> transferTransactions = page.getContent();
-        List<TransactionResponse> items = mapper.getAllTransactions(transferTransactions);
+        List<ITransactionResponse> items = mapper.getAllTransactions(transferTransactions);
         TransactionoverviewResponse response = new TransactionoverviewResponse(items,page.getNumber(),page.getSize());
         return response;
     }
@@ -78,7 +73,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
 
-    public TransactionResponse getTransactionByid(long id)
+    public ITransactionResponse getTransactionByid(long id)
     {
        return mapper.toResponse(transactionRepository.findById(id).orElseThrow());
     }
