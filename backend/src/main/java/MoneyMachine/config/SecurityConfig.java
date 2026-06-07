@@ -26,17 +26,17 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final String frontendUrl;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-            @Value("${FRONTEND_URL}") String frontendUrl) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, @Value("${FRONTEND_URL}") String frontendUrl) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.frontendUrl = frontendUrl;
     }
 
-   @Bean
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         // NEEDS TO BE .ENV BASED
+        // configuration.setAllowedOrigins(Arrays.asList(frontendUrl));
         config.setAllowedOrigins(List.of(
             "http://localhost:5173",
             "https://chris-17lommerse.github.io"
