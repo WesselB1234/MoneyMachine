@@ -54,17 +54,18 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     void getAllBankAccounts_whenAuthorized_getAllBankAccounts() throws Exception {
         mockMvc.perform(get(String.format("/users"))
-                .header("Authorization", "Bearer" + websiteEmployeeAuthToken))
-                .andExpect(status().is(200))
+                .header("Authorization", "Bearer " + websiteEmployeeAuthToken))
+                .andExpect(status().isOk())
+                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.items").exists())
-                .andExpect(jsonPath("$.[items].userId").value(user.getId()))
-                .andExpect(jsonPath("$.[items].firstName").value(user.getFirstName()))
-                .andExpect(jsonPath("$.[items].lastName").value(user.getLastName()))
-                .andExpect(jsonPath("$.[items].email").value(user.getEmail()))
-                .andExpect(jsonPath("$.[items].bsn").value(user.getBsn()))
-                .andExpect(jsonPath("$.[items].phoneNumber").value(user.getPhoneNumber()))
-                .andExpect(jsonPath("$.[items].role").value(user.getRole()))
-                .andExpect(jsonPath("$.[items].isActive").value(user.getIsActive()))
-                .andExpect(jsonPath("$.[items].isApproved").value(user.getIsApproved()));
+                .andExpect(jsonPath("$.items[0].userId").value(user.getId()))
+                .andExpect(jsonPath("$.items[0].firstName").value(user.getFirstName()))
+                .andExpect(jsonPath("$.items[0].lastName").value(user.getLastName()))
+                .andExpect(jsonPath("$.items[0].email").value(user.getEmail()))
+                .andExpect(jsonPath("$.items[0].bsn").value(user.getBsn()))
+                .andExpect(jsonPath("$.items[0].phoneNumber").value(user.getPhoneNumber()))
+                .andExpect(jsonPath("$.items[0].role").value(user.getRole()))
+                .andExpect(jsonPath("$.items[0].isActive").value(user.getIsActive()))
+                .andExpect(jsonPath("$.items[0].isApproved").value(user.getIsApproved()));
     }
 }

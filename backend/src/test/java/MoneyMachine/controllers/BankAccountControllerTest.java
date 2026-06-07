@@ -97,7 +97,7 @@ public class BankAccountControllerTest extends BaseControllerTest {
     void failedGetAllBankAccounts_WhenNotAuthorized_GetUnAuthorizedError() throws Exception {
         mockMvc.perform(get(String.format("/bank-accounts", pageable))
         .header("Authorization", "Bearer" + websiteEmployeeAuthToken))
-        .andExpect(status().is(401))
+        .andExpect(status().is(403))
         .andExpect(jsonPath("$.code").value(errorResponse.getCode()))
         .andExpect(jsonPath("$.type").value(errorResponse.getErrorType()))
         .andExpect(jsonPath("$.message").value(errorResponse.getMessage()));
