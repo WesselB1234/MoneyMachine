@@ -145,4 +145,18 @@ public class AuthControllerTest extends BaseControllerTest {
                 .header("Authorization", "Bearer invalidToken"))
             .andExpect(status().is(401));
     }
+
+    @Test
+    void invalidLogin_whenInvalidLoginType_returnBadRequest() throws Exception {
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("email", "user@user.user");
+        request.put("password", "password");
+        request.put("loginType", "UNDEFINED");
+
+        mockMvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().is(400));
+    }
 }
