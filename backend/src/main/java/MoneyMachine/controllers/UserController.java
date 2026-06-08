@@ -1,25 +1,15 @@
 package MoneyMachine.controllers;
 
 import java.util.List;
-import java.util.Objects;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException.Unauthorized;
-import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 import MoneyMachine.models.dtos.responses.BankAccountOverviewResponse;
-import MoneyMachine.models.dtos.responses.BankAccountResponse;
-import MoneyMachine.models.dtos.responses.ErrorResponse;
-import MoneyMachine.models.dtos.responses.ITransactionResponse;
 import MoneyMachine.exception.NotFoundException;
-import MoneyMachine.models.dtos.responses.TransactionoverviewResponse;
+import MoneyMachine.models.dtos.responses.TransactionOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserOverviewResponse;
 import MoneyMachine.models.dtos.responses.UserResponse;
 import MoneyMachine.services.interfaces.*;
-import java.util.ArrayList;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,12 +18,10 @@ public class UserController {
 
     private final UserService userService;
     private final BankAccountService bankAccountService;
-    private final TransactionService transactionService;
 
-    public UserController(UserService userService, AuthenticationService authenticationService, BankAccountService bankAccountService, TransactionService transactionService) {
+    public UserController(UserService userService, AuthenticationService authenticationService, BankAccountService bankAccountService) {
         this.userService = userService;
         this.bankAccountService = bankAccountService;
-        this.transactionService = transactionService;
     }
 
     @GetMapping("{id}/bank-accounts")
@@ -72,51 +60,10 @@ public class UserController {
 
         return ResponseEntity.ok(userOverviewResponse);
     }
-    public ResponseEntity<?> getAllUsersWithoutAnAccountTest() {
-        try {
-            List<UserResponse> users = userService.getAllUsersWithoutBankAccounts();
-            UserOverviewResponse userOverviewResponse = new UserOverviewResponse();
-            userOverviewResponse.setUsers(users);
-            return ResponseEntity.ok(userOverviewResponse);
-        } catch (Unauthorized exUnauthorized) {
-            ErrorResponse errorResponse = new ErrorResponse(401, MoneyMachine.models.enums.ErrorType.UNAUTHORIZED,
-                    "Unauthorized - Authentication required");
-            return ResponseEntity.status(401).body(errorResponse);
-        } catch (InternalServerError exInternalServerError) {
-            ErrorResponse errorResponse = new ErrorResponse(500,
-                    MoneyMachine.models.enums.ErrorType.INTERNAL_SERVER_ERROR,
-                    "Internal Server Error - An unexpected error occurred");
-            return ResponseEntity.status(500).body(errorResponse);
-        }
-    }
     @GetMapping("/{id}/transactions")
     @PreAuthorize("@authorizationService.isLoggedIntoLoginType('WEBSITE')")
     public ResponseEntity<?> getTransactionsByUserId(@PathVariable Long id, Pageable pageable) throws Exception {
-        BankAccountOverviewResponse bankAccountOverviewResponse = bankAccountService.getAllBankAccountsByUserId(id, pageable);
-        List<BankAccountResponse> bankAccounts = bankAccountOverviewResponse.getItems();
-        TransactionoverviewResponse transactions = new TransactionoverviewResponse(new ArrayList<>(), pageable.getPageNumber(), pageable.getPageSize());
-        for(BankAccountResponse bankAccount:bankAccounts)
-        {
-            String iban = bankAccount.getIban();
-            TransactionoverviewResponse overview=transactionService.getTransactionsByIban(iban,pageable);
-            for (ITransactionResponse transactionResponse : overview.getTransactions()) {
-
-                boolean isNewTransaction = true;
-
-                for (ITransactionResponse existing : transactions.getTransactions()) {
-
-                    if (Objects.equals(existing.getTransactionId(),transactionResponse.getTransactionId())) {
-
-                        isNewTransaction = false;
-                        break;
-                    }
-                }
-
-                if (isNewTransaction) {
-                    transactions.getTransactions().add(transactionResponse);
-                }
-            }
-        }
+        TransactionOverviewResponse transactions = userService.getTransactionsByUserId(id, pageable);
         return ResponseEntity.status(200).body(transactions);
     }
 }

@@ -17,7 +17,7 @@ import MoneyMachine.models.TransferTransaction;
 import MoneyMachine.models.User;
 import MoneyMachine.models.WithdrawTransaction;
 import MoneyMachine.models.dtos.responses.DepositTransactionResponse;
-import MoneyMachine.models.dtos.responses.TransactionoverviewResponse;
+import MoneyMachine.models.dtos.responses.TransactionOverviewResponse;
 import MoneyMachine.models.dtos.responses.ITransactionResponse;
 import MoneyMachine.models.dtos.responses.TransferTransactionResponse;
 import MoneyMachine.models.dtos.responses.WithdrawTransactionResponse;
@@ -48,21 +48,21 @@ public class TransactionServiceImpl implements TransactionService {
         this.transactionPolicy = transactionPolicy;
     }
 
-    public TransactionoverviewResponse getAllTransactions(Pageable pageable)
+    public TransactionOverviewResponse getAllTransactions(Pageable pageable)
     {
         Page<Transaction> page = transactionRepository.findAll(pageable);
         List<Transaction> transferTransactions = page.getContent();
         List<ITransactionResponse> items = mapper.getAllTransactions(transferTransactions);
-        TransactionoverviewResponse response = new TransactionoverviewResponse(items,page.getNumber(),page.getSize());
+        TransactionOverviewResponse response = new TransactionOverviewResponse(items,page.getNumber(),page.getSize());
         return response;
     }
-    public TransactionoverviewResponse getTransactionsByIban(String iban,Pageable pageable)
+    public TransactionOverviewResponse getTransactionsByIban(String iban,Pageable pageable)
     {
         throwIfUserCannotInteractWithBankAccount(authenticationService.getLoggedInUser(), bankAccountService.getBankAccountEntityByIban(iban));
         Page<Transaction> page = transactionRepository.findAllByToOrFromIban(iban,pageable);
         List<Transaction> transferTransactions = page.getContent();
         List<ITransactionResponse> items = mapper.getAllTransactions(transferTransactions);
-        TransactionoverviewResponse response = new TransactionoverviewResponse(items,page.getNumber(),page.getSize());
+        TransactionOverviewResponse response = new TransactionOverviewResponse(items,page.getNumber(),page.getSize());
         return response;
     }
 

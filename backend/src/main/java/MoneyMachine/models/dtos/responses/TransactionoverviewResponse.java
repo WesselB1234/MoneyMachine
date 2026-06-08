@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionoverviewResponse implements Serializable {
+public class TransactionOverviewResponse implements Serializable {
     private List<ITransactionResponse> transactions;
     private int page;
     private int pageSize;
