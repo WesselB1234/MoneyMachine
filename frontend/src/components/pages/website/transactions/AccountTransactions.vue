@@ -1,8 +1,12 @@
 <script setup>
 import apiClient from '@/utils/axios.js';
 import TransactionsTable from "@/components/organisms/TransactionsTable.vue";
-import { ref, onMounted } from 'vue';
+import { ref,computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore.js'
+const authStore = useAuthStore()
+const websiteDecodedAuthToken = computed(() => authStore.websiteDecodedAuthToken ?? null)
+
 const route = useRoute();
 const transactions = ref([])
 onMounted(async () => {
