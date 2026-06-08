@@ -33,9 +33,6 @@ const props = defineProps({
         <BaseTableDataFieldAtom :text="bankAccount.isActive" />
         <td class="flex flex-column">
             <CloseBankAccountButtonAtom :bankAccount="bankAccount" />
-            <UpdateTransferLimitsButtonAtom />
-            <ViewTransactionHistoryButtonAtom />
-            <TransferMoneyButtonAtom />
         </td>
     </tr>
 </template>
