@@ -17,7 +17,7 @@ public class UserControllerTest extends BaseControllerTest {
     void setUp() {
         super.setUpMockAuth();
         user = new User();
-        user.setId(1l);
+        user.setId(2l);
         user.setFirstName("employeeFirstName");
         user.setLastName("employeeLastName");
         user.setEmail("employee@employee.employee");
@@ -64,7 +64,7 @@ public class UserControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.items[0].email").value(user.getEmail()))
                 .andExpect(jsonPath("$.items[0].bsn").value(user.getBsn()))
                 .andExpect(jsonPath("$.items[0].phoneNumber").value(user.getPhoneNumber()))
-                .andExpect(jsonPath("$.items[0].role").value(user.getRole()))
+                .andExpect(jsonPath("$.items[0].role").value(user.getRole().name()))
                 .andExpect(jsonPath("$.items[0].isActive").value(user.getIsActive()))
                 .andExpect(jsonPath("$.items[0].isApproved").value(user.getIsApproved()));
     }
