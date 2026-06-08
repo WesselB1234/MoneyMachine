@@ -1,7 +1,9 @@
 package MoneyMachine.exception;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,20 +24,21 @@ public class GlobalExceptionHandler {
             StackTraceElement targetElement = ex.getStackTrace()[0];
 
             locationInfo = String.format("%s.%s(%s:%d)",
-                    targetElement.getClassName(),
-                    targetElement.getMethodName(),
-                    targetElement.getFileName(),
-                    targetElement.getLineNumber());
+                targetElement.getClassName(),
+                targetElement.getMethodName(),
+                targetElement.getFileName(),
+                targetElement.getLineNumber()
+            );
         }
         
         return locationInfo;
     }
 
-   @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleAllException(Exception ex) {
         
         String locationInfo = getLocationOfException(ex);
-        ErrorResponse errorResponse = new ErrorResponse(500, ErrorType.INTERNAL_SERVER_ERROR, ex.getMessage(), locationInfo);
+        ErrorResponse errorResponse = new ErrorResponse(500, ErrorType.INTERNAL_SERVER_ERROR, ex.getMessage());
 
         System.err.println(String.format("[RUNTIME ERROR] Reason: %s | Code Location: %s", ex.getMessage(), locationInfo));
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
@@ -44,49 +47,63 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCredentialsException(InvalidCredentialsException ex) {
         
-        ErrorResponse errorResponse = new ErrorResponse(401, ErrorType.UNAUTHORIZED, "Invalid credentials", ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(401, ErrorType.UNAUTHORIZED, ex.getMessage());
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
     }
 
     @ExceptionHandler(NotAuthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleNotAuthorizedExceptions(NotAuthorizedException ex) {
+    public ResponseEntity<ErrorResponse> handleNotAuthorizedException(NotAuthorizedException ex) {
         
-        ErrorResponse errorResponse = new ErrorResponse(401, ErrorType.UNAUTHORIZED, "Not authorized", ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(401, ErrorType.UNAUTHORIZED, ex.getMessage());
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDeniedExceptions(AccessDeniedException ex) {
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
         
-        ErrorResponse errorResponse = new ErrorResponse(403, ErrorType.FORBIDDEN, "Access denied", ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(403, ErrorType.FORBIDDEN, ex.getMessage());
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
     }
 
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ErrorResponse> handleJwtExceptions(JwtException ex) {
+    public ResponseEntity<ErrorResponse> handleJwtException(JwtException ex) {
         
-        ErrorResponse errorResponse = new ErrorResponse(401, ErrorType.INVALID_AUTH_TOKEN, "Invalid token", ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(401, ErrorType.INVALID_AUTH_TOKEN, ex.getMessage());
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorResponse> handleExpiredJwtExceptions(ExpiredJwtException ex) {
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
         
-        ErrorResponse errorResponse = new ErrorResponse(401, ErrorType.INVALID_AUTH_TOKEN, "Expired token", "Your authentication token has expired.");
+        ErrorResponse errorResponse = new ErrorResponse(401, ErrorType.INVALID_AUTH_TOKEN, "Your authentication token has expired.");
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentExceptions(IllegalArgumentException ex) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         
-        ErrorResponse errorResponse = new ErrorResponse(400, ErrorType.ILLEGAL_ARGUMENTS, "Illegal arguments", ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(400, ErrorType.ILLEGAL_ARGUMENTS, ex.getMessage());
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundExceptions(NotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
         
-        ErrorResponse errorResponse = new ErrorResponse(404, ErrorType.ILLEGAL_ARGUMENTS, "Not found", ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(404, ErrorType.ILLEGAL_ARGUMENTS, ex.getMessage());
         return ResponseEntity.status(errorResponse.getCode()).body(errorResponse); 
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+
+        ErrorResponse errorResponse = new ErrorResponse(400, ErrorType.ILLEGAL_ARGUMENTS, "Bad request: missing or invalid fields.");
+        return ResponseEntity.status(errorResponse.getCode()).body(errorResponse);
+    }
+    
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+
+        ErrorResponse errorResponse = new ErrorResponse(400, ErrorType.ILLEGAL_ARGUMENTS, "Bad request: invalid or unreadable request body.");
+        return ResponseEntity.status(errorResponse.getCode()).body(errorResponse);
     }
 }
