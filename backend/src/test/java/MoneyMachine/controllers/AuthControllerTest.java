@@ -159,4 +159,35 @@ public class AuthControllerTest extends BaseControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().is(400));
     }
+
+    @Test
+    void employeeTest_whenAuthenticatedAsEmployeeOnWebsite_returnOk() throws Exception {
+
+        mockMvc.perform(get("/auth/employee-test")
+                .header("Authorization", "Bearer " + websiteEmployeeAuthToken))
+            .andExpect(status().is(200));
+    }
+
+    @Test
+    void employeeTest_whenAuthenticatedAsEmployeeOnAtm_returnForbidden() throws Exception {
+
+        mockMvc.perform(get("/auth/employee-test")
+                .header("Authorization", "Bearer " + atmEmployeeAuthToken))
+            .andExpect(status().is(403));
+    }
+
+    @Test
+    void employeeTest_whenAuthenticatedAsUserOnWebsite_returnForbidden() throws Exception {
+
+        mockMvc.perform(get("/auth/employee-test")
+                .header("Authorization", "Bearer " + websiteUserAuthToken))
+            .andExpect(status().is(403));
+    }
+
+    @Test
+    void employeeTest_whenNotAuthenticated_returnUnauthorized() throws Exception {
+
+        mockMvc.perform(get("/auth/employee-test"))
+            .andExpect(status().is(401));
+    }
 }
