@@ -30,6 +30,6 @@ const emits = defineEmits(['approveCustomer']);
     <BaseTableDataFieldAtom :text="user.email" />
     <BaseTableDataFieldAtom :text="user.bsn" />
     <BaseTableDataFieldAtom :text="user.phoneNumber" />
-    <ApproveCustomerButtonAtom @approveCustomer="$emit('approveCustomer')" :user="user"/>
+    <ApproveCustomerButtonAtom v-if="user.role !== 'EMPLOYEE'" @approveCustomer="$emit('approveCustomer')" :user="user"/>
     </tr>  
 </template>
