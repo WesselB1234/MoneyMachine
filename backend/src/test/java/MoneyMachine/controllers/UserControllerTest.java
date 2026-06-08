@@ -32,7 +32,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     void getBankAccountsByUserId_whenGetCall_getBankAccounts() throws Exception {
         mockMvc.perform(get(String.format("/users/%s/bank-accounts", user.getId()))
-                .header("Authorization", "Bearer " + atmUserAuthToken))
+                .header("Authorization", "Bearer " + websiteEmployeeAuthToken))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$.items").exists());
     }
